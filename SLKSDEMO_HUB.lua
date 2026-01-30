@@ -1,16 +1,17 @@
--- SLKS GAMING | LOADING + MENU FIX (DELTA MOBILE SAFE)
+-- SLKS HUB | NEW CLEAN VERSION
+-- Loading + Menu + Tabs (MAIN / INFO / SETTING)
+-- Mobile + Delta Safe
 
-local TweenService = game:GetService("TweenService")
 local Players = game:GetService("Players")
+local TweenService = game:GetService("TweenService")
 local player = Players.LocalPlayer
 
 -------------------------------------------------
--- LOADING GUI
+-- LOADING
 -------------------------------------------------
-local LoadingGui = Instance.new("ScreenGui")
+local LoadingGui = Instance.new("ScreenGui", player.PlayerGui)
 LoadingGui.IgnoreGuiInset = true
 LoadingGui.ResetOnSpawn = false
-LoadingGui.Parent = player:WaitForChild("PlayerGui")
 
 local bg = Instance.new("Frame", LoadingGui)
 bg.Size = UDim2.new(1,0,1,0)
@@ -26,30 +27,21 @@ local title = Instance.new("TextLabel", box)
 title.Size = UDim2.new(1,0,0,40)
 title.Position = UDim2.new(0,0,0,10)
 title.BackgroundTransparency = 1
-title.Text = "SLKS GAMING"
+title.Text = "SLKS HUB"
 title.Font = Enum.Font.Code
 title.TextSize = 26
 title.TextColor3 = Color3.fromRGB(0,255,140)
 
-local binary = Instance.new("TextLabel", box)
-binary.Size = UDim2.new(1,-20,0,60)
-binary.Position = UDim2.new(0,10,0,50)
-binary.BackgroundTransparency = 1
-binary.Font = Enum.Font.Code
-binary.TextSize = 14
-binary.TextWrapped = true
-binary.TextColor3 = Color3.fromRGB(0,200,120)
-
 local barBG = Instance.new("Frame", box)
 barBG.Size = UDim2.new(1,-40,0,16)
 barBG.Position = UDim2.new(0,20,1,-40)
-barBG.BackgroundColor3 = Color3.fromRGB(30,50,60)
-Instance.new("UICorner", barBG).CornerRadius = UDim.new(1,0)
+barBG.BackgroundColor3 = Color3.fromRGB(40,40,40)
+Instance.new("UICorner", barBG)
 
 local bar = Instance.new("Frame", barBG)
 bar.Size = UDim2.new(0,0,1,0)
 bar.BackgroundColor3 = Color3.fromRGB(0,255,140)
-Instance.new("UICorner", bar).CornerRadius = UDim.new(1,0)
+Instance.new("UICorner", bar)
 
 local percent = Instance.new("TextLabel", box)
 percent.Size = UDim2.new(1,0,0,20)
@@ -60,135 +52,140 @@ percent.TextSize = 16
 percent.TextColor3 = Color3.fromRGB(0,255,140)
 percent.Text = "Loading 0%"
 
-task.spawn(function()
-	while LoadingGui.Parent do
-		local s = ""
-		for i=1,math.random(40,70) do
-			s ..= math.random(0,1)
-		end
-		binary.Text = s
-		task.wait(0.15)
-	end
-end)
-
-for i=1,100 do
+for i = 1,100 do
 	percent.Text = "Loading "..i.."%"
-	bar.Size = UDim2.new(i/100,0,1,0)
+	TweenService:Create(bar,TweenInfo.new(0.03),{
+		Size = UDim2.new(i/100,0,1,0)
+	}):Play()
 	task.wait(0.03)
 end
 
-task.wait(0.5)
+task.wait(0.3)
 LoadingGui:Destroy()
 
 -------------------------------------------------
--- MENU GUI (FIX 100%)
+-- MENU
 -------------------------------------------------
-local MenuGui = Instance.new("ScreenGui")
+local MenuGui = Instance.new("ScreenGui", player.PlayerGui)
 MenuGui.ResetOnSpawn = false
-MenuGui.Parent = player.PlayerGui
 
 local Menu = Instance.new("Frame", MenuGui)
 Menu.Size = UDim2.new(0,420,0,260)
 Menu.Position = UDim2.new(0.5,-210,0.5,-130)
-Menu.BackgroundColor3 = Color3.fromRGB(15,25,35)
-Instance.new("UICorner", Menu).CornerRadius = UDim.new(0,14)
+Menu.BackgroundColor3 = Color3.fromRGB(0,0,0)
+Menu.BackgroundTransparency = 0.3
+Menu.Active = true
+Menu.Draggable = true
+Instance.new("UICorner", Menu)
 
--- TOP BAR
-local Top = Instance.new("Frame", Menu)
-Top.Size = UDim2.new(1,0,0,40)
-Top.BackgroundColor3 = Color3.fromRGB(10,20,30)
+local stroke = Instance.new("UIStroke", Menu)
+stroke.Color = Color3.fromRGB(0,255,140)
+stroke.Thickness = 2
 
-local Title = Instance.new("TextLabel", Top)
-Title.Size = UDim2.new(1,-80,1,0)
-Title.Position = UDim2.new(0,10,0,0)
-Title.BackgroundTransparency = 1
-Title.Text = "SLKS HUB | v0.1"
-Title.Font = Enum.Font.Code
-Title.TextSize = 18
-Title.TextXAlignment = Left
-Title.TextColor3 = Color3.fromRGB(0,255,140)
+-- Header
+local header = Instance.new("TextLabel", Menu)
+header.Size = UDim2.new(1,0,0,50)
+header.BackgroundTransparency = 1
+header.Text = "SLKS HUB | v0.1"
+header.Font = Enum.Font.Code
+header.TextSize = 18
+header.TextColor3 = Color3.fromRGB(0,255,140)
 
--- MINIMIZE
-local Min = Instance.new("TextButton", Top)
-Min.Size = UDim2.new(0,30,0,30)
-Min.Position = UDim2.new(1,-70,0,5)
-Min.Text = "-"
-Min.Font = Enum.Font.Code
-Min.TextSize = 22
-Min.BackgroundColor3 = Color3.fromRGB(30,50,60)
+-- Buttons
+local minBtn = Instance.new("TextButton", Menu)
+minBtn.Size = UDim2.new(0,30,0,30)
+minBtn.Position = UDim2.new(1,-70,0,10)
+minBtn.Text = "-"
+minBtn.Font = Enum.Font.Code
+minBtn.TextSize = 22
+minBtn.BackgroundColor3 = Color3.fromRGB(25,25,25)
+minBtn.TextColor3 = Color3.fromRGB(0,255,140)
+Instance.new("UICorner", minBtn)
 
--- CLOSE
-local Close = Instance.new("TextButton", Top)
-Close.Size = UDim2.new(0,30,0,30)
-Close.Position = UDim2.new(1,-35,0,5)
-Close.Text = "X"
-Close.Font = Enum.Font.Code
-Close.TextSize = 18
-Close.BackgroundColor3 = Color3.fromRGB(60,30,30)
+local closeBtn = Instance.new("TextButton", Menu)
+closeBtn.Size = UDim2.new(0,30,0,30)
+closeBtn.Position = UDim2.new(1,-35,0,10)
+closeBtn.Text = "X"
+closeBtn.Font = Enum.Font.Code
+closeBtn.TextSize = 18
+closeBtn.BackgroundColor3 = Color3.fromRGB(60,20,20)
+closeBtn.TextColor3 = Color3.fromRGB(255,80,80)
+Instance.new("UICorner", closeBtn)
 
 -------------------------------------------------
--- TABS
+-- TAB BUTTONS
 -------------------------------------------------
-local Tabs = {"MAIN","INFO","SETTING"}
-local TabButtons = {}
-local Pages = {}
+local tabHolder = Instance.new("Frame", Menu)
+tabHolder.Size = UDim2.new(1,-20,0,35)
+tabHolder.Position = UDim2.new(0,10,0,55)
+tabHolder.BackgroundTransparency = 1
 
-local TabBar = Instance.new("Frame", Menu)
-TabBar.Position = UDim2.new(0,0,0,40)
-TabBar.Size = UDim2.new(1,0,0,35)
-TabBar.BackgroundTransparency = 1
-
-for i,name in ipairs(Tabs) do
-	local btn = Instance.new("TextButton", TabBar)
-	btn.Size = UDim2.new(0,120,1,0)
-	btn.Position = UDim2.new(0,(i-1)*130+10,0,0)
-	btn.Text = name
-	btn.Font = Enum.Font.Code
-	btn.TextSize = 16
-	btn.BackgroundColor3 = Color3.fromRGB(25,40,50)
-	TabButtons[name] = btn
-
-	local page = Instance.new("Frame", Menu)
-	page.Position = UDim2.new(0,10,0,85)
-	page.Size = UDim2.new(1,-20,1,-95)
-	page.BackgroundTransparency = 1
-	page.Visible = (name=="MAIN")
-	Pages[name] = page
+local function makeTab(text, x)
+	local b = Instance.new("TextButton", tabHolder)
+	b.Size = UDim2.new(0,120,1,0)
+	b.Position = UDim2.new(0,x,0,0)
+	b.Text = text
+	b.Font = Enum.Font.Code
+	b.TextSize = 14
+	b.TextColor3 = Color3.fromRGB(0,255,140)
+	b.BackgroundColor3 = Color3.fromRGB(25,25,25)
+	Instance.new("UICorner", b)
+	return b
 end
 
-for name,btn in pairs(TabButtons) do
-	btn.MouseButton1Click:Connect(function()
-		for n,p in pairs(Pages) do
-			p.Visible = (n==name)
-		end
-	end)
-end
+local mainTab = makeTab("MAIN",0)
+local infoTab = makeTab("INFO",130)
+local setTab  = makeTab("SETTING",260)
 
 -------------------------------------------------
--- INFO TAB CONTENT
+-- PAGES
 -------------------------------------------------
-local info = Instance.new("TextLabel", Pages.INFO)
-info.Size = UDim2.new(1,0,1,0)
-info.BackgroundTransparency = 1
-info.TextWrapped = true
-info.Font = Enum.Font.Code
-info.TextSize = 16
-info.TextColor3 = Color3.fromRGB(0,255,140)
-info.Text = "SLKS HUB\nForsaken Script\n\nYouTube: SLKS GAMING\nDiscord: Coming Soon"
+local pages = Instance.new("Frame", Menu)
+pages.Size = UDim2.new(1,-20,1,-100)
+pages.Position = UDim2.new(0,10,0,95)
+pages.BackgroundTransparency = 1
+
+local function makePage(text)
+	local f = Instance.new("TextLabel", pages)
+	f.Size = UDim2.new(1,0,1,0)
+	f.BackgroundTransparency = 1
+	f.Text = text
+	f.Font = Enum.Font.Code
+	f.TextSize = 16
+	f.TextColor3 = Color3.fromRGB(255,255,255)
+	f.Visible = false
+	return f
+end
+
+local mainPage = makePage("MAIN TAB\n\nScript chính ở đây")
+local infoPage = makePage("INFO TAB\n\nYouTube | Discord")
+local setPage  = makePage("SETTING TAB\n\nCài đặt")
+
+-- ✅ FIX QUAN TRỌNG
+mainPage.Visible = true
+
+local function switch(page)
+	mainPage.Visible = false
+	infoPage.Visible = false
+	setPage.Visible = false
+	page.Visible = true
+end
+
+mainTab.MouseButton1Click:Connect(function() switch(mainPage) end)
+infoTab.MouseButton1Click:Connect(function() switch(infoPage) end)
+setTab.MouseButton1Click:Connect(function() switch(setPage) end)
 
 -------------------------------------------------
 -- MINIMIZE / CLOSE
 -------------------------------------------------
 local minimized = false
-Min.MouseButton1Click:Connect(function()
+minBtn.MouseButton1Click:Connect(function()
 	minimized = not minimized
-	for _,v in ipairs(Menu:GetChildren()) do
-		if v ~= Top then
-			v.Visible = not minimized
-		end
-	end
+	pages.Visible = not minimized
+	tabHolder.Visible = not minimized
+	Menu.Size = minimized and UDim2.new(0,420,0,60) or UDim2.new(0,420,0,260)
 end)
 
-Close.MouseButton1Click:Connect(function()
+closeBtn.MouseButton1Click:Connect(function()
 	MenuGui:Destroy()
 end)
