@@ -1,269 +1,178 @@
--- SLK GAMING HUB | FULL BASE TEST
+-- SLK GAMING HUB | BASE FIX | DELTA OK
+-- MADE BY SLK GAMING
 
 local Players = game:GetService("Players")
-local RunService = game:GetService("RunService")
-local UIS = game:GetService("UserInputService")
 local player = Players.LocalPlayer
 
-if getgenv().SLK_HUB then return end
-getgenv().SLK_HUB = true
+-- chống exec trùng
+if getgenv().SLK_LOADED then return end
+getgenv().SLK_LOADED = true
 
---------------------------------------------------
--- STATE
---------------------------------------------------
-getgenv().SLK_STATE = {
-	speedOn = false,
-	speedValue = 16,
-	espPlayer = false,
-	autoFixGen = false,
-	fixDelay = 0
-}
-
---------------------------------------------------
--- GUI ROOT
---------------------------------------------------
+-------------------------------------------------
+-- GUI GỐC
+-------------------------------------------------
 local gui = Instance.new("ScreenGui")
-gui.Name = "SLK_GAMING_HUB"
+gui.Name = "SLK_HUB"
 gui.ResetOnSpawn = false
 gui.Parent = player:WaitForChild("PlayerGui")
 
---------------------------------------------------
+-------------------------------------------------
 -- LOADING
---------------------------------------------------
-local load = Instance.new("TextLabel", gui)
-load.Size = UDim2.new(0,300,0,120)
-load.Position = UDim2.new(0.5,-150,0.5,-60)
-load.BackgroundColor3 = Color3.fromRGB(255,170,200)
-load.TextColor3 = Color3.new(1,1,1)
-load.Font = Enum.Font.Code
-load.TextSize = 18
-load.Text = "SLK GAMING HUB\nLoading 0%"
-Instance.new("UICorner", load)
+-------------------------------------------------
+local loadFrame = Instance.new("Frame", gui)
+loadFrame.Size = UDim2.new(0,300,0,120)
+loadFrame.Position = UDim2.new(0.5,-150,0.5,-60)
+loadFrame.BackgroundColor3 = Color3.fromRGB(255,180,200)
+loadFrame.BorderSizePixel = 0
 
-for i=0,100,10 do
-	load.Text = "SLK GAMING HUB\nLoading "..i.."%"
-	task.wait(0.08)
-end
-load:Destroy()
+local loadCorner = Instance.new("UICorner", loadFrame)
+loadCorner.CornerRadius = UDim.new(0,16)
 
---------------------------------------------------
--- MENU
---------------------------------------------------
-local menu = Instance.new("Frame", gui)
-menu.Size = UDim2.new(0,460,0,320)
-menu.Position = UDim2.new(0.5,-230,0.5,-160)
-menu.BackgroundColor3 = Color3.fromRGB(255,150,190)
-menu.Active = true
-menu.Draggable = true
-Instance.new("UICorner", menu)
-
-local title = Instance.new("TextLabel", menu)
+local title = Instance.new("TextLabel", loadFrame)
 title.Size = UDim2.new(1,0,0,40)
 title.BackgroundTransparency = 1
-title.Text = "SLK GAMING HUB 💗"
-title.Font = Enum.Font.Code
-title.TextSize = 20
-title.TextColor3 = Color3.new(1,1,1)
+title.Text = "🌸 SLK GAMING HUB"
+title.Font = Enum.Font.GothamBold
+title.TextSize = 18
+title.TextColor3 = Color3.fromRGB(255,255,255)
 
---------------------------------------------------
--- TABS
---------------------------------------------------
-local tabs = {}
+local percent = Instance.new("TextLabel", loadFrame)
+percent.Size = UDim2.new(1,0,0,30)
+percent.Position = UDim2.new(0,0,0.5,0)
+percent.BackgroundTransparency = 1
+percent.Text = "Loading... 0%"
+percent.Font = Enum.Font.Gotham
+percent.TextSize = 16
+percent.TextColor3 = Color3.fromRGB(255,255,255)
+
+for i = 1,100 do
+	percent.Text = "Loading... "..i.."%"
+	task.wait(0.02)
+end
+
+loadFrame:Destroy()
+
+-------------------------------------------------
+-- MAIN MENU
+-------------------------------------------------
+local main = Instance.new("Frame", gui)
+main.Size = UDim2.new(0,450,0,300)
+main.Position = UDim2.new(0.5,-225,0.5,-150)
+main.BackgroundColor3 = Color3.fromRGB(255,200,220)
+main.BorderSizePixel = 0
+
+local mainCorner = Instance.new("UICorner", main)
+mainCorner.CornerRadius = UDim.new(0,18)
+
+local header = Instance.new("TextLabel", main)
+header.Size = UDim2.new(1,0,0,40)
+header.BackgroundTransparency = 1
+header.Text = "SLK GAMING HUB 🌸"
+header.Font = Enum.Font.GothamBold
+header.TextSize = 20
+header.TextColor3 = Color3.fromRGB(255,255,255)
+
+-------------------------------------------------
+-- TAB BUTTONS
+-------------------------------------------------
+local tabs = {"Info","Farm","Player","Settings"}
+local tabButtons = {}
 local pages = {}
 
-local function makeTab(name,x)
-	local b = Instance.new("TextButton", menu)
-	b.Size = UDim2.new(0,120,0,30)
-	b.Position = UDim2.new(0,x,0,45)
-	b.Text = name
-	b.Font = Enum.Font.Code
-	b.TextColor3 = Color3.new(1,1,1)
-	b.BackgroundColor3 = Color3.fromRGB(255,110,160)
-	Instance.new("UICorner", b)
-	return b
+for i,name in ipairs(tabs) do
+	local btn = Instance.new("TextButton", main)
+	btn.Size = UDim2.new(0,100,0,30)
+	btn.Position = UDim2.new(0,10 + (i-1)*110,0,50)
+	btn.Text = name
+	btn.Font = Enum.Font.GothamBold
+	btn.TextSize = 14
+	btn.BackgroundColor3 = Color3.fromRGB(255,150,180)
+	btn.TextColor3 = Color3.fromRGB(255,255,255)
+	btn.BorderSizePixel = 0
+
+	local c = Instance.new("UICorner", btn)
+	c.CornerRadius = UDim.new(0,12)
+
+	tabButtons[name] = btn
+
+	local page = Instance.new("Frame", main)
+	page.Size = UDim2.new(1,-20,1,-100)
+	page.Position = UDim2.new(0,10,0,90)
+	page.BackgroundTransparency = 1
+	page.Visible = false
+	pages[name] = page
 end
 
-tabs.Player = makeTab("PLAYER",20)
-tabs.Farm = makeTab("FARM",160)
+pages["Info"].Visible = true
 
-local function makePage()
-	local f = Instance.new("Frame", menu)
-	f.Size = UDim2.new(1,-20,1,-90)
-	f.Position = UDim2.new(0,10,0,80)
-	f.BackgroundTransparency = 1
-	f.Visible = false
-	return f
-end
-
-pages.Player = makePage()
-pages.Farm = makePage()
-
-local function switch(tab)
-	for _,p in pairs(pages) do p.Visible = false end
-	pages[tab].Visible = true
-end
-
-switch("Player")
-tabs.Player.MouseButton1Click:Connect(function() switch("Player") end)
-tabs.Farm.MouseButton1Click:Connect(function() switch("Farm") end)
-
---------------------------------------------------
--- PLAYER TAB
---------------------------------------------------
-local p = pages.Player
-
-local spLabel = Instance.new("TextLabel", p)
-spLabel.Size = UDim2.new(1,0,0,25)
-spLabel.BackgroundTransparency = 1
-spLabel.Text = "Teleport Speed: 16"
-spLabel.Font = Enum.Font.Code
-spLabel.TextColor3 = Color3.new(1,1,1)
-
-local spSlider = Instance.new("TextButton", p)
-spSlider.Position = UDim2.new(0,0,0,30)
-spSlider.Size = UDim2.new(1,0,0,20)
-spSlider.Text = "SPEED 0 - 50"
-spSlider.BackgroundColor3 = Color3.fromRGB(255,120,160)
-Instance.new("UICorner", spSlider)
-
-spSlider.MouseButton1Down:Connect(function()
-	local c
-	c = RunService.RenderStepped:Connect(function()
-		local x = math.clamp((UIS:GetMouseLocation().X - spSlider.AbsolutePosition.X) / spSlider.AbsoluteSize.X,0,1)
-		local v = math.floor(x*50)
-		getgenv().SLK_STATE.speedValue = v
-		spLabel.Text = "Teleport Speed: "..v
+for name,btn in pairs(tabButtons) do
+	btn.MouseButton1Click:Connect(function()
+		for _,p in pairs(pages) do p.Visible = false end
+		pages[name].Visible = true
 	end)
-	UIS.InputEnded:Wait()
-	c:Disconnect()
+end
+
+-------------------------------------------------
+-- INFO TAB
+-------------------------------------------------
+local infoText = Instance.new("TextLabel", pages["Info"])
+infoText.Size = UDim2.new(1,0,1,0)
+infoText.BackgroundTransparency = 1
+infoText.TextWrapped = true
+infoText.Text = "MADE BY SLK GAMING\n\n✔ Hub không mất khi chết\n✔ Hub không mất khi vào trận\n✔ Delta Executor Support"
+infoText.Font = Enum.Font.Gotham
+infoText.TextSize = 16
+infoText.TextColor3 = Color3.fromRGB(255,255,255)
+
+-------------------------------------------------
+-- FARM TAB (TEST)
+-------------------------------------------------
+local farmBtn = Instance.new("TextButton", pages["Farm"])
+farmBtn.Size = UDim2.new(0,200,0,40)
+farmBtn.Position = UDim2.new(0,20,0,20)
+farmBtn.Text = "AUTO FIX GEN (TEST)"
+farmBtn.Font = Enum.Font.GothamBold
+farmBtn.TextSize = 14
+farmBtn.BackgroundColor3 = Color3.fromRGB(255,120,160)
+farmBtn.TextColor3 = Color3.fromRGB(255,255,255)
+farmBtn.BorderSizePixel = 0
+Instance.new("UICorner", farmBtn)
+
+farmBtn.MouseButton1Click:Connect(function()
+	farmBtn.Text = "AUTO FIX GEN: ON (TEST)"
 end)
 
-local spBtn = Instance.new("TextButton", p)
-spBtn.Position = UDim2.new(0,0,0,60)
-spBtn.Size = UDim2.new(0,220,0,30)
-spBtn.Text = "TELEPORT SPEED : OFF"
-spBtn.BackgroundColor3 = Color3.fromRGB(255,90,130)
-Instance.new("UICorner", spBtn)
+-------------------------------------------------
+-- PLAYER TAB (TELEPORT SPEED)
+-------------------------------------------------
+getgenv().tpSpeed = false
+getgenv().tpValue = 16
 
-spBtn.MouseButton1Click:Connect(function()
-	local st = getgenv().SLK_STATE
-	st.speedOn = not st.speedOn
-	spBtn.Text = st.speedOn and "TELEPORT SPEED : ON" or "TELEPORT SPEED : OFF"
+local tpBtn = Instance.new("TextButton", pages["Player"])
+tpBtn.Size = UDim2.new(0,200,0,40)
+tpBtn.Position = UDim2.new(0,20,0,20)
+tpBtn.Text = "Teleport Speed: OFF"
+tpBtn.Font = Enum.Font.GothamBold
+tpBtn.TextSize = 14
+tpBtn.BackgroundColor3 = Color3.fromRGB(255,120,160)
+tpBtn.TextColor3 = Color3.fromRGB(255,255,255)
+tpBtn.BorderSizePixel = 0
+Instance.new("UICorner", tpBtn)
+
+tpBtn.MouseButton1Click:Connect(function()
+	getgenv().tpSpeed = not getgenv().tpSpeed
+	tpBtn.Text = getgenv().tpSpeed and "Teleport Speed: ON" or "Teleport Speed: OFF"
 end)
 
-local espBtn = Instance.new("TextButton", p)
-espBtn.Position = UDim2.new(0,0,0,100)
-espBtn.Size = UDim2.new(0,220,0,30)
-espBtn.Text = "ESP PLAYER : OFF"
-espBtn.BackgroundColor3 = Color3.fromRGB(120,255,120)
-Instance.new("UICorner", espBtn)
+-------------------------------------------------
+-- SETTINGS TAB
+-------------------------------------------------
+local setText = Instance.new("TextLabel", pages["Settings"])
+setText.Size = UDim2.new(1,0,1,0)
+setText.BackgroundTransparency = 1
+setText.Text = "Settings đang phát triển 🌸"
+setText.Font = Enum.Font.Gotham
+setText.TextSize = 16
+setText.TextColor3 = Color3.fromRGB(255,255,255)
 
-espBtn.MouseButton1Click:Connect(function()
-	local st = getgenv().SLK_STATE
-	st.espPlayer = not st.espPlayer
-	espBtn.Text = st.espPlayer and "ESP PLAYER : ON" or "ESP PLAYER : OFF"
-end)
-
---------------------------------------------------
--- FARM TAB
---------------------------------------------------
-local f = pages.Farm
-
-local dLabel = Instance.new("TextLabel", f)
-dLabel.Size = UDim2.new(1,0,0,25)
-dLabel.BackgroundTransparency = 1
-dLabel.Text = "Delay: 0"
-dLabel.Font = Enum.Font.Code
-dLabel.TextColor3 = Color3.new(1,1,1)
-
-local dSlider = Instance.new("TextButton", f)
-dSlider.Position = UDim2.new(0,0,0,30)
-dSlider.Size = UDim2.new(1,0,0,20)
-dSlider.Text = "DELAY 0 - 10"
-dSlider.BackgroundColor3 = Color3.fromRGB(255,120,160)
-Instance.new("UICorner", dSlider)
-
-dSlider.MouseButton1Down:Connect(function()
-	local c
-	c = RunService.RenderStepped:Connect(function()
-		local x = math.clamp((UIS:GetMouseLocation().X - dSlider.AbsolutePosition.X) / dSlider.AbsoluteSize.X,0,1)
-		local v = math.floor(x*10)
-		getgenv().SLK_STATE.fixDelay = v
-		dLabel.Text = "Delay: "..v
-	end)
-	UIS.InputEnded:Wait()
-	c:Disconnect()
-end)
-
-local fixBtn = Instance.new("TextButton", f)
-fixBtn.Position = UDim2.new(0,0,0,60)
-fixBtn.Size = UDim2.new(0,220,0,30)
-fixBtn.Text = "AUTO FIX GEN : OFF"
-fixBtn.BackgroundColor3 = Color3.fromRGB(255,90,130)
-Instance.new("UICorner", fixBtn)
-
-fixBtn.MouseButton1Click:Connect(function()
-	local st = getgenv().SLK_STATE
-	st.autoFixGen = not st.autoFixGen
-	fixBtn.Text = st.autoFixGen and "AUTO FIX GEN : ON" or "AUTO FIX GEN : OFF"
-end)
-
---------------------------------------------------
--- CORE SPEED
---------------------------------------------------
-RunService.RenderStepped:Connect(function()
-	local st = getgenv().SLK_STATE
-	if not st.speedOn then return end
-	local char = player.Character
-	if not char then return end
-	local hum = char:FindFirstChildOfClass("Humanoid")
-	if not hum then return end
-	if hum.MoveDirection.Magnitude > 0 then
-		hum.WalkSpeed = st.speedValue
-	else
-		hum.WalkSpeed = 16
-	end
-end)
-
---------------------------------------------------
--- CORE ESP PLAYER
---------------------------------------------------
-task.spawn(function()
-	while task.wait(1) do
-		for _,plr in ipairs(Players:GetPlayers()) do
-			if plr ~= player and plr.Character and plr.Character:FindFirstChild("Humanoid") then
-				local char = plr.Character
-				local esp = char:FindFirstChild("SLK_ESP")
-				if getgenv().SLK_STATE.espPlayer then
-					if not esp then
-						local h = Instance.new("Highlight")
-						h.Name = "SLK_ESP"
-						h.FillColor = Color3.fromRGB(0,255,0)
-						h.OutlineColor = Color3.fromRGB(0,255,0)
-						h.DepthMode = Enum.HighlightDepthMode.AlwaysOnTop
-						h.Parent = char
-					end
-				else
-					if esp then esp:Destroy() end
-				end
-			end
-		end
-	end
-end)
-
---------------------------------------------------
--- CORE AUTO FIX GEN (PROMPT)
---------------------------------------------------
-task.spawn(function()
-	while task.wait(0.2) do
-		if not getgenv().SLK_STATE.autoFixGen then continue end
-		for _,v in ipairs(workspace:GetDescendants()) do
-			if v:IsA("ProximityPrompt") and v.ActionText and v.ActionText:lower():find("repair") then
-				task.wait(getgenv().SLK_STATE.fixDelay)
-				pcall(function()
-					fireproximityprompt(v)
-				end)
-			end
-		end
-	end
-end)
+print("✅ SLK GAMING HUB LOADED")
