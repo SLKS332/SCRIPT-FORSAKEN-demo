@@ -180,3 +180,45 @@ closeBtn.MouseButton1Click:Connect(function()
 		confirm:Destroy()
 	end)
 end)
+-------------------------------------------------
+-- INFO TAB BUTTON
+-------------------------------------------------
+local infoBtn = Instance.new("TextButton", Menu)
+infoBtn.Size = UDim2.new(0,100,0,32)
+infoBtn.Position = UDim2.new(0,15,0,70)
+infoBtn.Text = "INFO"
+infoBtn.Font = Enum.Font.Code
+infoBtn.TextSize = 16
+infoBtn.TextColor3 = Color3.fromRGB(0,255,140)
+infoBtn.BackgroundColor3 = Color3.fromRGB(20,20,20)
+Instance.new("UICorner", infoBtn)
+
+-------------------------------------------------
+-- INFO FRAME
+-------------------------------------------------
+local infoFrame = Instance.new("Frame", Menu)
+infoFrame.Size = UDim2.new(1,-30,1,-120)
+infoFrame.Position = UDim2.new(0,15,0,110)
+infoFrame.BackgroundColor3 = Color3.fromRGB(10,10,10)
+infoFrame.BackgroundTransparency = 0.2
+infoFrame.Visible = false
+Instance.new("UICorner", infoFrame)
+
+local infoStroke = Instance.new("UIStroke", infoFrame)
+infoStroke.Color = Color3.fromRGB(0,255,140)
+infoStroke.Thickness = 1.5
+
+-------------------------------------------------
+-- INFO TEXT
+-------------------------------------------------
+local infoText = Instance.new("TextLabel", infoFrame)
+infoText.Size = UDim2.new(1,-20,0,80)
+infoText.Position = UDim2.new(0,10,0,10)
+infoText.BackgroundTransparency = 1
+infoText.TextWrapped = true
+infoText.TextYAlignment = Enum.TextYAlignment.Top
+infoText.Font = Enum.Font.Code
+infoText.TextSize = 14
+infoText.TextColor3 = Color3.fromRGB(0,255,140)
+infoText.Text =
+[[SL
