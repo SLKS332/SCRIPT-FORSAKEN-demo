@@ -1,191 +1,231 @@
--- SLKS GAMING | DEMO HUB V0.1 (FIXED)
+-- SLKS GAMING | LOADING + MENU + TAB (STABLE)
+-- Mobile Safe (Delta)
 
-local Players = game:GetService("Players")
 local TweenService = game:GetService("TweenService")
+local Players = game:GetService("Players")
+local UIS = game:GetService("UserInputService")
 local player = Players.LocalPlayer
+
+-------------------------------------------------
+-- LOADING GUI
+-------------------------------------------------
+local LoadingGui = Instance.new("ScreenGui", player.PlayerGui)
+LoadingGui.IgnoreGuiInset = true
+LoadingGui.ResetOnSpawn = false
+
+local bg = Instance.new("Frame", LoadingGui)
+bg.Size = UDim2.new(1,0,1,0)
+bg.BackgroundColor3 = Color3.fromRGB(5,10,15)
+
+local box = Instance.new("Frame", bg)
+box.Size = UDim2.new(0,360,0,180)
+box.Position = UDim2.new(0.5,-180,0.5,-90)
+box.BackgroundColor3 = Color3.fromRGB(15,25,35)
+Instance.new("UICorner", box).CornerRadius = UDim.new(0,16)
+
+local title = Instance.new("TextLabel", box)
+title.Size = UDim2.new(1,0,0,40)
+title.Position = UDim2.new(0,0,0,10)
+title.BackgroundTransparency = 1
+title.Text = "SLKS GAMING"
+title.Font = Enum.Font.Code
+title.TextSize = 26
+title.TextColor3 = Color3.fromRGB(0,255,140)
+
+local binary = Instance.new("TextLabel", box)
+binary.Size = UDim2.new(1,-20,0,60)
+binary.Position = UDim2.new(0,10,0,50)
+binary.BackgroundTransparency = 1
+binary.TextWrapped = true
+binary.Font = Enum.Font.Code
+binary.TextSize = 14
+binary.TextColor3 = Color3.fromRGB(0,200,120)
+
+local barBG = Instance.new("Frame", box)
+barBG.Size = UDim2.new(1,-40,0,16)
+barBG.Position = UDim2.new(0,20,1,-40)
+barBG.BackgroundColor3 = Color3.fromRGB(30,50,60)
+Instance.new("UICorner", barBG)
+
+local bar = Instance.new("Frame", barBG)
+bar.Size = UDim2.new(0,0,1,0)
+bar.BackgroundColor3 = Color3.fromRGB(0,255,140)
+Instance.new("UICorner", bar)
+
+local percent = Instance.new("TextLabel", box)
+percent.Size = UDim2.new(1,0,0,20)
+percent.Position = UDim2.new(0,0,1,-65)
+percent.BackgroundTransparency = 1
+percent.Font = Enum.Font.Code
+percent.TextSize = 16
+percent.TextColor3 = Color3.fromRGB(0,255,140)
+
+task.spawn(function()
+	while LoadingGui.Parent do
+		local s = ""
+		for i=1,math.random(40,70) do
+			s ..= math.random(0,1)
+		end
+		binary.Text = s
+		task.wait(0.15)
+	end
+end)
+
+for i=1,100 do
+	percent.Text = "Loading "..i.."%"
+	TweenService:Create(bar,TweenInfo.new(0.025),{
+		Size = UDim2.new(i/100,0,1,0)
+	}):Play()
+	task.wait(0.025)
+end
+
+task.wait(0.4)
+LoadingGui:Destroy()
 
 -------------------------------------------------
 -- MENU GUI
 -------------------------------------------------
-local MenuGui = Instance.new("ScreenGui", player.PlayerGui)
-MenuGui.ResetOnSpawn = false
-MenuGui.IgnoreGuiInset = true
+local Gui = Instance.new("ScreenGui", player.PlayerGui)
+Gui.ResetOnSpawn = false
 
-local Menu = Instance.new("Frame", MenuGui)
-Menu.Size = UDim2.new(0,420,0,260)
-Menu.Position = UDim2.new(0.5,-210,0.5,-130)
-Menu.BackgroundColor3 = Color3.fromRGB(0,0,0)
-Menu.BackgroundTransparency = 0.3
-Menu.Active = true
-Menu.Draggable = true
-Instance.new("UICorner", Menu).CornerRadius = UDim.new(0,14)
+local Main = Instance.new("Frame", Gui)
+Main.Size = UDim2.new(0,420,0,260)
+Main.Position = UDim2.new(0.5,-210,0.5,-130)
+Main.BackgroundColor3 = Color3.fromRGB(0,0,0)
+Main.BackgroundTransparency = 0.25
+Main.Active = true
+Main.Draggable = true
+Instance.new("UICorner", Main).CornerRadius = UDim.new(0,14)
 
-local stroke = Instance.new("UIStroke", Menu)
-stroke.Color = Color3.fromRGB(0,255,140)
-stroke.Thickness = 2
-
--------------------------------------------------
--- HEADER (LUÔN HIỆN)
--------------------------------------------------
-local header = Instance.new("TextLabel", Menu)
-header.Size = UDim2.new(1,-80,0,60)
-header.Position = UDim2.new(0,10,0,0)
-header.BackgroundTransparency = 1
-header.Text = "SLKS GAMING\nBY SLKS GAMING\nVERSION DEMO V0.1"
-header.Font = Enum.Font.Code
-header.TextSize = 16
-header.TextColor3 = Color3.fromRGB(0,255,140)
-header.TextXAlignment = Left
-header.TextYAlignment = Center
+local Stroke = Instance.new("UIStroke", Main)
+Stroke.Color = Color3.fromRGB(0,255,140)
+Stroke.Thickness = 2
 
 -------------------------------------------------
--- BUTTONS (- / X)
+-- HEADER
 -------------------------------------------------
-local minBtn = Instance.new("TextButton", Menu)
-minBtn.Size = UDim2.new(0,30,0,30)
-minBtn.Position = UDim2.new(1,-70,0,15)
-minBtn.Text = "-"
-minBtn.Font = Enum.Font.Code
-minBtn.TextSize = 22
-minBtn.BackgroundColor3 = Color3.fromRGB(25,25,25)
-minBtn.TextColor3 = Color3.fromRGB(0,255,140)
-Instance.new("UICorner", minBtn)
+local Header = Instance.new("Frame", Main)
+Header.Size = UDim2.new(1,0,0,50)
+Header.BackgroundTransparency = 1
 
-local closeBtn = Instance.new("TextButton", Menu)
-closeBtn.Size = UDim2.new(0,30,0,30)
-closeBtn.Position = UDim2.new(1,-35,0,15)
-closeBtn.Text = "X"
-closeBtn.Font = Enum.Font.Code
-closeBtn.TextSize = 18
-closeBtn.BackgroundColor3 = Color3.fromRGB(60,20,20)
-closeBtn.TextColor3 = Color3.fromRGB(255,80,80)
-Instance.new("UICorner", closeBtn)
+local Title2 = Instance.new("TextLabel", Header)
+Title2.Size = UDim2.new(1,-100,1,0)
+Title2.Position = UDim2.new(0,10,0,0)
+Title2.BackgroundTransparency = 1
+Title2.Text = "SLKS GAMING | DEMO V0.1"
+Title2.Font = Enum.Font.Code
+Title2.TextSize = 18
+Title2.TextColor3 = Color3.fromRGB(0,255,140)
+Title2.TextXAlignment = Left
+
+local MinBtn = Instance.new("TextButton", Header)
+MinBtn.Size = UDim2.new(0,30,0,30)
+MinBtn.Position = UDim2.new(1,-70,0,10)
+MinBtn.Text = "-"
+MinBtn.Font = Enum.Font.Code
+MinBtn.TextSize = 22
+MinBtn.BackgroundColor3 = Color3.fromRGB(20,20,20)
+MinBtn.TextColor3 = Color3.fromRGB(0,255,140)
+Instance.new("UICorner", MinBtn)
+
+local CloseBtn = Instance.new("TextButton", Header)
+CloseBtn.Size = UDim2.new(0,30,0,30)
+CloseBtn.Position = UDim2.new(1,-35,0,10)
+CloseBtn.Text = "X"
+CloseBtn.Font = Enum.Font.Code
+CloseBtn.TextSize = 18
+CloseBtn.BackgroundColor3 = Color3.fromRGB(60,20,20)
+CloseBtn.TextColor3 = Color3.fromRGB(255,80,80)
+Instance.new("UICorner", CloseBtn)
 
 -------------------------------------------------
--- CONTENT FRAME (ẨN / HIỆN)
+-- TAB BAR + CONTENT
 -------------------------------------------------
-local Content = Instance.new("Frame", Menu)
-Content.Size = UDim2.new(1,-20,1,-80)
-Content.Position = UDim2.new(0,10,0,70)
+local TabBar = Instance.new("Frame", Main)
+TabBar.Size = UDim2.new(0,120,1,-60)
+TabBar.Position = UDim2.new(0,10,0,50)
+TabBar.BackgroundTransparency = 1
+
+local Content = Instance.new("Frame", Main)
+Content.Size = UDim2.new(1,-150,1,-60)
+Content.Position = UDim2.new(0,140,0,50)
 Content.BackgroundTransparency = 1
 
 -------------------------------------------------
--- INFO TAB
+-- TAB SYSTEM
 -------------------------------------------------
-local infoBtn = Instance.new("TextButton", Content)
-infoBtn.Size = UDim2.new(0,100,0,30)
-infoBtn.Position = UDim2.new(0,0,0,0)
-infoBtn.Text = "INFO"
-infoBtn.Font = Enum.Font.Code
-infoBtn.TextSize = 16
-infoBtn.TextColor3 = Color3.fromRGB(0,255,140)
-infoBtn.BackgroundColor3 = Color3.fromRGB(25,25,25)
-Instance.new("UICorner", infoBtn)
+local CurrentTab
+local TabIndex = 0
 
-local infoFrame = Instance.new("Frame", Content)
-infoFrame.Size = UDim2.new(1,0,1,-40)
-infoFrame.Position = UDim2.new(0,0,0,40)
-infoFrame.BackgroundColor3 = Color3.fromRGB(10,10,10)
-infoFrame.BackgroundTransparency = 0.15
-infoFrame.Visible = false
-Instance.new("UICorner", infoFrame)
+local function CreateTab(name)
+	local btn = Instance.new("TextButton", TabBar)
+	btn.Size = UDim2.new(1,0,0,40)
+	btn.Position = UDim2.new(0,0,0,TabIndex*45)
+	btn.Text = name
+	btn.Font = Enum.Font.Code
+	btn.TextSize = 16
+	btn.BackgroundColor3 = Color3.fromRGB(20,20,20)
+	btn.TextColor3 = Color3.fromRGB(0,255,140)
+	Instance.new("UICorner", btn)
 
-local infoText = Instance.new("TextLabel", infoFrame)
-infoText.Size = UDim2.new(1,-20,0,90)
-infoText.Position = UDim2.new(0,10,0,10)
-infoText.BackgroundTransparency = 1
-infoText.TextWrapped = true
-infoText.Text = "SLKS GAMING HUB\nDemo V0.1\n\nScript thử nghiệm\nCảm ơn đã sử dụng!"
-infoText.Font = Enum.Font.Code
-infoText.TextSize = 15
-infoText.TextColor3 = Color3.fromRGB(255,255,255)
+	local page = Instance.new("Frame", Content)
+	page.Size = UDim2.new(1,0,1,0)
+	page.Visible = false
+	page.BackgroundTransparency = 1
 
-local yt = Instance.new("TextButton", infoFrame)
-yt.Size = UDim2.new(0.45,0,0,35)
-yt.Position = UDim2.new(0.03,0,1,-45)
-yt.Text = "YouTube"
-yt.BackgroundColor3 = Color3.fromRGB(200,60,60)
-Instance.new("UICorner", yt)
+	btn.MouseButton1Click:Connect(function()
+		if CurrentTab then CurrentTab.Visible = false end
+		page.Visible = true
+		CurrentTab = page
+	end)
 
-local dc = Instance.new("TextButton", infoFrame)
-dc.Size = UDim2.new(0.45,0,0,35)
-dc.Position = UDim2.new(0.52,0,1,-45)
-dc.Text = "Discord"
-dc.BackgroundColor3 = Color3.fromRGB(60,90,200)
-Instance.new("UICorner", dc)
+	if not CurrentTab then
+		page.Visible = true
+		CurrentTab = page
+	end
 
-infoBtn.MouseButton1Click:Connect(function()
-	infoFrame.Visible = not infoFrame.Visible
-end)
+	TabIndex += 1
+	return page
+end
 
 -------------------------------------------------
--- MINIMIZE (CÓ NÚT KHÔI PHỤC)
+-- TABS
+-------------------------------------------------
+local InfoTab = CreateTab("INFO")
+local MainTab = CreateTab("MAIN")
+local SettingTab = CreateTab("SETTING")
+
+-------------------------------------------------
+-- TAB CONTENT
+-------------------------------------------------
+local function MakeLabel(parent,text)
+	local lb = Instance.new("TextLabel", parent)
+	lb.Size = UDim2.new(1,0,0,80)
+	lb.BackgroundTransparency = 1
+	lb.TextWrapped = true
+	lb.Text = text
+	lb.Font = Enum.Font.Code
+	lb.TextSize = 16
+	lb.TextColor3 = Color3.new(1,1,1)
+end
+
+MakeLabel(InfoTab,"SLKS GAMING HUB\nDemo V0.1\n\nYouTube | Discord")
+MakeLabel(MainTab,"MAIN TAB\nGắn ESP / Teleport sau")
+MakeLabel(SettingTab,"SETTING TAB\nUI / Option")
+
+-------------------------------------------------
+-- MINIMIZE + CLOSE
 -------------------------------------------------
 local minimized = false
+local fullSize = Main.Size
 
-local restoreBtn = Instance.new("TextButton", MenuGui)
-restoreBtn.Size = UDim2.new(0,50,0,50)
-restoreBtn.Position = UDim2.new(0.5,-25,1,-70)
-restoreBtn.Text = "SLKS"
-restoreBtn.Visible = false
-restoreBtn.Font = Enum.Font.Code
-restoreBtn.TextSize = 12
-restoreBtn.BackgroundColor3 = Color3.fromRGB(0,0,0)
-restoreBtn.TextColor3 = Color3.fromRGB(0,255,140)
-restoreBtn.Active = true
-restoreBtn.Draggable = true
-Instance.new("UICorner", restoreBtn)
-
-minBtn.MouseButton1Click:Connect(function()
-	minimized = true
-	Menu.Visible = false
-	restoreBtn.Visible = true
+MinBtn.MouseButton1Click:Connect(function()
+	minimized = not minimized
+	TabBar.Visible = not minimized
+	Content.Visible = not minimized
+	Main.Size = minimized and UDim2.new(0,420,0,50) or fullSize
 end)
 
-restoreBtn.MouseButton1Click:Connect(function()
-	minimized = false
-	Menu.Visible = true
-	restoreBtn.Visible = false
-end)
-
--------------------------------------------------
--- CLOSE CONFIRM
--------------------------------------------------
-closeBtn.MouseButton1Click:Connect(function()
-	local confirm = Instance.new("Frame", MenuGui)
-	confirm.Size = UDim2.new(0,260,0,120)
-	confirm.Position = UDim2.new(0.5,-130,0.5,-60)
-	confirm.BackgroundColor3 = Color3.fromRGB(15,15,15)
-	Instance.new("UICorner", confirm)
-
-	local txt = Instance.new("TextLabel", confirm)
-	txt.Size = UDim2.new(1,-20,0,50)
-	txt.Position = UDim2.new(0,10,0,10)
-	txt.BackgroundTransparency = 1
-	txt.Text = "Bạn chắc chắn muốn tắt script?"
-	txt.Font = Enum.Font.Code
-	txt.TextSize = 16
-	txt.TextColor3 = Color3.fromRGB(255,255,255)
-
-	local yes = Instance.new("TextButton", confirm)
-	yes.Size = UDim2.new(0.4,0,0,30)
-	yes.Position = UDim2.new(0.05,0,1,-40)
-	yes.Text = "CÓ"
-	yes.BackgroundColor3 = Color3.fromRGB(200,60,60)
-	Instance.new("UICorner", yes)
-
-	local no = Instance.new("TextButton", confirm)
-	no.Size = UDim2.new(0.4,0,0,30)
-	no.Position = UDim2.new(0.55,0,1,-40)
-	no.Text = "KHÔNG"
-	no.BackgroundColor3 = Color3.fromRGB(60,200,100)
-	Instance.new("UICorner", no)
-
-	yes.MouseButton1Click:Connect(function()
-		MenuGui:Destroy()
-	end)
-
-	no.MouseButton1Click:Connect(function()
-		confirm:Destroy()
-	end)
+CloseBtn.MouseButton1Click:Connect(function()
+	Gui:Destroy()
 end)
