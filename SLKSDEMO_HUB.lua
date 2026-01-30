@@ -1,10 +1,9 @@
--- SLKS GAMING HUB V0.1 (FINAL)
--- Loading + Menu + Tabs + Smooth Slider
--- Mobile / Delta Safe
+-- SLKS GAMING HUB V0.1 (FINAL FIX)
+-- Loading + Menu + Tabs + Speed + ESP
 
 local Players = game:GetService("Players")
-local UIS = game:GetService("UserInputService")
 local RunService = game:GetService("RunService")
+local UIS = game:GetService("UserInputService")
 local player = Players.LocalPlayer
 
 -------------------------------------------------
@@ -12,78 +11,56 @@ local player = Players.LocalPlayer
 -------------------------------------------------
 local LoadingGui = Instance.new("ScreenGui", player.PlayerGui)
 LoadingGui.IgnoreGuiInset = true
-LoadingGui.ResetOnSpawn = false
 
 local bg = Instance.new("Frame", LoadingGui)
 bg.Size = UDim2.new(1,0,1,0)
 bg.BackgroundColor3 = Color3.fromRGB(5,10,15)
 
-local box = Instance.new("Frame", bg)
-box.Size = UDim2.new(0,360,0,160)
-box.Position = UDim2.new(0.5,-180,0.5,-80)
-box.BackgroundColor3 = Color3.fromRGB(15,25,35)
-Instance.new("UICorner", box).CornerRadius = UDim.new(0,16)
+local txt = Instance.new("TextLabel", bg)
+txt.Size = UDim2.new(1,0,1,0)
+txt.BackgroundTransparency = 1
+txt.Font = Enum.Font.Code
+txt.TextSize = 28
+txt.TextColor3 = Color3.fromRGB(0,255,140)
+txt.Text = "SLKS GAMING\nLoading..."
 
-local title = Instance.new("TextLabel", box)
-title.Size = UDim2.new(1,0,0,40)
-title.BackgroundTransparency = 1
-title.Text = "SLKS GAMING"
-title.Font = Enum.Font.Code
-title.TextSize = 26
-title.TextColor3 = Color3.fromRGB(0,255,140)
-
-local percent = Instance.new("TextLabel", box)
-percent.Position = UDim2.new(0,0,1,-40)
-percent.Size = UDim2.new(1,0,0,30)
-percent.BackgroundTransparency = 1
-percent.Font = Enum.Font.Code
-percent.TextSize = 16
-percent.TextColor3 = Color3.fromRGB(0,255,140)
-
-for i=1,100 do
-	percent.Text = "Loading "..i.."%"
-	task.wait(0.02)
-end
-
+task.wait(1)
 LoadingGui:Destroy()
 
 -------------------------------------------------
 -- MENU
 -------------------------------------------------
 local Gui = Instance.new("ScreenGui", player.PlayerGui)
-Gui.ResetOnSpawn = false
-
 local Menu = Instance.new("Frame", Gui)
-Menu.Size = UDim2.new(0,460,0,320)
-Menu.Position = UDim2.new(0.5,-230,0.5,-160)
+Menu.Size = UDim2.new(0,450,0,300)
+Menu.Position = UDim2.new(0.5,-225,0.5,-150)
 Menu.BackgroundColor3 = Color3.fromRGB(0,0,0)
 Menu.BackgroundTransparency = 0.25
 Menu.Active = true
 Menu.Draggable = true
-Instance.new("UICorner", Menu).CornerRadius = UDim.new(0,14)
+Instance.new("UICorner", Menu)
 
 local stroke = Instance.new("UIStroke", Menu)
 stroke.Color = Color3.fromRGB(0,255,140)
 stroke.Thickness = 2
 
 local header = Instance.new("TextLabel", Menu)
-header.Size = UDim2.new(1,0,0,50)
+header.Size = UDim2.new(1,0,0,40)
 header.BackgroundTransparency = 1
-header.Text = "SLKS GAMING HUB | V0.1"
 header.Font = Enum.Font.Code
 header.TextSize = 18
 header.TextColor3 = Color3.fromRGB(0,255,140)
+header.Text = "SLKS GAMING HUB V0.1"
 
 -- top buttons
-local function topBtn(txt, x, color)
+local function topBtn(t,x,c)
 	local b = Instance.new("TextButton", Menu)
 	b.Size = UDim2.new(0,30,0,30)
-	b.Position = UDim2.new(1,x,0,10)
-	b.Text = txt
+	b.Position = UDim2.new(1,x,0,5)
+	b.Text = t
 	b.Font = Enum.Font.Code
 	b.TextSize = 20
-	b.TextColor3 = Color3.new(1,1,1)
-	b.BackgroundColor3 = color
+	b.BackgroundColor3 = c
 	Instance.new("UICorner", b)
 	return b
 end
@@ -97,109 +74,79 @@ local closeBtn = topBtn("X", -35, Color3.fromRGB(80,30,30))
 local tabs = {}
 local pages = {}
 
-local function createTab(name, x)
+local function tabBtn(name,x)
 	local b = Instance.new("TextButton", Menu)
-	b.Size = UDim2.new(0,110,0,32)
-	b.Position = UDim2.new(0,x,0,60)
+	b.Size = UDim2.new(0,120,0,30)
+	b.Position = UDim2.new(0,x,0,45)
 	b.Text = name
 	b.Font = Enum.Font.Code
-	b.TextSize = 16
 	b.TextColor3 = Color3.fromRGB(0,255,140)
-	b.BackgroundColor3 = Color3.fromRGB(25,25,25)
+	b.BackgroundColor3 = Color3.fromRGB(20,20,20)
 	Instance.new("UICorner", b)
 	return b
 end
 
-tabs.Main = createTab("MAIN", 15)
-tabs.Info = createTab("INFO", 135)
-tabs.Set = createTab("SETTING", 255)
+tabs.Main = tabBtn("MAIN",15)
+tabs.Info = tabBtn("INFO",145)
 
-local function createPage()
+local function page()
 	local f = Instance.new("Frame", Menu)
-	f.Size = UDim2.new(1,-30,1,-120)
-	f.Position = UDim2.new(0,15,0,105)
+	f.Size = UDim2.new(1,-30,1,-90)
+	f.Position = UDim2.new(0,15,0,85)
 	f.BackgroundTransparency = 1
 	f.Visible = false
 	return f
 end
 
-pages.Main = createPage()
-pages.Info = createPage()
-pages.Set = createPage()
+pages.Main = page()
+pages.Info = page()
+pages.Main.Visible = true
 
-local function switch(tab)
-	for _,p in pairs(pages) do p.Visible = false end
-	pages[tab].Visible = true
+local function switch(p)
+	for _,v in pairs(pages) do v.Visible = false end
+	pages[p].Visible = true
 end
-switch("Main")
 
 tabs.Main.MouseButton1Click:Connect(function() switch("Main") end)
 tabs.Info.MouseButton1Click:Connect(function() switch("Info") end)
-tabs.Set.MouseButton1Click:Connect(function() switch("Set") end)
 
 -------------------------------------------------
--- MAIN TAB : TELEPORT SPEED
+-- TELEPORT SPEED (ĐÚNG Ý BẠN)
 -------------------------------------------------
-local speed = 16
+local speed = 20
 local speedOn = false
 
-local speedLabel = Instance.new("TextLabel", pages.Main)
-speedLabel.Size = UDim2.new(1,0,0,30)
-speedLabel.BackgroundTransparency = 1
-speedLabel.Font = Enum.Font.Code
-speedLabel.TextSize = 16
-speedLabel.TextColor3 = Color3.fromRGB(0,255,140)
-speedLabel.Text = "Teleport Speed: 16"
+local speedTxt = Instance.new("TextLabel", pages.Main)
+speedTxt.Size = UDim2.new(1,0,0,25)
+speedTxt.Text = "Teleport Speed: 20"
+speedTxt.Font = Enum.Font.Code
+speedTxt.TextColor3 = Color3.new(1,1,1)
+speedTxt.BackgroundTransparency = 1
 
--- slider bg
-local sliderBG = Instance.new("Frame", pages.Main)
-sliderBG.Position = UDim2.new(0,0,0,40)
-sliderBG.Size = UDim2.new(1,0,0,14)
-sliderBG.BackgroundColor3 = Color3.fromRGB(35,35,35)
-Instance.new("UICorner", sliderBG).CornerRadius = UDim.new(1,0)
+local slider = Instance.new("TextButton", pages.Main)
+slider.Position = UDim2.new(0,0,0,30)
+slider.Size = UDim2.new(1,0,0,20)
+slider.Text = "KÉO ĐỂ CHỈNH (0 - 50)"
+slider.BackgroundColor3 = Color3.fromRGB(30,30,30)
 
-local sliderFill = Instance.new("Frame", sliderBG)
-sliderFill.Size = UDim2.new(0,0,1,0)
-sliderFill.BackgroundColor3 = Color3.fromRGB(0,255,140)
-Instance.new("UICorner", sliderFill).CornerRadius = UDim.new(1,0)
-
-local knob = Instance.new("Frame", sliderBG)
-knob.Size = UDim2.new(0,22,0,22)
-knob.Position = UDim2.new(0,-11,0.5,-11)
-knob.BackgroundColor3 = Color3.fromRGB(0,255,140)
-Instance.new("UICorner", knob).CornerRadius = UDim.new(1,0)
-
-local dragging = false
-knob.InputBegan:Connect(function(i)
-	if i.UserInputType == Enum.UserInputType.Touch or i.UserInputType == Enum.UserInputType.MouseButton1 then
-		dragging = true
-	end
-end)
-
-UIS.InputEnded:Connect(function(i)
-	if i.UserInputType == Enum.UserInputType.Touch or i.UserInputType == Enum.UserInputType.MouseButton1 then
-		dragging = false
-	end
-end)
-
-UIS.InputChanged:Connect(function(i)
-	if dragging and (i.UserInputType == Enum.UserInputType.Touch or i.UserInputType == Enum.UserInputType.MouseMovement) then
-		local x = math.clamp((i.Position.X - sliderBG.AbsolutePosition.X)/sliderBG.AbsoluteSize.X,0,1)
-		speed = math.floor(x*50)
-		speedLabel.Text = "Teleport Speed: "..speed
-		sliderFill.Size = UDim2.new(x,0,1,0)
-		knob.Position = UDim2.new(x,-11,0.5,-11)
-	end
+slider.MouseButton1Down:Connect(function()
+	local con
+	con = UIS.InputChanged:Connect(function(i)
+		if i.UserInputType == Enum.UserInputType.Touch or i.UserInputType == Enum.UserInputType.MouseMovement then
+			local p = math.clamp((i.Position.X - slider.AbsolutePosition.X)/slider.AbsoluteSize.X,0,1)
+			speed = math.floor(p*50)
+			speedTxt.Text = "Teleport Speed: "..speed
+		end
+	end)
+	UIS.InputEnded:Wait()
+	con:Disconnect()
 end)
 
 local speedBtn = Instance.new("TextButton", pages.Main)
-speedBtn.Position = UDim2.new(0,0,0,80)
-speedBtn.Size = UDim2.new(0,150,0,32)
+speedBtn.Position = UDim2.new(0,0,0,60)
+speedBtn.Size = UDim2.new(0,160,0,30)
 speedBtn.Text = "SPEED : OFF"
-speedBtn.Font = Enum.Font.Code
-speedBtn.TextSize = 16
-speedBtn.TextColor3 = Color3.fromRGB(0,255,140)
-speedBtn.BackgroundColor3 = Color3.fromRGB(25,25,25)
+speedBtn.BackgroundColor3 = Color3.fromRGB(60,30,30)
 Instance.new("UICorner", speedBtn)
 
 speedBtn.MouseButton1Click:Connect(function()
@@ -207,62 +154,121 @@ speedBtn.MouseButton1Click:Connect(function()
 	speedBtn.Text = speedOn and "SPEED : ON" or "SPEED : OFF"
 end)
 
-RunService.Heartbeat:Connect(function()
-	if speedOn and player.Character and player.Character:FindFirstChild("HumanoidRootPart") then
-		player.Character.HumanoidRootPart.CFrame *= CFrame.new(0,0,-speed/100)
+RunService.RenderStepped:Connect(function()
+	if not speedOn then return end
+	local char = player.Character
+	if not char then return end
+	local hum = char:FindFirstChildOfClass("Humanoid")
+	local root = char:FindFirstChild("HumanoidRootPart")
+	if not hum or not root then return end
+
+	local dir = hum.MoveDirection
+	if dir.Magnitude > 0 then
+		root.CFrame = root.CFrame + dir.Unit * speed * 0.35
 	end
 end)
 
 -------------------------------------------------
--- INFO TAB
+-- ESP SYSTEM
+-------------------------------------------------
+local espPlayer = false
+local espGen = false
+local cache = {}
+
+local function addESP(obj,color)
+	if cache[obj] then return end
+	local h = Instance.new("Highlight")
+	h.Adornee = obj
+	h.FillColor = color
+	h.OutlineColor = color
+	h.DepthMode = Enum.HighlightDepthMode.AlwaysOnTop
+	h.Parent = obj
+	cache[obj] = h
+end
+
+local function clearESP()
+	for _,h in pairs(cache) do h:Destroy() end
+	cache = {}
+end
+
+local function refreshESP()
+	clearESP()
+
+	if espPlayer then
+		for _,plr in pairs(Players:GetPlayers()) do
+			if plr ~= player and plr.Character then
+				addESP(plr.Character, Color3.fromRGB(255,80,80))
+			end
+		end
+	end
+
+	if espGen then
+		for _,v in pairs(workspace:GetDescendants()) do
+			if v:IsA("Model") and v.Name:lower():find("gen") then
+				addESP(v, Color3.fromRGB(255,255,0))
+			end
+		end
+	end
+end
+
+local y = 100
+local function espBtn(name,color,callback)
+	local b = Instance.new("TextButton", pages.Main)
+	b.Position = UDim2.new(0,0,0,y)
+	b.Size = UDim2.new(0,220,0,32)
+	b.Text = name.." : OFF"
+	b.Font = Enum.Font.Code
+	b.TextColor3 = color
+	b.BackgroundColor3 = Color3.fromRGB(25,25,25)
+	Instance.new("UICorner", b)
+	y += 40
+
+	b.MouseButton1Click:Connect(function()
+		callback(b)
+		refreshESP()
+	end)
+end
+
+espBtn("ESP PLAYER (KILLER + SURVIVAL)", Color3.fromRGB(255,120,120), function(b)
+	espPlayer = not espPlayer
+	b.Text = "ESP PLAYER : "..(espPlayer and "ON" or "OFF")
+end)
+
+espBtn("ESP GENERATOR", Color3.fromRGB(255,255,120), function(b)
+	espGen = not espGen
+	b.Text = "ESP GENERATOR : "..(espGen and "ON" or "OFF")
+end)
+
+-------------------------------------------------
+-- INFO
 -------------------------------------------------
 local info = Instance.new("TextLabel", pages.Info)
 info.Size = UDim2.new(1,0,1,0)
 info.BackgroundTransparency = 1
 info.TextWrapped = true
-info.TextYAlignment = Enum.TextYAlignment.Top
 info.Font = Enum.Font.Code
-info.TextSize = 14
-info.TextColor3 = Color3.fromRGB(255,255,255)
-info.Text = [[
-SLKS GAMING HUB
-VERSION : V0.1
-
-FEATURES :
-• Teleport Speed (Slider + ON/OFF)
-• Mobile / Delta Safe
-• Stable UI
-
-AUTHOR :
-SLKS GAMING
-
-YouTube : SLKS GAMING
-Discord : Coming Soon
-]]
+info.TextColor3 = Color3.new(1,1,1)
+info.Text =
+"SLKS GAMING HUB V0.1\n\n"..
+"- Teleport Speed (điều khiển mới chạy)\n"..
+"- ESP Player (Killer + Survival)\n"..
+"- ESP Generator\n\n"..
+"Made for Delta / Mobile"
 
 -------------------------------------------------
--- SETTING TAB
+-- MIN / CLOSE
 -------------------------------------------------
-local setTxt = Instance.new("TextLabel", pages.Set)
-setTxt.Size = UDim2.new(1,0,0,30)
-setTxt.BackgroundTransparency = 1
-setTxt.Font = Enum.Font.Code
-setTxt.TextSize = 14
-setTxt.TextColor3 = Color3.fromRGB(255,255,255)
-setTxt.Text = "Setting đang phát triển..."
-
--------------------------------------------------
--- MINIMIZE / CLOSE
--------------------------------------------------
-local minimized = false
+local mini = false
 minBtn.MouseButton1Click:Connect(function()
-	minimized = not minimized
-	for _,v in ipairs(Menu:GetChildren()) do
-		if v:IsA("GuiObject") and v ~= header and v ~= minBtn and v ~= closeBtn then
-			v.Visible = not minimized
+	mini = not mini
+	for _,v in pairs(Menu:GetChildren()) do
+		if v ~= header and v ~= minBtn and v ~= closeBtn then
+			if v:IsA("GuiObject") then
+				v.Visible = not mini
+			end
 		end
 	end
-	Menu.Size = minimized and UDim2.new(0,460,0,50) or UDim2.new(0,460,0,320)
+	Menu.Size = mini and UDim2.new(0,450,0,40) or UDim2.new(0,450,0,300)
 end)
 
 closeBtn.MouseButton1Click:Connect(function()
