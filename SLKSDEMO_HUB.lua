@@ -1,170 +1,211 @@
--- SLKS GAMING HUB | FULL FIX | NO RESET | ESP + TELEPORT SPEED
-
-if getgenv().SLKS_LOADED then return end
-getgenv().SLKS_LOADED = true
+-- SLKS GAMING HUB | FORSAKEN FIX
+-- Alive after death / teleport
 
 local Players = game:GetService("Players")
-local UIS = game:GetService("UserInputService")
 local RunService = game:GetService("RunService")
-local CoreGui = game:GetService("CoreGui")
-local LP = Players.LocalPlayer
+local player = Players.LocalPlayer
 
-------------------------------------------------
--- GUI (COREGUI - KHÔNG MẤT KHI CHẾT)
-------------------------------------------------
+-- chống load trùng
+if getgenv().SLKS_HUB then return end
+getgenv().SLKS_HUB = true
+
+-------------------------------------------------
+-- GUI
+-------------------------------------------------
 local Gui = Instance.new("ScreenGui")
 Gui.Name = "SLKS_HUB"
 Gui.ResetOnSpawn = false
-Gui.Parent = CoreGui
+Gui.Parent = player.PlayerGui
 
-------------------------------------------------
--- MAIN FRAME
-------------------------------------------------
-local Main = Instance.new("Frame", Gui)
-Main.Size = UDim2.new(0,420,0,280)
-Main.Position = UDim2.new(0.5,-210,0.5,-140)
-Main.BackgroundColor3 = Color3.fromRGB(15,15,15)
-Main.Active = true
-Main.Draggable = true
-Instance.new("UICorner", Main)
+local Menu = Instance.new("Frame", Gui)
+Menu.Size = UDim2.new(0,450,0,300)
+Menu.Position = UDim2.new(0.5,-225,0.5,-150)
+Menu.BackgroundColor3 = Color3.fromRGB(0,0,0)
+Menu.BackgroundTransparency = 0.25
+Menu.Active = true
+Menu.Draggable = true
+Instance.new("UICorner", Menu).CornerRadius = UDim.new(0,14)
 
-local title = Instance.new("TextLabel", Main)
-title.Size = UDim2.new(1,0,0,40)
-title.Text = "SLKS GAMING HUB | FULL"
-title.TextColor3 = Color3.fromRGB(0,255,150)
-title.Font = Enum.Font.Code
-title.TextSize = 18
-title.BackgroundTransparency = 1
+local stroke = Instance.new("UIStroke", Menu)
+stroke.Color = Color3.fromRGB(0,255,140)
+stroke.Thickness = 2
 
-------------------------------------------------
--- VARIABLES
-------------------------------------------------
-local tpSpeed = 3
-local tpOn = false
-local espOn = false
-local connections = {}
-local espCache = {}
+local header = Instance.new("TextLabel", Menu)
+header.Size = UDim2.new(1,0,0,45)
+header.BackgroundTransparency = 1
+header.Text = "SLKS GAMING HUB | FORSAKEN"
+header.Font = Enum.Font.Code
+header.TextSize = 18
+header.TextColor3 = Color3.fromRGB(0,255,140)
 
-------------------------------------------------
--- TELEPORT SPEED (ĐÚNG KIỂU BẠN MUỐN)
-------------------------------------------------
+-- buttons
+local function topBtn(txt,x,color)
+	local b = Instance.new("TextButton", Menu)
+	b.Size = UDim2.new(0,30,0,30)
+	b.Position = UDim2.new(1,x,0,8)
+	b.Text = txt
+	b.Font = Enum.Font.Code
+	b.TextSize = 18
+	b.BackgroundColor3 = color
+	b.TextColor3 = Color3.new(1,1,1)
+	Instance.new("UICorner", b)
+	return b
+end
+
+local minBtn = topBtn("-", -70, Color3.fromRGB(40,40,40))
+local closeBtn = topBtn("X", -35, Color3.fromRGB(80,30,30))
+
+-------------------------------------------------
+-- TABS
+-------------------------------------------------
+local tabs = {}
+local pages = {}
+
+local function makeTab(name,x)
+	local b = Instance.new("TextButton", Menu)
+	b.Size = UDim2.new(0,120,0,30)
+	b.Position = UDim2.new(0,x,0,55)
+	b.Text = name
+	b.Font = Enum.Font.Code
+	b.TextSize = 14
+	b.TextColor3 = Color3.fromRGB(0,255,140)
+	b.BackgroundColor3 = Color3.fromRGB(25,25,25)
+	Instance.new("UICorner", b)
+	return b
+end
+
+tabs.Main = makeTab("MAIN",15)
+tabs.Info = makeTab("INFO",145)
+
+local function makePage()
+	local f = Instance.new("Frame", Menu)
+	f.Size = UDim2.new(1,-30,1,-100)
+	f.Position = UDim2.new(0,15,0,95)
+	f.BackgroundTransparency = 1
+	f.Visible = false
+	return f
+end
+
+pages.Main = makePage()
+pages.Info = makePage()
+
+local function switch(tab)
+	for _,p in pairs(pages) do p.Visible = false end
+	pages[tab].Visible = true
+end
+
+switch("Main")
+tabs.Main.MouseButton1Click:Connect(function() switch("Main") end)
+tabs.Info.MouseButton1Click:Connect(function() switch("Info") end)
+
+-------------------------------------------------
+-- TELEPORT SPEED (CHUẨN: CHỈ NHANH KHI BẠN ĐI)
+-------------------------------------------------
+local speed = 16
+local speedOn = false
+
+local speedLabel = Instance.new("TextLabel", pages.Main)
+speedLabel.Size = UDim2.new(1,0,0,30)
+speedLabel.Text = "Teleport Speed: 16"
+speedLabel.Font = Enum.Font.Code
+speedLabel.TextColor3 = Color3.new(1,1,1)
+speedLabel.BackgroundTransparency = 1
+
+local slider = Instance.new("TextButton", pages.Main)
+slider.Position = UDim2.new(0,0,0,35)
+slider.Size = UDim2.new(1,0,0,20)
+slider.Text = "KÉO ĐỂ CHỈNH TỐC ĐỘ"
+slider.Font = Enum.Font.Code
+slider.BackgroundColor3 = Color3.fromRGB(35,35,35)
+
+slider.MouseButton1Down:Connect(function()
+	local move
+	move = RunService.RenderStepped:Connect(function()
+		local x = math.clamp(
+			(game:GetService("UserInputService"):GetMouseLocation().X - slider.AbsolutePosition.X)
+			/ slider.AbsoluteSize.X, 0, 1)
+		speed = math.floor(1 + x*50)
+		speedLabel.Text = "Teleport Speed: "..speed
+	end)
+	game:GetService("UserInputService").InputEnded:Wait()
+	move:Disconnect()
+end)
+
+local toggle = Instance.new("TextButton", pages.Main)
+toggle.Position = UDim2.new(0,0,0,65)
+toggle.Size = UDim2.new(0,150,0,30)
+toggle.Text = "SPEED : OFF"
+toggle.BackgroundColor3 = Color3.fromRGB(80,30,30)
+
+toggle.MouseButton1Click:Connect(function()
+	speedOn = not speedOn
+	toggle.Text = speedOn and "SPEED : ON" or "SPEED : OFF"
+end)
+
 RunService.RenderStepped:Connect(function()
-	if not tpOn then return end
-	local char = LP.Character
-	if not char then return end
-	local hrp = char:FindFirstChild("HumanoidRootPart")
-	if not hrp then return end
-
-	local dir = Vector3.zero
-	if UIS:IsKeyDown(Enum.KeyCode.W) then dir += hrp.CFrame.LookVector end
-	if UIS:IsKeyDown(Enum.KeyCode.S) then dir -= hrp.CFrame.LookVector end
-	if UIS:IsKeyDown(Enum.KeyCode.A) then dir -= hrp.CFrame.RightVector end
-	if UIS:IsKeyDown(Enum.KeyCode.D) then dir += hrp.CFrame.RightVector end
-
-	if dir.Magnitude > 0 then
-		hrp.CFrame = hrp.CFrame + dir.Unit * tpSpeed
-	end
-end)
-
-------------------------------------------------
--- BUTTON: TELEPORT SPEED
-------------------------------------------------
-local tpBtn = Instance.new("TextButton", Main)
-tpBtn.Position = UDim2.new(0,20,0,60)
-tpBtn.Size = UDim2.new(0,180,0,35)
-tpBtn.Text = "TELEPORT SPEED : OFF"
-tpBtn.Font = Enum.Font.Code
-tpBtn.TextSize = 14
-tpBtn.BackgroundColor3 = Color3.fromRGB(60,30,30)
-tpBtn.TextColor3 = Color3.new(1,1,1)
-Instance.new("UICorner", tpBtn)
-
-tpBtn.MouseButton1Click:Connect(function()
-	tpOn = not tpOn
-	tpBtn.Text = tpOn and "TELEPORT SPEED : ON" or "TELEPORT SPEED : OFF"
-end)
-
-------------------------------------------------
--- SPEED VALUE BUTTON (BẤM LÀ TĂNG)
-------------------------------------------------
-local speedBtn = Instance.new("TextButton", Main)
-speedBtn.Position = UDim2.new(0,220,0,60)
-speedBtn.Size = UDim2.new(0,160,0,35)
-speedBtn.Text = "SPEED : 3"
-speedBtn.Font = Enum.Font.Code
-speedBtn.TextSize = 14
-speedBtn.BackgroundColor3 = Color3.fromRGB(30,30,30)
-speedBtn.TextColor3 = Color3.new(1,1,1)
-Instance.new("UICorner", speedBtn)
-
-speedBtn.MouseButton1Click:Connect(function()
-	tpSpeed += 2
-	if tpSpeed > 20 then tpSpeed = 3 end
-	speedBtn.Text = "SPEED : "..tpSpeed
-end)
-
-------------------------------------------------
--- ESP FUNCTION
-------------------------------------------------
-local function clearESP()
-	for _,v in pairs(espCache) do
-		if v then v:Destroy() end
-	end
-	espCache = {}
-end
-
-local function createESP(char)
-	if not char:FindFirstChild("HumanoidRootPart") then return end
-	local hl = Instance.new("Highlight")
-	hl.FillTransparency = 0.6
-	hl.OutlineColor = Color3.fromRGB(255,0,0)
-	hl.Parent = char
-	table.insert(espCache, hl)
-end
-
-local function loadESP()
-	clearESP()
-	for _,plr in pairs(Players:GetPlayers()) do
-		if plr ~= LP and plr.Character then
-			createESP(plr.Character)
+	if speedOn then
+		local char = player.Character
+		if char and char:FindFirstChild("Humanoid") then
+			char.Humanoid.WalkSpeed = speed
 		end
 	end
+end)
+
+-------------------------------------------------
+-- ESP (KILLER + SURVIVAL + GEN)
+-------------------------------------------------
+local function addESP(model,color)
+	if model:FindFirstChild("SLKS_ESP") then return end
+	local h = Instance.new("Highlight")
+	h.Name = "SLKS_ESP"
+	h.FillColor = color
+	h.OutlineColor = color
+	h.DepthMode = Enum.HighlightDepthMode.AlwaysOnTop
+	h.Parent = model
 end
 
-Players.PlayerAdded:Connect(loadESP)
-Players.PlayerRemoving:Connect(loadESP)
-LP.CharacterAdded:Connect(function()
-	task.wait(1)
-	if espOn then loadESP() end
+task.spawn(function()
+	while task.wait(1) do
+		for _,v in pairs(workspace:GetDescendants()) do
+			if v:IsA("Model") then
+				if v.Name:lower():find("killer") then
+					addESP(v, Color3.fromRGB(255,0,0))
+				elseif v.Name:lower():find("surviv") then
+					addESP(v, Color3.fromRGB(0,255,0))
+				elseif v.Name:lower():find("generator") then
+					addESP(v, Color3.fromRGB(255,255,0))
+				end
+			end
+		end
+	end
 end)
 
-------------------------------------------------
--- ESP BUTTON
-------------------------------------------------
-local espBtn = Instance.new("TextButton", Main)
-espBtn.Position = UDim2.new(0,20,0,110)
-espBtn.Size = UDim2.new(0,180,0,35)
-espBtn.Text = "ESP : OFF"
-espBtn.Font = Enum.Font.Code
-espBtn.TextSize = 14
-espBtn.BackgroundColor3 = Color3.fromRGB(60,30,30)
-espBtn.TextColor3 = Color3.new(1,1,1)
-Instance.new("UICorner", espBtn)
-
-espBtn.MouseButton1Click:Connect(function()
-	espOn = not espOn
-	espBtn.Text = espOn and "ESP : ON" or "ESP : OFF"
-	if espOn then loadESP() else clearESP() end
-end)
-
-------------------------------------------------
+-------------------------------------------------
 -- INFO
-------------------------------------------------
-local info = Instance.new("TextLabel", Main)
-info.Position = UDim2.new(0,20,0,170)
-info.Size = UDim2.new(1,-40,0,90)
+-------------------------------------------------
+local info = Instance.new("TextLabel", pages.Info)
+info.Size = UDim2.new(1,0,1,0)
 info.TextWrapped = true
-info.Text = "✔ Hub KHÔNG MẤT khi chết / vào trận\n✔ Teleport Speed chuẩn\n✔ ESP tự load lại\nSLKS GAMING HUB"
+info.Text = "SLKS GAMING HUB\nForsaken Fix Version\n\nTeleport Speed + ESP\nAlive after death"
 info.Font = Enum.Font.Code
-info.TextColor3 = Color3.fromRGB(200,200,200)
+info.TextColor3 = Color3.new(1,1,1)
 info.BackgroundTransparency = 1
+
+-------------------------------------------------
+-- MIN / CLOSE
+-------------------------------------------------
+local minimized = false
+minBtn.MouseButton1Click:Connect(function()
+	minimized = not minimized
+	for _,v in pairs(Menu:GetChildren()) do
+		if v:IsA("GuiObject") and v ~= header and v ~= minBtn and v ~= closeBtn then
+			v.Visible = not minimized
+		end
+	end
+	Menu.Size = minimized and UDim2.new(0,450,0,45) or UDim2.new(0,450,0,300)
+end)
+
+closeBtn.MouseButton1Click:Connect(function()
+	Gui:Destroy()
+	getgenv().SLKS_HUB = false
+end)
