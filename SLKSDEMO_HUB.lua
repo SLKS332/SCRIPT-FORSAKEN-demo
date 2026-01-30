@@ -1,12 +1,18 @@
--- 🌸 SLK GAMING HUB | CUTE PINK FULL UI
+-- 🌸 SLK GAMING HUB | DELTA FIX
 -- ĐƯỢC LÀM BY SLK GAMING
 
 local Players = game:GetService("Players")
 local player = Players.LocalPlayer
 
--- chống load trùng
-if getgenv().SLK_GAMING_HUB then return end
-getgenv().SLK_GAMING_HUB = true
+--------------------------------------------------
+-- CLEANUP (KHÔNG RETURN – XÓA HUB CŨ NẾU CÓ)
+--------------------------------------------------
+pcall(function()
+	local pg = player:WaitForChild("PlayerGui")
+	if pg:FindFirstChild("SLK_GAMING_HUB") then
+		pg.SLK_GAMING_HUB:Destroy()
+	end
+end)
 
 --------------------------------------------------
 -- GUI ROOT (KHÔNG MẤT KHI CHẾT)
@@ -18,7 +24,7 @@ Gui.IgnoreGuiInset = true
 Gui.Parent = player:WaitForChild("PlayerGui")
 
 --------------------------------------------------
--- 🌸 LOADING
+-- 🌸 LOADING (HỒNG + BAR + % RIÊNG)
 --------------------------------------------------
 local bg = Instance.new("Frame", Gui)
 bg.Size = UDim2.new(1,0,1,0)
@@ -64,7 +70,6 @@ for i = 1,100 do
 	percent.Text = "Loading... "..i.."%"
 	task.wait(0.02)
 end
-
 bg:Destroy()
 
 --------------------------------------------------
@@ -82,7 +87,6 @@ local stroke = Instance.new("UIStroke", Menu)
 stroke.Color = Color3.fromRGB(255,120,170)
 stroke.Thickness = 3
 
--- Header
 local header = Instance.new("TextLabel", Menu)
 header.Size = UDim2.new(1,0,0,50)
 header.BackgroundTransparency = 1
@@ -161,7 +165,7 @@ for name,btn in pairs(tabBtns) do
 end
 
 --------------------------------------------------
--- 📄 INFO CONTENT
+-- 📄 INFO
 --------------------------------------------------
 local info = Instance.new("TextLabel", pages.INFO)
 info.Size = UDim2.new(1,0,1,0)
@@ -224,7 +228,6 @@ closeBtn.MouseButton1Click:Connect(function()
 
 	yes.MouseButton1Click:Connect(function()
 		Gui:Destroy()
-		getgenv().SLK_GAMING_HUB = false
 	end)
 	no.MouseButton1Click:Connect(function()
 		confirm:Destroy()
