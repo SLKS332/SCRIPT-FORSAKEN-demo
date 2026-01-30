@@ -1,202 +1,83 @@
--- SLKS GAMING HUB | FORSAKEN | FINAL FULL FIX
--- COPY → EXEC → KHÔNG MẤT HUB KHI CHẾT / VÀO TRẬN
+-- SLKS GAMING HUB | CUTE PINK LOADING (BAR + PERCENT)
 
 local Players = game:GetService("Players")
-local RunService = game:GetService("RunService")
-local UIS = game:GetService("UserInputService")
 local player = Players.LocalPlayer
 
--- chống exec trùng
-if getgenv().SLKS_FINAL then return end
-getgenv().SLKS_FINAL = true
+if getgenv().SLKS_PINK_LOADING then return end
+getgenv().SLKS_PINK_LOADING = true
 
--- lưu trạng thái
-getgenv().SLKS_STATE = getgenv().SLKS_STATE or {
-	speed = 16,
-	speedOn = false
-}
-
--------------------------------------------------
--- LOADING
--------------------------------------------------
-local LoadingGui = Instance.new("ScreenGui", player.PlayerGui)
-LoadingGui.ResetOnSpawn = false
-
-local loadFrame = Instance.new("Frame", LoadingGui)
-loadFrame.Size = UDim2.new(0,300,0,120)
-loadFrame.Position = UDim2.new(0.5,-150,0.5,-60)
-loadFrame.BackgroundColor3 = Color3.fromRGB(0,0,0)
-loadFrame.BackgroundTransparency = 0.2
-Instance.new("UICorner", loadFrame).CornerRadius = UDim.new(0,14)
-
-local loadText = Instance.new("TextLabel", loadFrame)
-loadText.Size = UDim2.new(1,0,1,0)
-loadText.BackgroundTransparency = 1
-loadText.Text = "SLKS GAMING HUB\nLoading..."
-loadText.Font = Enum.Font.Code
-loadText.TextSize = 18
-loadText.TextColor3 = Color3.fromRGB(0,255,140)
-
-task.wait(1.5)
-LoadingGui:Destroy()
-
--------------------------------------------------
 -- GUI
--------------------------------------------------
-local Gui = Instance.new("ScreenGui", player.PlayerGui)
-Gui.Name = "SLKS_HUB"
-Gui.ResetOnSpawn = false
+local gui = Instance.new("ScreenGui")
+gui.Name = "SLKS_PINK_LOADING"
+gui.ResetOnSpawn = false
+gui.IgnoreGuiInset = true
+gui.Parent = player:WaitForChild("PlayerGui")
 
-local Main = Instance.new("Frame", Gui)
-Main.Size = UDim2.new(0,520,0,330)
-Main.Position = UDim2.new(0.5,-260,0.5,-165)
-Main.BackgroundColor3 = Color3.fromRGB(0,0,0)
-Main.BackgroundTransparency = 0.25
-Main.Active = true
-Main.Draggable = true
-Instance.new("UICorner", Main).CornerRadius = UDim.new(0,16)
+-- background
+local bg = Instance.new("Frame", gui)
+bg.Size = UDim2.new(1,0,1,0)
+bg.BackgroundColor3 = Color3.fromRGB(255,190,215)
 
-local stroke = Instance.new("UIStroke", Main)
-stroke.Color = Color3.fromRGB(0,255,140)
-stroke.Thickness = 2
+-- box
+local box = Instance.new("Frame", bg)
+box.Size = UDim2.new(0,400,0,230)
+box.Position = UDim2.new(0.5,-200,0.5,-115)
+box.BackgroundColor3 = Color3.fromRGB(255,225,235)
+Instance.new("UICorner", box).CornerRadius = UDim.new(0,22)
 
-local title = Instance.new("TextLabel", Main)
-title.Size = UDim2.new(1,0,0,40)
+local stroke = Instance.new("UIStroke", box)
+stroke.Color = Color3.fromRGB(255,120,170)
+stroke.Thickness = 3
+
+-- title
+local title = Instance.new("TextLabel", box)
+title.Size = UDim2.new(1,0,0,45)
+title.Position = UDim2.new(0,0,0,15)
 title.BackgroundTransparency = 1
-title.Text = "SLKS GAMING HUB | FORSAKEN"
-title.Font = Enum.Font.Code
-title.TextSize = 18
-title.TextColor3 = Color3.fromRGB(0,255,140)
+title.Text = "💗 SLKS GAMING HUB 💗"
+title.Font = Enum.Font.GothamBold
+title.TextSize = 24
+title.TextColor3 = Color3.fromRGB(255,90,150)
 
--------------------------------------------------
--- TABS
--------------------------------------------------
-local tabs = {}
-local pages = {}
+-- subtitle
+local sub = Instance.new("TextLabel", box)
+sub.Size = UDim2.new(1,0,0,25)
+sub.Position = UDim2.new(0,0,0,60)
+sub.BackgroundTransparency = 1
+sub.Text = "Cute Pink Edition ✨"
+sub.Font = Enum.Font.Gotham
+sub.TextSize = 15
+sub.TextColor3 = Color3.fromRGB(255,130,180)
 
-local function newTab(name,x)
-	local b = Instance.new("TextButton", Main)
-	b.Size = UDim2.new(0,150,0,32)
-	b.Position = UDim2.new(0,x,0,50)
-	b.Text = name
-	b.Font = Enum.Font.Code
-	b.TextSize = 14
-	b.BackgroundColor3 = Color3.fromRGB(25,25,25)
-	b.TextColor3 = Color3.fromRGB(0,255,140)
-	Instance.new("UICorner", b)
-	return b
+-- loading bar background
+local barBG = Instance.new("Frame", box)
+barBG.Size = UDim2.new(0.85,0,0,18)
+barBG.Position = UDim2.new(0.075,0,0,110)
+barBG.BackgroundColor3 = Color3.fromRGB(255,200,220)
+Instance.new("UICorner", barBG).CornerRadius = UDim.new(1,0)
+
+-- loading bar fill
+local bar = Instance.new("Frame", barBG)
+bar.Size = UDim2.new(0,0,1,0)
+bar.BackgroundColor3 = Color3.fromRGB(255,110,170)
+Instance.new("UICorner", bar).CornerRadius = UDim.new(1,0)
+
+-- percent text (RIÊNG, KHÔNG DÍNH BAR)
+local percent = Instance.new("TextLabel", box)
+percent.Size = UDim2.new(1,0,0,30)
+percent.Position = UDim2.new(0,0,0,145)
+percent.BackgroundTransparency = 1
+percent.Font = Enum.Font.GothamMedium
+percent.TextSize = 16
+percent.TextColor3 = Color3.fromRGB(255,90,150)
+percent.Text = "Loading... 0%"
+
+-- fake loading
+for i = 1,100 do
+	bar.Size = UDim2.new(i/100,0,1,0)
+	percent.Text = "Loading... "..i.."%"
+	task.wait(0.025)
 end
 
-tabs.Main = newTab("MAIN",20)
-tabs.Info = newTab("INFO",185)
-tabs.Settings = newTab("SETTINGS",350)
-
-local function newPage()
-	local f = Instance.new("Frame", Main)
-	f.Size = UDim2.new(1,-40,1,-110)
-	f.Position = UDim2.new(0,20,0,90)
-	f.BackgroundTransparency = 1
-	f.Visible = false
-	return f
-end
-
-pages.Main = newPage()
-pages.Info = newPage()
-pages.Settings = newPage()
-
-local function switch(tab)
-	for _,p in pairs(pages) do p.Visible = false end
-	pages[tab].Visible = true
-end
-switch("Main")
-
-tabs.Main.MouseButton1Click:Connect(function() switch("Main") end)
-tabs.Info.MouseButton1Click:Connect(function() switch("Info") end)
-tabs.Settings.MouseButton1Click:Connect(function() switch("Settings") end)
-
--------------------------------------------------
--- TELEPORT SPEED (CHUẨN)
--------------------------------------------------
-local speedLabel = Instance.new("TextLabel", pages.Main)
-speedLabel.Size = UDim2.new(1,0,0,30)
-speedLabel.Text = "Speed: "..getgenv().SLKS_STATE.speed
-speedLabel.BackgroundTransparency = 1
-speedLabel.TextColor3 = Color3.new(1,1,1)
-speedLabel.Font = Enum.Font.Code
-
-local toggle = Instance.new("TextButton", pages.Main)
-toggle.Position = UDim2.new(0,0,0,40)
-toggle.Size = UDim2.new(0,220,0,35)
-toggle.Text = "Teleport Speed: OFF"
-toggle.BackgroundColor3 = Color3.fromRGB(80,30,30)
-toggle.Font = Enum.Font.Code
-Instance.new("UICorner", toggle)
-
-toggle.MouseButton1Click:Connect(function()
-	getgenv().SLKS_STATE.speedOn = not getgenv().SLKS_STATE.speedOn
-	toggle.Text = getgenv().SLKS_STATE.speedOn and "Teleport Speed: ON" or "Teleport Speed: OFF"
-end)
-
--------------------------------------------------
--- SPEED CORE (KHÔNG AUTO ĐI)
--------------------------------------------------
-local function apply(char)
-	local hum = char:WaitForChild("Humanoid")
-	RunService.RenderStepped:Connect(function()
-		if getgenv().SLKS_STATE.speedOn and hum.MoveDirection.Magnitude > 0 then
-			hum.WalkSpeed = getgenv().SLKS_STATE.speed
-		else
-			hum.WalkSpeed = 16
-		end
-	end)
-end
-
-if player.Character then apply(player.Character) end
-player.CharacterAdded:Connect(function(c) task.wait(0.5) apply(c) end)
-
--------------------------------------------------
--- ESP (AUTO GẮN LẠI)
--------------------------------------------------
-local function esp(m,c)
-	if m:FindFirstChild("SLKS_ESP") then return end
-	local h = Instance.new("Highlight", m)
-	h.Name = "SLKS_ESP"
-	h.FillColor = c
-	h.OutlineColor = c
-	h.DepthMode = Enum.HighlightDepthMode.AlwaysOnTop
-end
-
-task.spawn(function()
-	while task.wait(1) do
-		for _,v in ipairs(workspace:GetDescendants()) do
-			if v:IsA("Model") then
-				local n = v.Name:lower()
-				if n:find("killer") then esp(v,Color3.fromRGB(255,0,0))
-				elseif n:find("surviv") then esp(v,Color3.fromRGB(0,255,0))
-				elseif n:find("gen") then esp(v,Color3.fromRGB(255,255,0))
-				end
-			end
-		end
-	end
-end)
-
--------------------------------------------------
--- INFO
--------------------------------------------------
-local info = Instance.new("TextLabel", pages.Info)
-info.Size = UDim2.new(1,0,1,0)
-info.TextWrapped = true
-info.BackgroundTransparency = 1
-info.Font = Enum.Font.Code
-info.TextColor3 = Color3.new(1,1,1)
-info.Text = "SLKS GAMING HUB\nFINAL VERSION\n\n✔ Chết không mất hub\n✔ Vào trận không mất\n✔ ESP + Speed"
-
--------------------------------------------------
--- SETTINGS
--------------------------------------------------
-local set = Instance.new("TextLabel", pages.Settings)
-set.Size = UDim2.new(1,0,1,0)
-set.BackgroundTransparency = 1
-set.TextColor3 = Color3.new(1,1,1)
-set.Font = Enum.Font.Code
-set.Text = "Không cần chỉnh gì thêm.\nHub tự sống."
+-- done
+gui:Destroy()
