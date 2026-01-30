@@ -1,235 +1,225 @@
--- 🌸 SLK GAMING HUB | DELTA FIX
--- ĐƯỢC LÀM BY SLK GAMING
+-- SLK GAMING | FORSAKEN HUB (PINK CUTE)
+-- Loading + Menu + FARM Auto Fix Gen + Auto Move
+-- Hub không mất khi chết / vào trận
 
+-- ===== RESET DUPLICATE =====
+if getgenv().SLK_HUB_LOADED then return end
+getgenv().SLK_HUB_LOADED = true
+
+-- ===== SERVICES =====
 local Players = game:GetService("Players")
+local RunService = game:GetService("RunService")
+local TweenService = game:GetService("TweenService")
+local UIS = game:GetService("UserInputService")
 local player = Players.LocalPlayer
 
+-- ===== STATE (LƯU TRẠNG THÁI) =====
+getgenv().SLK_STATE = getgenv().SLK_STATE or {
+	autoFixGen = false,
+	autoMoveGen = false,
+	fixDelay = 0
+}
+
+-- ===== GUI ROOT =====
+local gui = Instance.new("ScreenGui")
+gui.Name = "SLK_GAMING_HUB"
+gui.ResetOnSpawn = false
+gui.Parent = player:WaitForChild("PlayerGui")
+
 --------------------------------------------------
--- CLEANUP (KHÔNG RETURN – XÓA HUB CŨ NẾU CÓ)
+-- 🔄 LOADING
 --------------------------------------------------
-pcall(function()
-	local pg = player:WaitForChild("PlayerGui")
-	if pg:FindFirstChild("SLK_GAMING_HUB") then
-		pg.SLK_GAMING_HUB:Destroy()
-	end
+local loading = Instance.new("Frame", gui)
+loading.Size = UDim2.new(0,300,0,120)
+loading.Position = UDim2.new(0.5,-150,0.5,-60)
+loading.BackgroundColor3 = Color3.fromRGB(255,182,193)
+Instance.new("UICorner", loading).CornerRadius = UDim.new(0,20)
+
+local loadText = Instance.new("TextLabel", loading)
+loadText.Size = UDim2.new(1,0,1,0)
+loadText.BackgroundTransparency = 1
+loadText.Font = Enum.Font.Code
+loadText.TextSize = 18
+loadText.TextColor3 = Color3.new(1,1,1)
+loadText.Text = "SLK GAMING HUB\nLoading 0%"
+
+for i=1,100 do
+	loadText.Text = "SLK GAMING HUB\nLoading "..i.."%"
+	task.wait(0.015)
+end
+loading:Destroy()
+
+--------------------------------------------------
+-- 🌸 MENU
+--------------------------------------------------
+local menu = Instance.new("Frame", gui)
+menu.Size = UDim2.new(0,500,0,330)
+menu.Position = UDim2.new(0.5,-250,0.5,-165)
+menu.BackgroundColor3 = Color3.fromRGB(255,182,193)
+menu.Active = true
+menu.Draggable = true
+Instance.new("UICorner", menu).CornerRadius = UDim.new(0,22)
+
+local title = Instance.new("TextLabel", menu)
+title.Size = UDim2.new(1,0,0,40)
+title.BackgroundTransparency = 1
+title.Text = "SLK GAMING HUB | FORSAKEN"
+title.Font = Enum.Font.Code
+title.TextSize = 18
+title.TextColor3 = Color3.new(1,1,1)
+
+-- Close
+local close = Instance.new("TextButton", menu)
+close.Size = UDim2.new(0,30,0,30)
+close.Position = UDim2.new(1,-40,0,5)
+close.Text = "X"
+close.Font = Enum.Font.Code
+close.TextColor3 = Color3.new(1,1,1)
+close.BackgroundColor3 = Color3.fromRGB(255,105,180)
+Instance.new("UICorner", close)
+close.MouseButton1Click:Connect(function()
+	menu:Destroy()
+	getgenv().SLK_HUB_LOADED = false
 end)
 
 --------------------------------------------------
--- GUI ROOT (KHÔNG MẤT KHI CHẾT)
+-- 📑 TABS
 --------------------------------------------------
-local Gui = Instance.new("ScreenGui")
-Gui.Name = "SLK_GAMING_HUB"
-Gui.ResetOnSpawn = false
-Gui.IgnoreGuiInset = true
-Gui.Parent = player:WaitForChild("PlayerGui")
-
---------------------------------------------------
--- 🌸 LOADING (HỒNG + BAR + % RIÊNG)
---------------------------------------------------
-local bg = Instance.new("Frame", Gui)
-bg.Size = UDim2.new(1,0,1,0)
-bg.BackgroundColor3 = Color3.fromRGB(255,190,215)
-
-local box = Instance.new("Frame", bg)
-box.Size = UDim2.new(0,400,0,230)
-box.Position = UDim2.new(0.5,-200,0.5,-115)
-box.BackgroundColor3 = Color3.fromRGB(255,225,235)
-Instance.new("UICorner", box).CornerRadius = UDim.new(0,22)
-
-local title = Instance.new("TextLabel", box)
-title.Size = UDim2.new(1,0,0,50)
-title.Position = UDim2.new(0,0,0,20)
-title.BackgroundTransparency = 1
-title.Text = "💗 SLK GAMING HUB 💗"
-title.Font = Enum.Font.GothamBold
-title.TextSize = 24
-title.TextColor3 = Color3.fromRGB(255,90,150)
-
-local barBG = Instance.new("Frame", box)
-barBG.Size = UDim2.new(0.85,0,0,18)
-barBG.Position = UDim2.new(0.075,0,0,110)
-barBG.BackgroundColor3 = Color3.fromRGB(255,200,220)
-Instance.new("UICorner", barBG).CornerRadius = UDim.new(1,0)
-
-local bar = Instance.new("Frame", barBG)
-bar.Size = UDim2.new(0,0,1,0)
-bar.BackgroundColor3 = Color3.fromRGB(255,110,170)
-Instance.new("UICorner", bar).CornerRadius = UDim.new(1,0)
-
-local percent = Instance.new("TextLabel", box)
-percent.Size = UDim2.new(1,0,0,30)
-percent.Position = UDim2.new(0,0,0,145)
-percent.BackgroundTransparency = 1
-percent.Font = Enum.Font.Gotham
-percent.TextSize = 16
-percent.TextColor3 = Color3.fromRGB(255,90,150)
-percent.Text = "Loading... 0%"
-
-for i = 1,100 do
-	bar.Size = UDim2.new(i/100,0,1,0)
-	percent.Text = "Loading... "..i.."%"
-	task.wait(0.02)
-end
-bg:Destroy()
-
---------------------------------------------------
--- 🎀 MENU
---------------------------------------------------
-local Menu = Instance.new("Frame", Gui)
-Menu.Size = UDim2.new(0,520,0,340)
-Menu.Position = UDim2.new(0.5,-260,0.5,-170)
-Menu.BackgroundColor3 = Color3.fromRGB(255,220,235)
-Menu.Active = true
-Menu.Draggable = true
-Instance.new("UICorner", Menu).CornerRadius = UDim.new(0,26)
-
-local stroke = Instance.new("UIStroke", Menu)
-stroke.Color = Color3.fromRGB(255,120,170)
-stroke.Thickness = 3
-
-local header = Instance.new("TextLabel", Menu)
-header.Size = UDim2.new(1,0,0,50)
-header.BackgroundTransparency = 1
-header.Text = "🌸 SLK GAMING HUB 🌸"
-header.Font = Enum.Font.GothamBold
-header.TextSize = 22
-header.TextColor3 = Color3.fromRGB(255,90,150)
-
---------------------------------------------------
--- 🔘 NÚT TRÒN
---------------------------------------------------
-local function circleBtn(text,x,color)
-	local b = Instance.new("TextButton", Menu)
-	b.Size = UDim2.new(0,32,0,32)
-	b.Position = UDim2.new(1,x,0,10)
-	b.Text = text
-	b.Font = Enum.Font.GothamBold
-	b.TextSize = 16
-	b.BackgroundColor3 = color
-	b.TextColor3 = Color3.new(1,1,1)
-	Instance.new("UICorner", b).CornerRadius = UDim.new(1,0)
-	return b
-end
-
-local minBtn = circleBtn("-", -80, Color3.fromRGB(255,150,190))
-local closeBtn = circleBtn("X", -40, Color3.fromRGB(255,110,150))
-
---------------------------------------------------
--- 📂 TABS
---------------------------------------------------
-local tabs = {"INFO","FARM","PLAYER","SETTINGS"}
+local tabs = {}
 local pages = {}
 
-local function makeTab(name,x)
-	local b = Instance.new("TextButton", Menu)
-	b.Size = UDim2.new(0,110,0,32)
-	b.Position = UDim2.new(0,x,0,60)
+local function newTab(name, x)
+	local b = Instance.new("TextButton", menu)
+	b.Size = UDim2.new(0,100,0,30)
+	b.Position = UDim2.new(0,x,0,45)
 	b.Text = name
-	b.Font = Enum.Font.GothamBold
-	b.TextSize = 14
-	b.TextColor3 = Color3.fromRGB(255,90,150)
-	b.BackgroundColor3 = Color3.fromRGB(255,200,220)
-	Instance.new("UICorner", b).CornerRadius = UDim.new(1,0)
+	b.Font = Enum.Font.Code
+	b.TextColor3 = Color3.new(1,1,1)
+	b.BackgroundColor3 = Color3.fromRGB(255,105,180)
+	Instance.new("UICorner", b)
 	return b
 end
 
-local tabBtns = {}
-local startX = 20
-for i,name in ipairs(tabs) do
-	tabBtns[name] = makeTab(name, startX + (i-1)*120)
-end
+tabs.Info = newTab("INFO", 20)
+tabs.Farm = newTab("FARM", 140)
+tabs.Player = newTab("PLAYER", 260)
+tabs.Settings = newTab("SETTINGS", 380)
 
-local function makePage()
-	local f = Instance.new("Frame", Menu)
-	f.Size = UDim2.new(1,-40,1,-120)
-	f.Position = UDim2.new(0,20,0,100)
+local function newPage()
+	local f = Instance.new("Frame", menu)
+	f.Size = UDim2.new(1,-40,1,-90)
+	f.Position = UDim2.new(0,20,0,80)
 	f.BackgroundTransparency = 1
 	f.Visible = false
 	return f
 end
 
-for _,name in ipairs(tabs) do
-	pages[name] = makePage()
-end
-pages.INFO.Visible = true
+pages.Info = newPage()
+pages.Farm = newPage()
+pages.Player = newPage()
+pages.Settings = newPage()
 
-local function switch(name)
+local function switch(tab)
 	for _,p in pairs(pages) do p.Visible = false end
-	pages[name].Visible = true
+	pages[tab].Visible = true
 end
+switch("Farm")
 
-for name,btn in pairs(tabBtns) do
-	btn.MouseButton1Click:Connect(function()
-		switch(name)
+tabs.Info.MouseButton1Click:Connect(function() switch("Info") end)
+tabs.Farm.MouseButton1Click:Connect(function() switch("Farm") end)
+tabs.Player.MouseButton1Click:Connect(function() switch("Player") end)
+tabs.Settings.MouseButton1Click:Connect(function() switch("Settings") end)
+
+--------------------------------------------------
+-- 🌾 FARM TAB (AUTO FIX GEN + AUTO MOVE)
+--------------------------------------------------
+local farm = pages.Farm
+
+local delayLabel = Instance.new("TextLabel", farm)
+delayLabel.Size = UDim2.new(1,0,0,25)
+delayLabel.Text = "Fix Delay: 0s"
+delayLabel.BackgroundTransparency = 1
+delayLabel.Font = Enum.Font.Code
+delayLabel.TextColor3 = Color3.new(1,1,1)
+
+local slider = Instance.new("TextButton", farm)
+slider.Position = UDim2.new(0,0,0,30)
+slider.Size = UDim2.new(1,0,0,20)
+slider.Text = "KÉO ĐỂ CHỈNH DELAY (0-10s)"
+slider.BackgroundColor3 = Color3.fromRGB(255,105,180)
+
+slider.MouseButton1Down:Connect(function()
+	local conn
+	conn = RunService.RenderStepped:Connect(function()
+		local x = math.clamp((UIS:GetMouseLocation().X - slider.AbsolutePosition.X)/slider.AbsoluteSize.X,0,1)
+		local v = math.floor(x*10)
+		getgenv().SLK_STATE.fixDelay = v
+		delayLabel.Text = "Fix Delay: "..v.."s"
 	end)
-end
+	UIS.InputEnded:Wait()
+	conn:Disconnect()
+end)
 
---------------------------------------------------
--- 📄 INFO
---------------------------------------------------
-local info = Instance.new("TextLabel", pages.INFO)
-info.Size = UDim2.new(1,0,1,0)
-info.BackgroundTransparency = 1
-info.TextWrapped = true
-info.Text = "SLK GAMING HUB\nForsaken Roblox\n\nĐƯỢC LÀM BY SLK GAMING\n\n🌸 Cute Pink Edition"
-info.Font = Enum.Font.Gotham
-info.TextSize = 16
-info.TextColor3 = Color3.fromRGB(255,90,150)
+local fixBtn = Instance.new("TextButton", farm)
+fixBtn.Position = UDim2.new(0,0,0,60)
+fixBtn.Size = UDim2.new(0,220,0,30)
+fixBtn.Text = "AUTO FIX GEN : OFF"
+fixBtn.BackgroundColor3 = Color3.fromRGB(255,105,180)
+Instance.new("UICorner", fixBtn)
 
---------------------------------------------------
--- ➖ THU NHỎ
---------------------------------------------------
-local minimized = false
-minBtn.MouseButton1Click:Connect(function()
-	minimized = not minimized
-	for _,v in pairs(Menu:GetChildren()) do
-		if v ~= header and v ~= minBtn and v ~= closeBtn then
-			v.Visible = not minimized
-		end
-	end
-	Menu.Size = minimized and UDim2.new(0,520,0,50) or UDim2.new(0,520,0,340)
+fixBtn.MouseButton1Click:Connect(function()
+	local st = getgenv().SLK_STATE
+	st.autoFixGen = not st.autoFixGen
+	fixBtn.Text = st.autoFixGen and "AUTO FIX GEN : ON" or "AUTO FIX GEN : OFF"
+end)
+
+local moveBtn = Instance.new("TextButton", farm)
+moveBtn.Position = UDim2.new(0,0,0,100)
+moveBtn.Size = UDim2.new(0,220,0,30)
+moveBtn.Text = "AUTO MOVE TO GEN : OFF"
+moveBtn.BackgroundColor3 = Color3.fromRGB(255,105,180)
+Instance.new("UICorner", moveBtn)
+
+moveBtn.MouseButton1Click:Connect(function()
+	local st = getgenv().SLK_STATE
+	st.autoMoveGen = not st.autoMoveGen
+	moveBtn.Text = st.autoMoveGen and "AUTO MOVE TO GEN : ON" or "AUTO MOVE TO GEN : OFF"
 end)
 
 --------------------------------------------------
--- ❌ XÁC NHẬN ĐÓNG
+-- ⚙️ AUTO MOVE CORE
 --------------------------------------------------
-closeBtn.MouseButton1Click:Connect(function()
-	local confirm = Instance.new("Frame", Gui)
-	confirm.Size = UDim2.new(0,320,0,160)
-	confirm.Position = UDim2.new(0.5,-160,0.5,-80)
-	confirm.BackgroundColor3 = Color3.fromRGB(255,225,235)
-	Instance.new("UICorner", confirm).CornerRadius = UDim.new(0,20)
+local function getNearestGen()
+	local char = player.Character
+	if not char or not char:FindFirstChild("HumanoidRootPart") then return end
+	local hrp = char.HumanoidRootPart
+	local near, dist = nil, math.huge
+	for _,v in ipairs(workspace:GetDescendants()) do
+		if v:IsA("Model") and v.Name:lower():find("gen") and v.PrimaryPart then
+			local d = (hrp.Position - v.PrimaryPart.Position).Magnitude
+			if d < dist then
+				dist = d
+				near = v
+			end
+		end
+	end
+	return near
+end
 
-	local txt = Instance.new("TextLabel", confirm)
-	txt.Size = UDim2.new(1,-20,0,60)
-	txt.Position = UDim2.new(0,10,0,15)
-	txt.BackgroundTransparency = 1
-	txt.TextWrapped = true
-	txt.Text = "😖 Bạn thực sự muốn rời khỏi?"
-	txt.Font = Enum.Font.GothamBold
-	txt.TextSize = 16
-	txt.TextColor3 = Color3.fromRGB(255,90,150)
-
-	local yes = Instance.new("TextButton", confirm)
-	yes.Size = UDim2.new(0,120,0,36)
-	yes.Position = UDim2.new(0.1,0,1,-50)
-	yes.Text = "Có"
-	yes.Font = Enum.Font.GothamBold
-	yes.BackgroundColor3 = Color3.fromRGB(255,120,170)
-	Instance.new("UICorner", yes).CornerRadius = UDim.new(1,0)
-
-	local no = Instance.new("TextButton", confirm)
-	no.Size = UDim2.new(0,120,0,36)
-	no.Position = UDim2.new(0.55,0,1,-50)
-	no.Text = "Ở lại"
-	no.Font = Enum.Font.GothamBold
-	no.BackgroundColor3 = Color3.fromRGB(255,170,200)
-	Instance.new("UICorner", no).CornerRadius = UDim.new(1,0)
-
-	yes.MouseButton1Click:Connect(function()
-		Gui:Destroy()
-	end)
-	no.MouseButton1Click:Connect(function()
-		confirm:Destroy()
-	end)
+task.spawn(function()
+	while task.wait(1) do
+		local st = getgenv().SLK_STATE
+		if st.autoFixGen and st.autoMoveGen then
+			local gen = getNearestGen()
+			local char = player.Character
+			if gen and char and char:FindFirstChild("HumanoidRootPart") then
+				local hrp = char.HumanoidRootPart
+				TweenService:Create(
+					hrp,
+					TweenInfo.new(2),
+					{CFrame = gen.PrimaryPart.CFrame * CFrame.new(0,0,-3)}
+				):Play()
+			end
+		end
+	end
 end)
