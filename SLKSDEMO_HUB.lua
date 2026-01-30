@@ -6,7 +6,7 @@ local Players = game:GetService("Players")
 local player = Players.LocalPlayer
 
 -------------------------------------------------
--- LOADING GUI
+-- LOADING
 -------------------------------------------------
 local LoadingGui = Instance.new("ScreenGui", player.PlayerGui)
 LoadingGui.IgnoreGuiInset = true
@@ -47,8 +47,8 @@ barBG.BackgroundColor3 = Color3.fromRGB(30,50,60)
 Instance.new("UICorner", barBG)
 
 local bar = Instance.new("Frame", barBG)
-bar.Size = UDim2.new(0,0,1,0)
 bar.BackgroundColor3 = Color3.fromRGB(0,255,140)
+bar.Size = UDim2.new(0,0,1,0)
 Instance.new("UICorner", bar)
 
 local percent = Instance.new("TextLabel", box)
@@ -61,19 +61,19 @@ percent.TextColor3 = Color3.fromRGB(0,255,140)
 
 task.spawn(function()
 	while LoadingGui.Parent do
-		local s = ""
+		local s=""
 		for i=1,math.random(40,70) do
-			s ..= math.random(0,1)
+			s..=math.random(0,1)
 		end
-		binary.Text = s
+		binary.Text=s
 		task.wait(0.15)
 	end
 end)
 
 for i=1,100 do
-	percent.Text = "Loading "..i.."%"
+	percent.Text="Loading "..i.."%"
 	TweenService:Create(bar,TweenInfo.new(0.03),{
-		Size = UDim2.new(i/100,0,1,0)
+		Size=UDim2.new(i/100,0,1,0)
 	}):Play()
 	task.wait(0.03)
 end
@@ -82,9 +82,10 @@ task.wait(0.4)
 LoadingGui:Destroy()
 
 -------------------------------------------------
--- MENU GUI
+-- MENU
 -------------------------------------------------
 local MenuGui = Instance.new("ScreenGui", player.PlayerGui)
+MenuGui.IgnoreGuiInset = true
 MenuGui.ResetOnSpawn = false
 
 local Menu = Instance.new("Frame", MenuGui)
@@ -101,90 +102,92 @@ stroke.Color = Color3.fromRGB(0,255,140)
 stroke.Thickness = 2
 
 local header = Instance.new("TextLabel", Menu)
-header.Size = UDim2.new(1,0,0,60)
+header.Size = UDim2.new(1,-80,0,60)
+header.Position = UDim2.new(0,10,0,0)
 header.BackgroundTransparency = 1
 header.Text = "SLKS GAMING\nBY SLKS GAMING\nVERSION DEMO V0.1"
 header.Font = Enum.Font.Code
 header.TextSize = 18
 header.TextColor3 = Color3.fromRGB(0,255,140)
+header.TextXAlignment = Left
 
--- Buttons
+-- MIN / CLOSE
 local minBtn = Instance.new("TextButton", Menu)
 minBtn.Size = UDim2.new(0,30,0,30)
-minBtn.Position = UDim2.new(1,-70,0,10)
-minBtn.Text = "-"
-minBtn.Font = Enum.Font.Code
-minBtn.TextSize = 22
-minBtn.BackgroundColor3 = Color3.fromRGB(20,20,20)
-minBtn.TextColor3 = Color3.fromRGB(0,255,140)
-Instance.new("UICorner", minBtn)
+minBtn.Position = UDim2.new(1,-70,0,15)
+minBtn.Text="-"
+minBtn.Font=Enum.Font.Code
+minBtn.TextSize=22
+minBtn.BackgroundColor3=Color3.fromRGB(20,20,20)
+minBtn.TextColor3=Color3.fromRGB(0,255,140)
+Instance.new("UICorner",minBtn)
 
 local closeBtn = Instance.new("TextButton", Menu)
 closeBtn.Size = UDim2.new(0,30,0,30)
-closeBtn.Position = UDim2.new(1,-35,0,10)
-closeBtn.Text = "X"
-closeBtn.Font = Enum.Font.Code
-closeBtn.TextSize = 18
-closeBtn.BackgroundColor3 = Color3.fromRGB(60,20,20)
-closeBtn.TextColor3 = Color3.fromRGB(255,80,80)
-Instance.new("UICorner", closeBtn)
+closeBtn.Position = UDim2.new(1,-35,0,15)
+closeBtn.Text="X"
+closeBtn.Font=Enum.Font.Code
+closeBtn.TextSize=18
+closeBtn.BackgroundColor3=Color3.fromRGB(60,20,20)
+closeBtn.TextColor3=Color3.fromRGB(255,80,80)
+Instance.new("UICorner",closeBtn)
 
 -------------------------------------------------
 -- INFO TAB
 -------------------------------------------------
 local infoBtn = Instance.new("TextButton", Menu)
-infoBtn.Size = UDim2.new(0,100,0,30)
+infoBtn.Size = UDim2.new(0,100,0,32)
 infoBtn.Position = UDim2.new(0,15,0,70)
-infoBtn.Text = "INFO"
-infoBtn.Font = Enum.Font.Code
-infoBtn.TextSize = 16
-infoBtn.TextColor3 = Color3.fromRGB(0,255,140)
-infoBtn.BackgroundColor3 = Color3.fromRGB(20,20,20)
-Instance.new("UICorner", infoBtn)
+infoBtn.Text="INFO"
+infoBtn.Font=Enum.Font.Code
+infoBtn.TextSize=16
+infoBtn.TextColor3=Color3.fromRGB(0,255,140)
+infoBtn.BackgroundColor3=Color3.fromRGB(20,20,20)
+Instance.new("UICorner",infoBtn)
 
 local infoFrame = Instance.new("Frame", Menu)
 infoFrame.Size = UDim2.new(1,-30,1,-120)
 infoFrame.Position = UDim2.new(0,15,0,110)
 infoFrame.BackgroundColor3 = Color3.fromRGB(10,10,10)
 infoFrame.BackgroundTransparency = 0.2
-infoFrame.Visible = false
-Instance.new("UICorner", infoFrame)
+infoFrame.Visible=false
+Instance.new("UICorner",infoFrame)
 
 local infoText = Instance.new("TextLabel", infoFrame)
-infoText.Size = UDim2.new(1,-20,0,80)
-infoText.Position = UDim2.new(0,10,0,10)
-infoText.BackgroundTransparency = 1
-infoText.TextWrapped = true
-infoText.Text = "SLKS GAMING HUB\nDemo Version V0.1\n\nScript thử nghiệm"
-infoText.Font = Enum.Font.Code
-infoText.TextSize = 15
-infoText.TextColor3 = Color3.fromRGB(255,255,255)
+infoText.Size=UDim2.new(1,-20,0,90)
+infoText.Position=UDim2.new(0,10,0,10)
+infoText.BackgroundTransparency=1
+infoText.TextWrapped=true
+infoText.Font=Enum.Font.Code
+infoText.TextSize=15
+infoText.TextColor3=Color3.new(1,1,1)
+infoText.Text="SLKS GAMING HUB\nDemo Version V0.1\n\nDiscord & YouTube bên dưới"
 
 local yt = Instance.new("TextButton", infoFrame)
-yt.Size = UDim2.new(0.45,0,0,35)
-yt.Position = UDim2.new(0.03,0,1,-45)
-yt.Text = "YouTube"
-yt.BackgroundColor3 = Color3.fromRGB(200,60,60)
-Instance.new("UICorner", yt)
+yt.Size=UDim2.new(0.45,0,0,35)
+yt.Position=UDim2.new(0.03,0,1,-45)
+yt.Text="YouTube"
+yt.BackgroundColor3=Color3.fromRGB(200,60,60)
+Instance.new("UICorner",yt)
 
 local dc = Instance.new("TextButton", infoFrame)
-dc.Size = UDim2.new(0.45,0,0,35)
-dc.Position = UDim2.new(0.52,0,1,-45)
-dc.Text = "Discord"
-dc.BackgroundColor3 = Color3.fromRGB(60,90,200)
-Instance.new("UICorner", dc)
+dc.Size=UDim2.new(0.45,0,0,35)
+dc.Position=UDim2.new(0.52,0,1,-45)
+dc.Text="Discord"
+dc.BackgroundColor3=Color3.fromRGB(60,90,200)
+Instance.new("UICorner",dc)
 
 infoBtn.MouseButton1Click:Connect(function()
-	infoFrame.Visible = not infoFrame.Visible
+	infoFrame.Visible=not infoFrame.Visible
 end)
 
 -------------------------------------------------
--- MINIMIZE + CLOSE
+-- MINIMIZE
 -------------------------------------------------
-local minimized = false
+local minimized=false
 minBtn.MouseButton1Click:Connect(function()
-	minimized = not minimized
-	infoFrame.Visible = false
+	minimized=not minimized
+	infoFrame.Visible=false
 	Menu.Size = minimized and UDim2.new(0,420,0,60) or UDim2.new(0,420,0,260)
 end)
 
