@@ -139,32 +139,38 @@ TweenService:Create(frame, tweenInfo, {
 
 task.wait(1.3)
 gui:Destroy()
---// SLK HUB MENU - FINAL FIX
+--// SLK HUB MENU - FULL FIX (NO LOADING)
+
 local Players = game:GetService("Players")
 local TweenService = game:GetService("TweenService")
 local UIS = game:GetService("UserInputService")
 local player = Players.LocalPlayer
 
 -- GUI
-local gui = Instance.new("ScreenGui", player.PlayerGui)
+local gui = Instance.new("ScreenGui")
 gui.Name = "SLK_HUB"
+gui.Parent = player:WaitForChild("PlayerGui")
 gui.ResetOnSpawn = false
 
--- MAIN FRAME
+-- MAIN
 local main = Instance.new("Frame", gui)
-main.Size = UDim2.fromScale(0.6,0.55)
-main.Position = UDim2.fromScale(0.2,0.22)
+main.Size = UDim2.fromScale(0.6, 0.55)
+main.Position = UDim2.fromScale(0.2, 0.22)
 main.BackgroundColor3 = Color3.fromRGB(0,0,0)
-main.BackgroundTransparency = 1
+main.BackgroundTransparency = 1 -- bắt đầu mờ
 main.BorderSizePixel = 0
 main.Active = true
+main.Visible = true
 Instance.new("UICorner", main).CornerRadius = UDim.new(0,18)
+
+-- chặn bấm khi đang fade
+main.AutoButtonColor = false
 
 -- TOP BAR
 local top = Instance.new("Frame", main)
 top.Size = UDim2.fromScale(1,0.16)
 top.BackgroundColor3 = Color3.fromRGB(20,20,20)
-top.BackgroundTransparency = 0.15
+top.BackgroundTransparency = 0.25
 top.BorderSizePixel = 0
 Instance.new("UICorner", top).CornerRadius = UDim.new(0,18)
 
@@ -176,13 +182,13 @@ title.BackgroundTransparency = 1
 title.Text = "SLK HUB"
 title.Font = Enum.Font.GothamBold
 title.TextScaled = true
-title.TextColor3 = Color3.fromRGB(255,255,255)
-title.TextXAlignment = Left
+title.TextColor3 = Color3.new(1,1,1)
+title.TextXAlignment = Enum.TextXAlignment.Left
 
--- VERSION
+-- VERSION BOX (xanh)
 local verBox = Instance.new("Frame", top)
-verBox.Position = UDim2.fromScale(0.28,0.28)
-verBox.Size = UDim2.fromScale(0.18,0.45)
+verBox.Position = UDim2.fromScale(0.28,0.3)
+verBox.Size = UDim2.fromScale(0.2,0.45)
 verBox.BackgroundColor3 = Color3.fromRGB(0,170,255)
 verBox.BorderSizePixel = 0
 Instance.new("UICorner", verBox).CornerRadius = UDim.new(1,0)
@@ -193,7 +199,7 @@ verText.BackgroundTransparency = 1
 verText.Text = "VERSION v1"
 verText.Font = Enum.Font.GothamBold
 verText.TextScaled = true
-verText.TextColor3 = Color3.fromRGB(255,255,255)
+verText.TextColor3 = Color3.new(1,1,1)
 
 -- BY TEXT
 local by = Instance.new("TextLabel", main)
@@ -204,9 +210,9 @@ by.Text = "BY slk gaming"
 by.Font = Enum.Font.Gotham
 by.TextScaled = true
 by.TextColor3 = Color3.fromRGB(180,180,180)
-by.TextXAlignment = Left
+by.TextXAlignment = Enum.TextXAlignment.Left
 
--- MINIMIZE
+-- MINIMIZE (-)
 local min = Instance.new("TextButton", top)
 min.Position = UDim2.fromScale(0.88,0.2)
 min.Size = UDim2.fromScale(0.05,0.6)
@@ -214,10 +220,11 @@ min.Text = "-"
 min.Font = Enum.Font.GothamBold
 min.TextScaled = true
 min.BackgroundColor3 = Color3.fromRGB(70,70,70)
-min.TextColor3 = Color3.fromRGB(255,255,255)
+min.TextColor3 = Color3.new(1,1,1)
+min.Active = false
 Instance.new("UICorner", min).CornerRadius = UDim.new(1,0)
 
--- CLOSE
+-- CLOSE (X)
 local close = Instance.new("TextButton", top)
 close.Position = UDim2.fromScale(0.94,0.2)
 close.Size = UDim2.fromScale(0.05,0.6)
@@ -225,7 +232,8 @@ close.Text = "X"
 close.Font = Enum.Font.GothamBold
 close.TextScaled = true
 close.BackgroundColor3 = Color3.fromRGB(180,50,50)
-close.TextColor3 = Color3.fromRGB(255,255,255)
+close.TextColor3 = Color3.new(1,1,1)
+close.Active = false
 Instance.new("UICorner", close).CornerRadius = UDim.new(1,0)
 
 -- CONTENT (TRỐNG)
@@ -234,7 +242,7 @@ content.Position = UDim2.fromScale(0.02,0.26)
 content.Size = UDim2.fromScale(0.96,0.7)
 content.BackgroundTransparency = 1
 
--- DRAG FIX
+-- DRAG
 local dragging, dragStart, startPos
 top.InputBegan:Connect(function(input)
 	if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
@@ -252,11 +260,16 @@ end)
 UIS.InputChanged:Connect(function(input)
 	if dragging and (input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch) then
 		local delta = input.Position - dragStart
-		main.Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X, startPos.Y.Scale, startPos.Y.Offset + delta.Y)
+		main.Position = UDim2.new(
+			startPos.X.Scale,
+			startPos.X.Offset + delta.X,
+			startPos.Y.Scale,
+			startPos.Y.Offset + delta.Y
+		)
 	end
 end)
 
--- MINIMIZED BUTTON
+-- MINI BUTTON
 local miniBtn = Instance.new("TextButton", gui)
 miniBtn.Size = UDim2.fromScale(0.18,0.06)
 miniBtn.Position = UDim2.fromScale(0.41,0.02)
@@ -265,10 +278,11 @@ miniBtn.Font = Enum.Font.GothamBold
 miniBtn.TextScaled = true
 miniBtn.BackgroundColor3 = Color3.fromRGB(0,0,0)
 miniBtn.BackgroundTransparency = 0.3
-miniBtn.TextColor3 = Color3.fromRGB(255,255,255)
+miniBtn.TextColor3 = Color3.new(1,1,1)
 miniBtn.Visible = false
 Instance.new("UICorner", miniBtn).CornerRadius = UDim.new(1,0)
 
+-- MINIMIZE ACTION
 min.MouseButton1Click:Connect(function()
 	main.Visible = false
 	miniBtn.Visible = true
@@ -294,7 +308,7 @@ close.MouseButton1Click:Connect(function()
 	txt.Text = "DO YOU WANT DELETE SCRIPT?"
 	txt.Font = Enum.Font.GothamBold
 	txt.TextScaled = true
-	txt.TextColor3 = Color3.fromRGB(255,255,255)
+	txt.TextColor3 = Color3.new(1,1,1)
 
 	local yes = Instance.new("TextButton", ask)
 	yes.Position = UDim2.fromScale(0.1,0.65)
@@ -322,7 +336,12 @@ close.MouseButton1Click:Connect(function()
 	end)
 end)
 
--- FADE IN
+-- FADE IN → RÕ RỒI MỚI BẤM ĐƯỢC
 TweenService:Create(main, TweenInfo.new(0.8), {
 	BackgroundTransparency = 0.35
 }):Play()
+
+task.delay(0.8, function()
+	min.Active = true
+	close.Active = true
+end)
