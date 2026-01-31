@@ -1,5 +1,5 @@
 --// ============================================================
---// SLK HUB | White Version v1.3
+--// SLK HUB | White Version v1.3.1
 --// Forsaken | ESP Player + ESP Generator + Player Speed
 --// By SLK GAMING
 --// ============================================================
@@ -32,8 +32,8 @@ ScreenGui.Parent = game.CoreGui
 ---------------------------------------------------------------
 local Main = Instance.new("Frame")
 Main.Parent = ScreenGui
-Main.Size = UDim2.new(0, 520, 0, 320)
-Main.Position = UDim2.new(0.5, -260, 0.5, -160)
+Main.Size = UDim2.new(0,520,0,320)
+Main.Position = UDim2.new(0.5,-260,0.5,-160)
 Main.BackgroundColor3 = Color3.fromRGB(255,255,255)
 Main.BackgroundTransparency = 0.15
 Main.BorderSizePixel = 0
@@ -66,7 +66,7 @@ Title.Parent = TopBar
 Title.Size = UDim2.new(1,-140,1,0)
 Title.Position = UDim2.new(0,16,0,0)
 Title.BackgroundTransparency = 1
-Title.Text = "SLK HUB | White Version v1.3"
+Title.Text = "SLK HUB | White Version v1.3.1"
 Title.Font = Enum.Font.GothamBold
 Title.TextSize = 15
 Title.TextXAlignment = Enum.TextXAlignment.Left
@@ -164,11 +164,13 @@ Info.Text = [[
 WELCOME TO SLK HUB 🤍
 
 Status: Working ✅
-Version: v1.3
+Version: v1.3.1
 
-✔ Clean UI
-✔ Mobile & PC
-✔ Forsaken Supported
+✔ Fixed Tabs
+✔ Fixed Drag
+✔ Fixed Close Confirm
+✔ ESP Player / Generator OK
+✔ Player Speed OK
 
 Thank you for using SLK HUB
 ]]
@@ -192,10 +194,12 @@ InvisText.TextYAlignment = Enum.TextYAlignment.Top
 InvisText.Font = Enum.Font.Gotham
 InvisText.TextSize = 13
 InvisText.TextColor3 = Color3.fromRGB(80,80,80)
-InvisText.Text = "INVISIBLE TAB\n\nChức năng sẽ được cập nhật trong phiên bản sau 🚧"
+InvisText.Text =
+"🇻🇳 Hub chỉ demo nên chưa có nhiều chức năng\n"..
+"🇺🇸 This hub is a demo, more features coming soon"
 
 ---------------------------------------------------------------
--- PLAYER TAB
+-- PLAYER TAB (SPEED)
 ---------------------------------------------------------------
 local PlayerFrame = Instance.new("Frame")
 PlayerFrame.Parent = View
@@ -203,9 +207,6 @@ PlayerFrame.Size = UDim2.new(1,0,1,0)
 PlayerFrame.BackgroundTransparency = 1
 PlayerFrame.Visible = false
 
----------------------------------------------------------------
--- PLAYER SPEED SYSTEM
----------------------------------------------------------------
 local SpeedOn = false
 local SpeedValue = 16
 
@@ -224,7 +225,7 @@ SpeedCorner.CornerRadius = UDim.new(0,10)
 SpeedCorner.Parent = SpeedBtn
 
 ---------------------------------------------------------------
--- SLIDER BAR
+-- SPEED SLIDER
 ---------------------------------------------------------------
 local Bar = Instance.new("Frame")
 Bar.Parent = PlayerFrame
@@ -245,9 +246,6 @@ local FillCorner = Instance.new("UICorner")
 FillCorner.CornerRadius = UDim.new(1,0)
 FillCorner.Parent = Fill
 
----------------------------------------------------------------
--- SPEED TEXT
----------------------------------------------------------------
 local SpeedText = Instance.new("TextLabel")
 SpeedText.Parent = PlayerFrame
 SpeedText.Position = UDim2.new(0,20,0,100)
@@ -258,9 +256,6 @@ SpeedText.TextSize = 13
 SpeedText.TextColor3 = Color3.fromRGB(70,70,70)
 SpeedText.Text = "Speed: 16"
 
----------------------------------------------------------------
--- SPEED TOGGLE
----------------------------------------------------------------
 SpeedBtn.MouseButton1Click:Connect(function()
 	SpeedOn = not SpeedOn
 	if SpeedOn then
@@ -276,13 +271,13 @@ SpeedBtn.MouseButton1Click:Connect(function()
 end)
 
 ---------------------------------------------------------------
--- SLIDER LOGIC (PC + MOBILE)
+-- SLIDER LOGIC
 ---------------------------------------------------------------
 local dragging = false
 
-Bar.InputBegan:Connect(function(input)
-	if input.UserInputType == Enum.UserInputType.MouseButton1
-	or input.UserInputType == Enum.UserInputType.Touch then
+Bar.InputBegan:Connect(function(i)
+	if i.UserInputType == Enum.UserInputType.MouseButton1
+	or i.UserInputType == Enum.UserInputType.Touch then
 		dragging = true
 	end
 end)
@@ -291,29 +286,17 @@ UserInputService.InputEnded:Connect(function()
 	dragging = false
 end)
 
-UserInputService.InputChanged:Connect(function(input)
-	if dragging and (
-		input.UserInputType == Enum.UserInputType.MouseMovement
-		or input.UserInputType == Enum.UserInputType.Touch
-	) then
-		local x = math.clamp(
-			(input.Position.X - Bar.AbsolutePosition.X) / Bar.AbsoluteSize.X,
-			0,
-			1
-		)
+UserInputService.InputChanged:Connect(function(i)
+	if dragging then
+		local x = math.clamp((i.Position.X - Bar.AbsolutePosition.X)/Bar.AbsoluteSize.X,0,1)
 		Fill.Size = UDim2.new(x,0,1,0)
-		SpeedValue = math.floor(x * 100)
+		SpeedValue = math.floor(x*100)
 		SpeedText.Text = "Speed: "..SpeedValue
 	end
 end)
 
----------------------------------------------------------------
--- APPLY SPEED
----------------------------------------------------------------
 RunService.RenderStepped:Connect(function()
-	if SpeedOn
-	and LocalPlayer.Character
-	and LocalPlayer.Character:FindFirstChild("Humanoid") then
+	if SpeedOn and LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("Humanoid") then
 		LocalPlayer.Character.Humanoid.WalkSpeed = SpeedValue
 	end
 end)
@@ -321,14 +304,7 @@ end)
 ---------------------------------------------------------------
 -- TABS
 ---------------------------------------------------------------
-local Tabs = {
-	"INFO",
-	"INVISIBLE",
-	"👤 PLAYER",
-	"TAB 4",
-	"TAB 5",
-	"TAB 6"
-}
+local Tabs = {"INFO","INVISIBLE","👤 PLAYER","TAB 4","TAB 5","TAB 6"}
 
 for i,name in ipairs(Tabs) do
 	local btn = Instance.new("TextButton")
@@ -341,9 +317,7 @@ for i,name in ipairs(Tabs) do
 	btn.BackgroundColor3 = Color3.fromRGB(235,235,235)
 	btn.TextColor3 = Color3.fromRGB(60,60,60)
 
-	local BtnCorner = Instance.new("UICorner")
-	BtnCorner.CornerRadius = UDim.new(0,8)
-	BtnCorner.Parent = btn
+	Instance.new("UICorner",btn).CornerRadius = UDim.new(0,8)
 
 	btn.MouseButton1Click:Connect(function()
 		Info.Visible = false
@@ -364,27 +338,23 @@ for i,name in ipairs(Tabs) do
 end
 
 ---------------------------------------------------------------
--- DRAG WINDOW (PC + MOBILE)
+-- DRAG WINDOW
 ---------------------------------------------------------------
 local draggingWindow = false
-local dragStart
-local startPos
+local dragStart, startPos
 
-TopBar.InputBegan:Connect(function(input)
-	if input.UserInputType == Enum.UserInputType.MouseButton1
-	or input.UserInputType == Enum.UserInputType.Touch then
+TopBar.InputBegan:Connect(function(i)
+	if i.UserInputType == Enum.UserInputType.MouseButton1
+	or i.UserInputType == Enum.UserInputType.Touch then
 		draggingWindow = true
-		dragStart = input.Position
+		dragStart = i.Position
 		startPos = Main.Position
 	end
 end)
 
-UserInputService.InputChanged:Connect(function(input)
-	if draggingWindow and (
-		input.UserInputType == Enum.UserInputType.MouseMovement
-		or input.UserInputType == Enum.UserInputType.Touch
-	) then
-		local delta = input.Position - dragStart
+UserInputService.InputChanged:Connect(function(i)
+	if draggingWindow then
+		local delta = i.Position - dragStart
 		Main.Position = UDim2.new(
 			startPos.X.Scale,
 			startPos.X.Offset + delta.X,
@@ -394,31 +364,56 @@ UserInputService.InputChanged:Connect(function(input)
 	end
 end)
 
-UserInputService.InputEnded:Connect(function(input)
-	if input.UserInputType == Enum.UserInputType.MouseButton1
-	or input.UserInputType == Enum.UserInputType.Touch then
-		draggingWindow = false
-	end
+UserInputService.InputEnded:Connect(function()
+	draggingWindow = false
 end)
 
 ---------------------------------------------------------------
 -- MINIMIZE
 ---------------------------------------------------------------
 local minimized = false
-
 MinBtn.MouseButton1Click:Connect(function()
 	minimized = not minimized
 	Content.Visible = not minimized
-	Main.Size = minimized
-		and UDim2.new(0,520,0,46)
-		or UDim2.new(0,520,0,320)
+	Main.Size = minimized and UDim2.new(0,520,0,46) or UDim2.new(0,520,0,320)
 end)
 
 ---------------------------------------------------------------
--- CLOSE
+-- CLOSE CONFIRM
 ---------------------------------------------------------------
 CloseBtn.MouseButton1Click:Connect(function()
-	ScreenGui:Destroy()
+	local cf = Instance.new("Frame",ScreenGui)
+	cf.Size = UDim2.new(0,260,0,130)
+	cf.Position = UDim2.new(0.5,-130,0.5,-65)
+	cf.BackgroundColor3 = Color3.fromRGB(255,255,255)
+	Instance.new("UICorner",cf).CornerRadius = UDim.new(0,12)
+
+	local t = Instance.new("TextLabel",cf)
+	t.Size = UDim2.new(1,-20,0,50)
+	t.Position = UDim2.new(0,10,0,10)
+	t.BackgroundTransparency = 1
+	t.Text = "Bạn có muốn đóng SLK HUB không?"
+	t.Font = Enum.Font.GothamBold
+	t.TextSize = 14
+	t.TextWrapped = true
+
+	local y = Instance.new("TextButton",cf)
+	y.Size = UDim2.new(0.4,0,0,32)
+	y.Position = UDim2.new(0.05,0,1,-42)
+	y.Text = "Yes"
+	y.BackgroundColor3 = Color3.fromRGB(255,120,120)
+	y.TextColor3 = Color3.new(1,1,1)
+	Instance.new("UICorner",y)
+
+	local n = Instance.new("TextButton",cf)
+	n.Size = UDim2.new(0.4,0,0,32)
+	n.Position = UDim2.new(0.55,0,1,-42)
+	n.Text = "No"
+	n.BackgroundColor3 = Color3.fromRGB(220,220,220)
+	Instance.new("UICorner",n)
+
+	y.MouseButton1Click:Connect(function() ScreenGui:Destroy() end)
+	n.MouseButton1Click:Connect(function() cf:Destroy() end)
 end)
 
---// ===================== END OF SLK HUB ======================
+--// ================= END SLK HUB v1.3.1 ======================
