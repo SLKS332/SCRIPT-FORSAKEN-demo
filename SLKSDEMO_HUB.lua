@@ -3,8 +3,9 @@
 
 local Players = game:GetService("Players")
 local UIS = game:GetService("UserInputService")
+local player = Players.LocalPlayer
 
--- Anti duplicate
+-- chống load lại
 if game.CoreGui:FindFirstChild("SLK_HUB") then
 	game.CoreGui.SLK_HUB:Destroy()
 end
@@ -21,104 +22,102 @@ Main.Parent = gui
 Main.Size = UDim2.new(0, 520, 0, 320)
 Main.Position = UDim2.new(0.5, -260, 0.5, -160)
 Main.BackgroundColor3 = Color3.fromRGB(255,255,255)
-Main.BackgroundTransparency = 0.18
+Main.BackgroundTransparency = 0.15
 Main.BorderSizePixel = 0
 Main.Active = true
-
-Instance.new("UICorner", Main).CornerRadius = UDim.new(0,16)
+Instance.new("UICorner", Main).CornerRadius = UDim.new(0,18)
 
 -- Top Bar
 local TopBar = Instance.new("Frame")
 TopBar.Parent = Main
 TopBar.Size = UDim2.new(1, 0, 0, 46)
-TopBar.BackgroundColor3 = Color3.fromRGB(245,245,245)
-TopBar.BackgroundTransparency = 0.1
+TopBar.BackgroundColor3 = Color3.fromRGB(235,235,235)
+TopBar.BackgroundTransparency = 0.05
 TopBar.BorderSizePixel = 0
-TopBar.Active = true
+Instance.new("UICorner", TopBar).CornerRadius = UDim.new(0,18)
 
-Instance.new("UICorner", TopBar).CornerRadius = UDim.new(0,16)
+-- fix bo góc dưới topbar
+local fix = Instance.new("Frame")
+fix.Parent = TopBar
+fix.Size = UDim2.new(1,0,0.5,0)
+fix.Position = UDim2.new(0,0,0.5,0)
+fix.BackgroundColor3 = TopBar.BackgroundColor3
+fix.BorderSizePixel = 0
 
--- Fix bo góc dưới TopBar
-local Fix = Instance.new("Frame")
-Fix.Parent = TopBar
-Fix.Size = UDim2.new(1,0,0.5,0)
-Fix.Position = UDim2.new(0,0,0.5,0)
-Fix.BackgroundColor3 = TopBar.BackgroundColor3
-Fix.BackgroundTransparency = TopBar.BackgroundTransparency
-Fix.BorderSizePixel = 0
+-- Title line 1
+local Title1 = Instance.new("TextLabel")
+Title1.Parent = TopBar
+Title1.Size = UDim2.new(1, -220, 0.5, 0)
+Title1.Position = UDim2.new(0, 16, 0, 2)
+Title1.BackgroundTransparency = 1
+Title1.Text = "SLK HUB"
+Title1.Font = Enum.Font.GothamBold
+Title1.TextSize = 15
+Title1.TextColor3 = Color3.fromRGB(35,35,35)
+Title1.TextXAlignment = Enum.TextXAlignment.Left
 
--- Title
-local Title = Instance.new("TextLabel")
-Title.Parent = TopBar
-Title.Position = UDim2.new(0,16,0,6)
-Title.Size = UDim2.new(1,-200,0,18)
-Title.BackgroundTransparency = 1
-Title.Text = "SLK HUB"
-Title.Font = Enum.Font.GothamBold
-Title.TextSize = 15
-Title.TextColor3 = Color3.fromRGB(35,35,35)
-Title.TextXAlignment = Left
+-- Title line 2
+local Title2 = Instance.new("TextLabel")
+Title2.Parent = TopBar
+Title2.Size = UDim2.new(1, -220, 0.5, 0)
+Title2.Position = UDim2.new(0, 16, 0.5, -2)
+Title2.BackgroundTransparency = 1
+Title2.Text = "By SLK GAMING"
+Title2.Font = Enum.Font.Gotham
+Title2.TextSize = 12
+Title2.TextColor3 = Color3.fromRGB(80,80,80)
+Title2.TextXAlignment = Enum.TextXAlignment.Left
 
--- By text
-local By = Instance.new("TextLabel")
-By.Parent = TopBar
-By.Position = UDim2.new(0,16,0,24)
-By.Size = UDim2.new(1,-200,0,16)
-By.BackgroundTransparency = 1
-By.Text = "By SLK GAMING"
-By.Font = Enum.Font.Gotham
-By.TextSize = 12
-By.TextColor3 = Color3.fromRGB(90,90,90)
-By.TextXAlignment = Left
-
--- Version label (đÃ FIX)
+-- VERSION LABEL (ĐÃ GẮN)
 local Version = Instance.new("TextLabel")
 Version.Parent = TopBar
-Version.Position = UDim2.new(1,-170,0.5,-12)
-Version.Size = UDim2.new(0,90,0,24)
+Version.Size = UDim2.new(0, 90, 0, 22)
+Version.Position = UDim2.new(1, -180, 0.5, -11)
 Version.BackgroundColor3 = Color3.fromRGB(230,230,230)
-Version.BackgroundTransparency = 0.2
+Version.BackgroundTransparency = 0.25
+Version.BorderSizePixel = 0
 Version.Text = "Version v1"
 Version.Font = Enum.Font.Gotham
 Version.TextSize = 12
 Version.TextColor3 = Color3.fromRGB(50,50,50)
-Version.BorderSizePixel = 0
+Version.TextXAlignment = Enum.TextXAlignment.Center
+Version.TextYAlignment = Enum.TextYAlignment.Center
 Instance.new("UICorner", Version).CornerRadius = UDim.new(0,8)
 
 -- Minimize button
 local Min = Instance.new("TextButton")
 Min.Parent = TopBar
-Min.Size = UDim2.new(0,32,0,32)
-Min.Position = UDim2.new(1,-70,0.5,-16)
+Min.Size = UDim2.new(0, 32, 0, 32)
+Min.Position = UDim2.new(1, -74, 0.5, -16)
 Min.Text = "-"
 Min.Font = Enum.Font.GothamBold
 Min.TextSize = 18
 Min.TextColor3 = Color3.fromRGB(40,40,40)
-Min.BackgroundColor3 = Color3.fromRGB(240,240,240)
+Min.BackgroundColor3 = Color3.fromRGB(245,245,245)
 Min.BorderSizePixel = 0
 Instance.new("UICorner", Min).CornerRadius = UDim.new(0,8)
 
 -- Close button
 local Close = Instance.new("TextButton")
 Close.Parent = TopBar
-Close.Size = UDim2.new(0,32,0,32)
-Close.Position = UDim2.new(1,-34,0.5,-16)
+Close.Size = UDim2.new(0, 32, 0, 32)
+Close.Position = UDim2.new(1, -36, 0.5, -16)
 Close.Text = "X"
 Close.Font = Enum.Font.GothamBold
 Close.TextSize = 14
-Close.TextColor3 = Color3.fromRGB(140,40,40)
-Close.BackgroundColor3 = Color3.fromRGB(240,240,240)
+Close.TextColor3 = Color3.fromRGB(120,40,40)
+Close.BackgroundColor3 = Color3.fromRGB(245,245,245)
 Close.BorderSizePixel = 0
 Instance.new("UICorner", Close).CornerRadius = UDim.new(0,8)
 
--- Content
+-- Content (trống)
 local Content = Instance.new("Frame")
 Content.Parent = Main
-Content.Position = UDim2.new(0,0,0,46)
-Content.Size = UDim2.new(1,0,1,-46)
+Content.Position = UDim2.new(0, 0, 0, 46)
+Content.Size = UDim2.new(1, 0, 1, -46)
 Content.BackgroundTransparency = 1
 
--- Drag system (chuẩn – không lỗi)
+-- Drag system
 local dragging = false
 local dragStart
 local startPos
@@ -129,6 +128,12 @@ TopBar.InputBegan:Connect(function(input)
 		dragging = true
 		dragStart = input.Position
 		startPos = Main.Position
+
+		input.Changed:Connect(function()
+			if input.UserInputState == Enum.UserInputState.End then
+				dragging = false
+			end
+		end)
 	end
 end)
 
@@ -147,14 +152,7 @@ UIS.InputChanged:Connect(function(input)
 	end
 end)
 
-UIS.InputEnded:Connect(function(input)
-	if input.UserInputType == Enum.UserInputType.MouseButton1
-	or input.UserInputType == Enum.UserInputType.Touch then
-		dragging = false
-	end
-end)
-
--- Minimize (thu nhỏ vẫn kéo được)
+-- Minimize logic
 local minimized = false
 Min.MouseButton1Click:Connect(function()
 	minimized = not minimized
