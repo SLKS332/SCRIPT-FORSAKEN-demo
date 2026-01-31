@@ -11,9 +11,10 @@ if game.CoreGui:FindFirstChild("SLK_HUB") then
 end
 
 -- ScreenGui
-local gui = Instance.new("ScreenGui", game.CoreGui)
+local gui = Instance.new("ScreenGui")
 gui.Name = "SLK_HUB"
 gui.ResetOnSpawn = false
+gui.Parent = game.CoreGui
 
 -- Main Frame
 local Main = Instance.new("Frame", gui)
@@ -29,15 +30,9 @@ Instance.new("UICorner", Main).CornerRadius = UDim.new(0,18)
 local TopBar = Instance.new("Frame", Main)
 TopBar.Size = UDim2.new(1, 0, 0, 46)
 TopBar.BackgroundColor3 = Color3.fromRGB(235,235,235)
-TopBar.BackgroundTransparency = 0.05
 TopBar.BorderSizePixel = 0
+TopBar.Active = true
 Instance.new("UICorner", TopBar).CornerRadius = UDim.new(0,18)
-
-local fix = Instance.new("Frame", TopBar)
-fix.Size = UDim2.new(1,0,0.5,0)
-fix.Position = UDim2.new(0,0,0.5,0)
-fix.BackgroundColor3 = TopBar.BackgroundColor3
-fix.BorderSizePixel = 0
 
 -- Title
 local Title1 = Instance.new("TextLabel", TopBar)
@@ -134,27 +129,39 @@ for i,name in ipairs(TabNames) do
 end
 
 --------------------------------------------------
--- DRAG
+-- DRAG (FIXED)
 --------------------------------------------------
-local dragging, dragStart, startPos = false
+local dragging = false
+local dragStart
+local startPos
+
 TopBar.InputBegan:Connect(function(input)
-	if input.UserInputType == Enum.UserInputType.MouseButton1 then
+	if Confirm.Visible then return end
+	if input.UserInputType == Enum.UserInputType.MouseButton1
+	or input.UserInputType == Enum.UserInputType.Touch then
 		dragging = true
 		dragStart = input.Position
 		startPos = Main.Position
+
+		input.Changed:Connect(function()
+			if input.UserInputState == Enum.UserInputState.End then
+				dragging = false
+			end
+		end)
 	end
 end)
 
 UIS.InputChanged:Connect(function(input)
-	if dragging and input.UserInputType == Enum.UserInputType.MouseMovement then
+	if dragging and (input.UserInputType == Enum.UserInputType.MouseMovement
+	or input.UserInputType == Enum.UserInputType.Touch) then
 		local delta = input.Position - dragStart
-		Main.Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X,
-			startPos.Y.Scale, startPos.Y.Offset + delta.Y)
+		Main.Position = UDim2.new(
+			startPos.X.Scale,
+			startPos.X.Offset + delta.X,
+			startPos.Y.Scale,
+			startPos.Y.Offset + delta.Y
+		)
 	end
-end)
-
-UIS.InputEnded:Connect(function()
-	dragging = false
 end)
 
 --------------------------------------------------
@@ -170,11 +177,12 @@ end)
 --------------------------------------------------
 -- CONFIRM CLOSE
 --------------------------------------------------
-local Confirm = Instance.new("Frame", gui)
+Confirm = Instance.new("Frame", gui)
 Confirm.Size = UDim2.new(0, 300, 0, 140)
 Confirm.Position = UDim2.new(0.5, -150, 0.5, -70)
 Confirm.BackgroundColor3 = Color3.fromRGB(245,245,245)
 Confirm.Visible = false
+Confirm.ZIndex = 10
 Instance.new("UICorner", Confirm).CornerRadius = UDim.new(0,14)
 
 local Msg = Instance.new("TextLabel", Confirm)
