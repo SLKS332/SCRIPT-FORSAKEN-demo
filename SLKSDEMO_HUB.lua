@@ -1,8 +1,10 @@
---// SLK HUB - WHITE VERSION v1 (FINAL FIX)
+--// SLK HUB - WHITE VERSION v1 (INVISIBLE ESP FIXED)
 --// By SLK GAMING
 
 ---------------- SERVICES ----------------
 local UIS = game:GetService("UserInputService")
+local Players = game:GetService("Players")
+local LocalPlayer = Players.LocalPlayer
 
 -------------- ANTI DUPLICATE ------------
 if game.CoreGui:FindFirstChild("SLK_HUB") then
@@ -102,10 +104,71 @@ YouTube: SLK GAMING]]
 
 Info.Text = INFO_TEXT
 
+---------------- ESP (INVISIBLE) ----------------
+local ESP_ON = false
+local ESP_LIST = {}
+
+local function ClearESP()
+	for _,h in pairs(ESP_LIST) do
+		if h and h.Parent then
+			h:Destroy()
+		end
+	end
+	table.clear(ESP_LIST)
+end
+
+local function ApplyESP()
+	ClearESP()
+	if not ESP_ON then return end
+
+	for _,plr in pairs(Players:GetPlayers()) do
+		if plr ~= LocalPlayer and plr.Character then
+			local hl = Instance.new("Highlight")
+			hl.Adornee = plr.Character
+			hl.FillColor = Color3.fromRGB(255,70,70)
+			hl.OutlineColor = Color3.new(1,1,1)
+			hl.FillTransparency = 0.35
+			hl.DepthMode = Enum.HighlightDepthMode.AlwaysOnTop
+			hl.Parent = plr.Character
+			table.insert(ESP_LIST, hl)
+		end
+	end
+end
+
+---------------- ESP UI ----------------
+local ESP_Frame = Instance.new("Frame", View)
+ESP_Frame.Size = UDim2.new(0,260,0,80)
+ESP_Frame.Position = UDim2.new(0,20,0,20)
+ESP_Frame.BackgroundTransparency = 1
+ESP_Frame.Visible = false
+
+local ESP_Toggle = Instance.new("TextButton", ESP_Frame)
+ESP_Toggle.Size = UDim2.new(0,200,0,36)
+ESP_Toggle.Position = UDim2.new(0,0,0,0)
+ESP_Toggle.Text = "ESP Highlight : OFF"
+ESP_Toggle.Font = Enum.Font.GothamBold
+ESP_Toggle.TextSize = 14
+ESP_Toggle.TextColor3 = Color3.new(1,1,1)
+ESP_Toggle.BackgroundColor3 = Color3.fromRGB(160,160,160)
+Instance.new("UICorner", ESP_Toggle).CornerRadius = UDim.new(0,10)
+
+ESP_Toggle.MouseButton1Click:Connect(function()
+	ESP_ON = not ESP_ON
+	if ESP_ON then
+		ESP_Toggle.Text = "ESP Highlight : ON"
+		ESP_Toggle.BackgroundColor3 = Color3.fromRGB(220,70,70)
+		ApplyESP()
+	else
+		ESP_Toggle.Text = "ESP Highlight : OFF"
+		ESP_Toggle.BackgroundColor3 = Color3.fromRGB(160,160,160)
+		ClearESP()
+	end
+end)
+
 ---------------- TABS --------------------
 local Tabs = {
 	"✅ INFO",
-	"Tab 2",
+	"👁 INVISIBLE",
 	"Tab 3",
 	"Tab 4",
 	"Tab 5",
@@ -125,8 +188,15 @@ for i,name in ipairs(Tabs) do
 
 	Tab.MouseButton1Click:Connect(function()
 		if name == "✅ INFO" then
+			Info.Visible = true
+			ESP_Frame.Visible = false
 			Info.Text = INFO_TEXT
+		elseif name == "👁 INVISIBLE" then
+			Info.Visible = false
+			ESP_Frame.Visible = true
 		else
+			Info.Visible = true
+			ESP_Frame.Visible = false
 			Info.Text = name .. " đang phát triển 🚧"
 		end
 	end)
