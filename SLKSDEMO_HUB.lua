@@ -140,7 +140,7 @@ TweenService:Create(frame, tweenInfo, {
 task.wait(1.3)
 gui:Destroy()
 
---// SLK HUB MENU (NO LOADING - INFORMATION ONLY)
+--// SLK HUB MENU (NO LOADING - INFORMATION TAB)
 local Players = game:GetService("Players")
 local TweenService = game:GetService("TweenService")
 local UIS = game:GetService("UserInputService")
@@ -209,6 +209,38 @@ by.TextScaled = true
 by.TextColor3 = Color3.fromRGB(180,180,180)
 by.TextXAlignment = Enum.TextXAlignment.Left
 
+-- TAB BUTTON (INFORMATION)
+local infoTab = Instance.new("TextButton", main)
+infoTab.Position = UDim2.fromScale(0.02, 0.23)
+infoTab.Size = UDim2.fromScale(0.25, 0.07)
+infoTab.Text = "INFORMATION"
+infoTab.Font = Enum.Font.GothamBold
+infoTab.TextScaled = true
+infoTab.BackgroundColor3 = Color3.fromRGB(30,30,30)
+infoTab.TextColor3 = Color3.fromRGB(255,255,255)
+Instance.new("UICorner", infoTab).CornerRadius = UDim.new(0,10)
+
+-- CONTENT INFORMATION
+local contentInformation = Instance.new("Frame", main)
+contentInformation.Position = UDim2.fromScale(0.02, 0.32)
+contentInformation.Size = UDim2.fromScale(0.96, 0.62)
+contentInformation.BackgroundTransparency = 1
+contentInformation.Visible = false
+
+local infoText = Instance.new("TextLabel", contentInformation)
+infoText.Size = UDim2.fromScale(1,1)
+infoText.BackgroundTransparency = 1
+infoText.Text = "SCRIPT IS DEVELOPING\nPLEASE WAIT FOR UPDATE"
+infoText.Font = Enum.Font.GothamBold
+infoText.TextScaled = true
+infoText.TextWrapped = true
+infoText.TextColor3 = Color3.fromRGB(0,170,255)
+
+-- TAB LOGIC
+infoTab.MouseButton1Click:Connect(function()
+	contentInformation.Visible = true
+end)
+
 -- MINIMIZE
 local min = Instance.new("TextButton", top)
 min.Position = UDim2.fromScale(0.88, 0.2)
@@ -231,26 +263,10 @@ close.BackgroundColor3 = Color3.fromRGB(180,50,50)
 close.TextColor3 = Color3.fromRGB(255,255,255)
 Instance.new("UICorner", close).CornerRadius = UDim.new(1,0)
 
--- CONTENT (INFORMATION)
-local content = Instance.new("Frame", main)
-content.Position = UDim2.fromScale(0.02, 0.26)
-content.Size = UDim2.fromScale(0.96, 0.7)
-content.BackgroundTransparency = 1
-
-local info = Instance.new("TextLabel", content)
-info.Size = UDim2.fromScale(1,1)
-info.BackgroundTransparency = 1
-info.Text = "SCRIPT IS DEVELOPING\nPLEASE WAIT FOR UPDATE"
-info.Font = Enum.Font.GothamBold
-info.TextScaled = true
-info.TextWrapped = true
-info.TextColor3 = Color3.fromRGB(0,170,255)
-
 -- DRAG
 local dragging, dragStart, startPos
 top.InputBegan:Connect(function(input)
-	if input.UserInputType == Enum.UserInputType.MouseButton1
-	or input.UserInputType == Enum.UserInputType.Touch then
+	if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
 		dragging = true
 		dragStart = input.Position
 		startPos = main.Position
@@ -296,7 +312,7 @@ miniBtn.MouseButton1Click:Connect(function()
 	miniBtn.Visible = false
 end)
 
--- CLOSE CONFIRM + GOODBYE
+-- CLOSE CONFIRM + GOODBYE 5s
 close.MouseButton1Click:Connect(function()
 	local ask = Instance.new("Frame", gui)
 	ask.Size = UDim2.fromScale(0.4, 0.22)
@@ -336,6 +352,36 @@ close.MouseButton1Click:Connect(function()
 	end)
 
 	yes.MouseButton1Click:Connect(function()
+		ask:Destroy()
+
+		local bye = Instance.new("Frame", gui)
+		bye.Size = UDim2.fromScale(0.45, 0.28)
+		bye.Position = UDim2.fromScale(0.275, 0.36)
+		bye.BackgroundColor3 = Color3.fromRGB(0,0,0)
+		bye.BackgroundTransparency = 0.15
+		Instance.new("UICorner", bye).CornerRadius = UDim.new(0,16)
+
+		local msg = Instance.new("TextLabel", bye)
+		msg.Size = UDim2.fromScale(1, 0.5)
+		msg.Position = UDim2.fromScale(0,0.15)
+		msg.Text = "SORRY\nSEE YOU AGAIN"
+		msg.Font = Enum.Font.GothamBold
+		msg.TextScaled = true
+		msg.BackgroundTransparency = 1
+
+		local count = Instance.new("TextLabel", bye)
+		count.Position = UDim2.fromScale(0.3, 0.7)
+		count.Size = UDim2.fromScale(0.4, 0.25)
+		count.TextScaled = true
+		count.Font = Enum.Font.GothamBlack
+		count.TextColor3 = Color3.fromRGB(0,170,255)
+		count.BackgroundTransparency = 1
+
+		for i = 5,0,-1 do
+			count.Text = i.."s"
+			task.wait(1)
+		end
+
 		gui:Destroy()
 	end)
 end)
