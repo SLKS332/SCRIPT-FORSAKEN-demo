@@ -1,4 +1,4 @@
---// SLK HUB - WHITE VERSION v1 (FIXED TAB INFO)
+--// SLK HUB - WHITE VERSION v1 (FINAL FIX)
 --// By SLK GAMING
 
 ---------------- SERVICES ----------------
@@ -92,15 +92,12 @@ Info.Font = Enum.Font.Gotham
 Info.TextSize = 14
 Info.TextColor3 = Color3.fromRGB(70,70,70)
 
--- NỘI DUNG INFO GỐC (FIX LỖI)
-local INFO_TEXT = [[Welcome to SLK HUB 👋
+local INFO_TEXT = [[⚙ SCRIPT STATUS
 
-• Hub trắng – trong suốt nhẹ
-• Fix lỗi mất tab khi ấn –
-• Ấn X có hỏi xác nhận
-• 6 tab đầy đủ
+• Script Status: Working ✅
+• Update Status: Updating...
 
-Chỉ chơi vui, không phá game 😄
+🙏 Thank you for using SLK HUB
 YouTube: SLK GAMING]]
 
 Info.Text = INFO_TEXT
@@ -171,7 +168,7 @@ Min.MouseButton1Click:Connect(function()
 	Main.Size = minimized and UDim2.new(0,520,0,46) or UDim2.new(0,520,0,320)
 end)
 
----------------- CLOSE CONFIRM ----------
+---------------- CLOSE CONFIRM -----------
 Close.MouseButton1Click:Connect(function()
 	if gui:FindFirstChild("CONFIRM") then return end
 
