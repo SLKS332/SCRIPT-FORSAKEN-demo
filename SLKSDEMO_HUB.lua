@@ -11,14 +11,12 @@ if game.CoreGui:FindFirstChild("SLK_HUB") then
 end
 
 -- ScreenGui
-local gui = Instance.new("ScreenGui")
+local gui = Instance.new("ScreenGui", game.CoreGui)
 gui.Name = "SLK_HUB"
 gui.ResetOnSpawn = false
-gui.Parent = game.CoreGui
 
 -- Main Frame
-local Main = Instance.new("Frame")
-Main.Parent = gui
+local Main = Instance.new("Frame", gui)
 Main.Size = UDim2.new(0, 520, 0, 320)
 Main.Position = UDim2.new(0.5, -260, 0.5, -160)
 Main.BackgroundColor3 = Color3.fromRGB(255,255,255)
@@ -28,16 +26,14 @@ Main.Active = true
 Instance.new("UICorner", Main).CornerRadius = UDim.new(0,18)
 
 -- Top Bar
-local TopBar = Instance.new("Frame")
-TopBar.Parent = Main
+local TopBar = Instance.new("Frame", Main)
 TopBar.Size = UDim2.new(1, 0, 0, 46)
 TopBar.BackgroundColor3 = Color3.fromRGB(235,235,235)
 TopBar.BackgroundTransparency = 0.05
 TopBar.BorderSizePixel = 0
 Instance.new("UICorner", TopBar).CornerRadius = UDim.new(0,18)
 
-local fix = Instance.new("Frame")
-fix.Parent = TopBar
+local fix = Instance.new("Frame", TopBar)
 fix.Size = UDim2.new(1,0,0.5,0)
 fix.Position = UDim2.new(0,0,0.5,0)
 fix.BackgroundColor3 = TopBar.BackgroundColor3
@@ -51,7 +47,6 @@ Title1.BackgroundTransparency = 1
 Title1.Text = "SLK HUB"
 Title1.Font = Enum.Font.GothamBold
 Title1.TextSize = 15
-Title1.TextColor3 = Color3.fromRGB(35,35,35)
 Title1.TextXAlignment = Enum.TextXAlignment.Left
 
 local Title2 = Instance.new("TextLabel", TopBar)
@@ -61,7 +56,6 @@ Title2.BackgroundTransparency = 1
 Title2.Text = "By SLK GAMING"
 Title2.Font = Enum.Font.Gotham
 Title2.TextSize = 12
-Title2.TextColor3 = Color3.fromRGB(80,80,80)
 Title2.TextXAlignment = Enum.TextXAlignment.Left
 
 -- Version
@@ -70,11 +64,9 @@ Version.Size = UDim2.new(0, 90, 0, 22)
 Version.Position = UDim2.new(1, -180, 0.5, -11)
 Version.BackgroundColor3 = Color3.fromRGB(230,230,230)
 Version.BackgroundTransparency = 0.25
-Version.BorderSizePixel = 0
 Version.Text = "Version v1"
 Version.Font = Enum.Font.Gotham
 Version.TextSize = 12
-Version.TextColor3 = Color3.fromRGB(50,50,50)
 Instance.new("UICorner", Version).CornerRadius = UDim.new(0,8)
 
 -- Minimize
@@ -85,7 +77,6 @@ Min.Text = "-"
 Min.Font = Enum.Font.GothamBold
 Min.TextSize = 18
 Min.BackgroundColor3 = Color3.fromRGB(245,245,245)
-Min.BorderSizePixel = 0
 Instance.new("UICorner", Min).CornerRadius = UDim.new(0,8)
 
 -- Close
@@ -97,7 +88,6 @@ Close.Font = Enum.Font.GothamBold
 Close.TextSize = 14
 Close.TextColor3 = Color3.fromRGB(120,40,40)
 Close.BackgroundColor3 = Color3.fromRGB(245,245,245)
-Close.BorderSizePixel = 0
 Instance.new("UICorner", Close).CornerRadius = UDim.new(0,8)
 
 -- Content
@@ -106,25 +96,20 @@ Content.Position = UDim2.new(0, 0, 0, 46)
 Content.Size = UDim2.new(1, 0, 1, -46)
 Content.BackgroundTransparency = 1
 
-----------------------------------------------------------------
--- TAB AREA
-----------------------------------------------------------------
-
--- Tab list (đổi tên sau này thoải mái)
+--------------------------------------------------
+-- TAB SYSTEM
+--------------------------------------------------
 local TabNames = {"Tab 1","Tab 2","Tab 3","Tab 4"}
 
--- Tab buttons frame
 local TabBar = Instance.new("Frame", Content)
 TabBar.Size = UDim2.new(0, 120, 1, 0)
 TabBar.BackgroundTransparency = 1
 
--- Content view
 local View = Instance.new("Frame", Content)
 View.Position = UDim2.new(0, 120, 0, 0)
 View.Size = UDim2.new(1, -120, 1, 0)
 View.BackgroundTransparency = 1
 
--- Content text
 local Info = Instance.new("TextLabel", View)
 Info.Size = UDim2.new(1, 0, 1, 0)
 Info.BackgroundTransparency = 1
@@ -133,7 +118,6 @@ Info.Font = Enum.Font.GothamBold
 Info.TextSize = 18
 Info.TextColor3 = Color3.fromRGB(120,120,120)
 
--- Create tabs
 for i,name in ipairs(TabNames) do
 	local Tab = Instance.new("TextButton", TabBar)
 	Tab.Size = UDim2.new(1, -10, 0, 40)
@@ -142,7 +126,6 @@ for i,name in ipairs(TabNames) do
 	Tab.Font = Enum.Font.Gotham
 	Tab.TextSize = 14
 	Tab.BackgroundColor3 = Color3.fromRGB(235,235,235)
-	Tab.BorderSizePixel = 0
 	Instance.new("UICorner", Tab).CornerRadius = UDim.new(0,8)
 
 	Tab.MouseButton1Click:Connect(function()
@@ -150,34 +133,33 @@ for i,name in ipairs(TabNames) do
 	end)
 end
 
-----------------------------------------------------------------
--- Drag
-----------------------------------------------------------------
+--------------------------------------------------
+-- DRAG
+--------------------------------------------------
 local dragging, dragStart, startPos = false
-
 TopBar.InputBegan:Connect(function(input)
-	if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+	if input.UserInputType == Enum.UserInputType.MouseButton1 then
 		dragging = true
 		dragStart = input.Position
 		startPos = Main.Position
-		input.Changed:Connect(function()
-			if input.UserInputState == Enum.UserInputState.End then
-				dragging = false
-			end
-		end)
 	end
 end)
 
 UIS.InputChanged:Connect(function(input)
-	if dragging and (input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch) then
+	if dragging and input.UserInputType == Enum.UserInputType.MouseMovement then
 		local delta = input.Position - dragStart
-		Main.Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X, startPos.Y.Scale, startPos.Y.Offset + delta.Y)
+		Main.Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X,
+			startPos.Y.Scale, startPos.Y.Offset + delta.Y)
 	end
 end)
 
-----------------------------------------------------------------
--- Minimize
-----------------------------------------------------------------
+UIS.InputEnded:Connect(function()
+	dragging = false
+end)
+
+--------------------------------------------------
+-- MINIMIZE
+--------------------------------------------------
 local minimized = false
 Min.MouseButton1Click:Connect(function()
 	minimized = not minimized
@@ -185,9 +167,47 @@ Min.MouseButton1Click:Connect(function()
 	Main.Size = minimized and UDim2.new(0,520,0,46) or UDim2.new(0,520,0,320)
 end)
 
-----------------------------------------------------------------
--- Close
-----------------------------------------------------------------
+--------------------------------------------------
+-- CONFIRM CLOSE
+--------------------------------------------------
+local Confirm = Instance.new("Frame", gui)
+Confirm.Size = UDim2.new(0, 300, 0, 140)
+Confirm.Position = UDim2.new(0.5, -150, 0.5, -70)
+Confirm.BackgroundColor3 = Color3.fromRGB(245,245,245)
+Confirm.Visible = false
+Instance.new("UICorner", Confirm).CornerRadius = UDim.new(0,14)
+
+local Msg = Instance.new("TextLabel", Confirm)
+Msg.Size = UDim2.new(1, -20, 0, 50)
+Msg.Position = UDim2.new(0, 10, 0, 10)
+Msg.BackgroundTransparency = 1
+Msg.Text = "Do you want to close this script?"
+Msg.Font = Enum.Font.Gotham
+Msg.TextSize = 14
+
+local Yes = Instance.new("TextButton", Confirm)
+Yes.Size = UDim2.new(0, 100, 0, 32)
+Yes.Position = UDim2.new(0.5, -110, 1, -50)
+Yes.Text = "YES"
+Yes.BackgroundColor3 = Color3.fromRGB(220,80,80)
+Yes.TextColor3 = Color3.fromRGB(255,255,255)
+Instance.new("UICorner", Yes).CornerRadius = UDim.new(0,8)
+
+local No = Instance.new("TextButton", Confirm)
+No.Size = UDim2.new(0, 100, 0, 32)
+No.Position = UDim2.new(0.5, 10, 1, -50)
+No.Text = "NO"
+No.BackgroundColor3 = Color3.fromRGB(200,200,200)
+Instance.new("UICorner", No).CornerRadius = UDim.new(0,8)
+
 Close.MouseButton1Click:Connect(function()
+	Confirm.Visible = true
+end)
+
+Yes.MouseButton1Click:Connect(function()
 	gui:Destroy()
+end)
+
+No.MouseButton1Click:Connect(function()
+	Confirm.Visible = false
 end)
