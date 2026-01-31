@@ -1,76 +1,171 @@
---// SLK HUB LOADING + MENU (FULL FIXED STABLE)
---// FIX: exec, drag mobile, minimize, close confirm, player teleport speed
---// DO NOT CUT / DO NOT RENAME CORE
+-- SLK HUB Loading Screen
+-- Duration: ~6 seconds
 
-------------------------------------------------
--- SERVICES
-------------------------------------------------
 local Players = game:GetService("Players")
-local UIS = game:GetService("UserInputService")
-local RunService = game:GetService("RunService")
 local TweenService = game:GetService("TweenService")
 local player = Players.LocalPlayer
 
-------------------------------------------------
--- LOADING GUI
-------------------------------------------------
-local loadingGui = Instance.new("ScreenGui")
-loadingGui.Name = "SLK_LOADING"
-loadingGui.ResetOnSpawn = false
-loadingGui.Parent = player.PlayerGui
+-- UI
+local gui = Instance.new("ScreenGui", player.PlayerGui)
+gui.Name = "SLK_Loading"
+gui.ResetOnSpawn = false
 
-local lFrame = Instance.new("Frame", loadingGui)
-lFrame.Size = UDim2.fromScale(0.6,0.6)
-lFrame.Position = UDim2.fromScale(0.2,0.2)
-lFrame.BackgroundColor3 = Color3.fromRGB(0,0,0)
-lFrame.BorderSizePixel = 2
-lFrame.BorderColor3 = Color3.fromRGB(0,170,255)
+local frame = Instance.new("Frame", gui)
+frame.Size = UDim2.fromScale(0.6, 0.6)
+frame.Position = UDim2.fromScale(0.2, 0.2)
+frame.BackgroundColor3 = Color3.fromRGB(0,0,0)
+frame.BorderSizePixel = 3
+frame.BorderColor3 = Color3.fromRGB(255,0,0)
 
-local lTitle = Instance.new("TextLabel", lFrame)
-lTitle.Size = UDim2.fromScale(1,0.2)
-lTitle.Position = UDim2.fromScale(0,0.3)
-lTitle.Text = "SLK HUB"
-lTitle.Font = Enum.Font.GothamBold
-lTitle.TextScaled = true
-lTitle.TextColor3 = Color3.fromRGB(255,255,255)
-lTitle.BackgroundTransparency = 1
+-- Title
+local title = Instance.new("TextLabel", frame)
+title.Size = UDim2.fromScale(1, 0.15)
+title.Position = UDim2.fromScale(0, 0.25)
+title.Text = "SLK HUB"
+title.TextScaled = true
+title.Font = Enum.Font.GothamBold
+title.TextColor3 = Color3.fromRGB(255,255,255)
+title.BackgroundTransparency = 1
 
-local lPercent = Instance.new("TextLabel", lFrame)
-lPercent.Size = UDim2.fromScale(1,0.1)
-lPercent.Position = UDim2.fromScale(0,0.55)
-lPercent.Text = "0%"
-lPercent.Font = Enum.Font.Code
-lPercent.TextScaled = true
-lPercent.TextColor3 = Color3.fromRGB(0,170,255)
-lPercent.BackgroundTransparency = 1
+local by = Instance.new("TextLabel", frame)
+by.Size = UDim2.fromScale(1, 0.07)
+by.Position = UDim2.fromScale(0, 0.4)
+by.Text = "By SLK Gaming"
+by.TextScaled = true
+by.Font = Enum.Font.Gotham
+by.TextColor3 = Color3.fromRGB(200,200,200)
+by.BackgroundTransparency = 1
 
-for i = 1,100 do
-	lPercent.Text = i.."%"
-	task.wait(0.04)
+-- Loading text
+local statusText = Instance.new("TextLabel", frame)
+statusText.Size = UDim2.fromScale(1, 0.08)
+statusText.Position = UDim2.fromScale(0, 0.6)
+statusText.Text = "Welcome to script"
+statusText.TextScaled = true
+statusText.Font = Enum.Font.Code
+statusText.TextColor3 = Color3.fromRGB(255,255,255)
+statusText.BackgroundTransparency = 1
+
+-- Percent
+local percentText = Instance.new("TextLabel", frame)
+percentText.Size = UDim2.fromScale(0.2, 0.08)
+percentText.Position = UDim2.fromScale(0.75, 0.6)
+percentText.Text = "0%"
+percentText.TextScaled = true
+percentText.Font = Enum.Font.Code
+percentText.TextColor3 = Color3.fromRGB(255,255,255)
+percentText.BackgroundTransparency = 1
+
+-- Vertical loading bar
+local barHolder = Instance.new("Frame", frame)
+barHolder.Size = UDim2.fromScale(0.05, 0.5)
+barHolder.Position = UDim2.fromScale(0.05, 0.3)
+barHolder.BackgroundColor3 = Color3.fromRGB(255,0,0)
+
+local barFill = Instance.new("Frame", barHolder)
+barFill.Size = UDim2.fromScale(1, 0)
+barFill.Position = UDim2.fromScale(0, 1)
+barFill.AnchorPoint = Vector2.new(0,1)
+barFill.BackgroundColor3 = Color3.fromRGB(0,170,255)
+
+-- Binary text
+local binary = Instance.new("TextLabel", frame)
+binary.Size = UDim2.fromScale(1, 0.06)
+binary.Position = UDim2.fromScale(0, 0.75)
+binary.Text = "1010101010101010101010101"
+binary.TextScaled = true
+binary.Font = Enum.Font.Code
+binary.TextColor3 = Color3.fromRGB(0,170,255)
+binary.BackgroundTransparency = 1
+
+-- Binary animation
+task.spawn(function()
+	while gui.Parent do
+		binary.Position = UDim2.fromScale(-0.1, 0.75)
+		TweenService:Create(binary, TweenInfo.new(4, Enum.EasingStyle.Linear), {
+			Position = UDim2.fromScale(0.1, 0.75)
+		}):Play()
+		task.wait(4)
+	end
+end)
+
+-- Loading logic
+local messages = {
+	"Welcome to script",
+	"Script will done",
+	"Script will ready",
+	"Okay wait a script"
+}
+
+local totalTime = 6
+for i = 1, 100 do
+	barFill.Size = UDim2.fromScale(1, i/100)
+	percentText.Text = i .. "%"
+
+	if i == 25 then statusText.Text = messages[2] end
+	if i == 50 then statusText.Text = messages[3] end
+	if i == 75 then statusText.Text = messages[4] end
+
+	task.wait(totalTime / 100)
 end
 
-TweenService:Create(lFrame,TweenInfo.new(0.8),{
-	Size = UDim2.fromScale(0.3,0.3),
-	Position = UDim2.fromScale(0.35,0.35),
+statusText.Text = "Thanks for use script"
+
+-- Hiệu ứng nhỏ dần + mờ dần
+local tweenInfo = TweenInfo.new(
+	1.2, -- thời gian (chậm, mượt)
+	Enum.EasingStyle.Quad,
+	Enum.EasingDirection.Out
+)
+
+local fadeGoals = {
 	BackgroundTransparency = 1
+}
+
+-- Fade toàn bộ UI
+for _, v in ipairs(gui:GetDescendants()) do
+	if v:IsA("TextLabel") then
+		TweenService:Create(v, tweenInfo, {TextTransparency = 1}):Play()
+	elseif v:IsA("Frame") then
+		TweenService:Create(v, tweenInfo, {BackgroundTransparency = 1}):Play()
+	end
+end
+
+-- Thu nhỏ khung
+TweenService:Create(frame, tweenInfo, {
+	Size = UDim2.fromScale(0.4, 0.4),
+	Position = UDim2.fromScale(0.3, 0.3)
 }):Play()
 
-task.wait(0.9)
-loadingGui:Destroy()
+task.wait(1.3)
+gui:Destroy()
+
+--// SLK HUB MENU (FULL - FINAL STABLE)
+--// Tabs: Information (FULL) + Player (NOT DEVELOPED)
+--// Auto Open Information + Minimize + Close Confirm + 5s Countdown
+--// DO NOT SHORTEN / DO NOT REMOVE LINES
+
+local Players = game:GetService("Players")
+local UIS = game:GetService("UserInputService")
+local player = Players.LocalPlayer
 
 ------------------------------------------------
--- MAIN GUI
+-- GUI
 ------------------------------------------------
-local mainGui = Instance.new("ScreenGui")
-mainGui.Name = "SLK_HUB_MENU"
-mainGui.ResetOnSpawn = false
-mainGui.Parent = player.PlayerGui
+local gui = Instance.new("ScreenGui")
+gui.Name = "SLK_HUB_MENU"
+gui.ResetOnSpawn = false
+gui.Parent = player:WaitForChild("PlayerGui")
 
-local main = Instance.new("Frame", mainGui)
-main.Size = UDim2.fromScale(0.6,0.55)
-main.Position = UDim2.fromScale(0.2,0.22)
+------------------------------------------------
+-- MAIN FRAME
+------------------------------------------------
+local main = Instance.new("Frame", gui)
+main.Size = UDim2.fromScale(0.6, 0.55)
+main.Position = UDim2.fromScale(0.2, 0.22)
 main.BackgroundColor3 = Color3.fromRGB(0,0,0)
 main.BackgroundTransparency = 0.35
+main.BorderSizePixel = 0
 main.Active = true
 Instance.new("UICorner", main).CornerRadius = UDim.new(0,18)
 
@@ -79,42 +174,266 @@ Instance.new("UICorner", main).CornerRadius = UDim.new(0,18)
 ------------------------------------------------
 local top = Instance.new("Frame", main)
 top.Size = UDim2.fromScale(1,0.16)
-top.BackgroundColor3 = Color3.fromRGB(25,25,25)
+top.BackgroundColor3 = Color3.fromRGB(20,20,20)
+top.BackgroundTransparency = 0.25
+top.BorderSizePixel = 0
 Instance.new("UICorner", top).CornerRadius = UDim.new(0,18)
 
 local title = Instance.new("TextLabel", top)
-title.Size = UDim2.fromScale(0.4,1)
-title.Position = UDim2.fromScale(0.03,0)
+title.Position = UDim2.fromScale(0.02,0)
+title.Size = UDim2.fromScale(0.25,1)
+title.BackgroundTransparency = 1
 title.Text = "SLK HUB"
 title.Font = Enum.Font.GothamBold
 title.TextScaled = true
 title.TextColor3 = Color3.fromRGB(255,255,255)
-title.BackgroundTransparency = 1
-title.TextXAlignment = Left
+title.TextXAlignment = Enum.TextXAlignment.Left
 
+-- MINIMIZE
 local min = Instance.new("TextButton", top)
-min.Size = UDim2.fromScale(0.06,0.6)
-min.Position = UDim2.fromScale(0.86,0.2)
+min.Position = UDim2.fromScale(0.88,0.2)
+min.Size = UDim2.fromScale(0.05,0.6)
 min.Text = "-"
 min.Font = Enum.Font.GothamBold
 min.TextScaled = true
 min.BackgroundColor3 = Color3.fromRGB(70,70,70)
-Instance.new("UICorner", min)
+min.TextColor3 = Color3.fromRGB(255,255,255)
+Instance.new("UICorner", min).CornerRadius = UDim.new(1,0)
 
+-- CLOSE
 local close = Instance.new("TextButton", top)
-close.Size = UDim2.fromScale(0.06,0.6)
-close.Position = UDim2.fromScale(0.93,0.2)
+close.Position = UDim2.fromScale(0.94,0.2)
+close.Size = UDim2.fromScale(0.05,0.6)
 close.Text = "X"
 close.Font = Enum.Font.GothamBold
 close.TextScaled = true
 close.BackgroundColor3 = Color3.fromRGB(180,50,50)
-Instance.new("UICorner", close)
+close.TextColor3 = Color3.fromRGB(255,255,255)
+Instance.new("UICorner", close).CornerRadius = UDim.new(1,0)
 
 ------------------------------------------------
--- DRAG (PC + MOBILE FIX)
+-- TAB LIST
 ------------------------------------------------
-local dragging = false
-local dragStart, startPos
+local tabList = Instance.new("Frame", main)
+tabList.Position = UDim2.fromScale(0.02,0.26)
+tabList.Size = UDim2.fromScale(0.25,0.7)
+tabList.BackgroundTransparency = 1
+
+local layout = Instance.new("UIListLayout", tabList)
+layout.Padding = UDim.new(0,8)
+
+------------------------------------------------
+-- CONTENT AREA
+------------------------------------------------
+local contentArea = Instance.new("Frame", main)
+contentArea.Position = UDim2.fromScale(0.29,0.26)
+contentArea.Size = UDim2.fromScale(0.69,0.7)
+contentArea.BackgroundTransparency = 1
+
+------------------------------------------------
+-- TAB SYSTEM
+------------------------------------------------
+local contents = {}
+
+local function showTab(name)
+	for _,v in pairs(contents) do
+		v.Visible = false
+	end
+	if contents[name] then
+		contents[name].Visible = true
+	end
+end
+
+------------------------------------------------
+-- TAB: INFORMATION
+------------------------------------------------
+local infoTab = Instance.new("TextButton", tabList)
+infoTab.Size = UDim2.fromScale(1,0.12)
+infoTab.Text = "ℹ INFORMATION"
+infoTab.Font = Enum.Font.GothamBold
+infoTab.TextScaled = true
+infoTab.BackgroundColor3 = Color3.fromRGB(40,40,40)
+infoTab.TextColor3 = Color3.fromRGB(255,255,255)
+Instance.new("UICorner", infoTab).CornerRadius = UDim.new(0,10)
+
+local infoContent = Instance.new("ScrollingFrame", contentArea)
+infoContent.Size = UDim2.fromScale(1,1)
+infoContent.CanvasSize = UDim2.new(0,0,1.6,0)
+infoContent.BackgroundTransparency = 1
+infoContent.Visible = false
+infoContent.BorderSizePixel = 0
+infoContent.ScrollBarImageTransparency = 0.3
+
+local infoText = Instance.new("TextLabel", infoContent)
+infoText.Position = UDim2.fromScale(0.05,0.05)
+infoText.Size = UDim2.fromScale(0.9,0.9)
+infoText.BackgroundTransparency = 1
+infoText.TextWrapped = true
+infoText.TextScaled = false
+infoText.TextSize = 20
+infoText.Font = Enum.Font.Gotham
+infoText.TextYAlignment = Enum.TextYAlignment.Top
+infoText.TextColor3 = Color3.fromRGB(0,170,255)
+
+infoText.Text = [[
+🔧 SCRIPT INFORMATION
+
+• Script stabilized
+• Core logic fixed
+• UI system stable
+• No shortened lines
+
+⚙️ STATUS
+• Progress: 85%
+• Auto open enabled
+• Close confirm enabled
+
+📦 NOTE
+• Do not edit core
+• Do not remove lines
+• Player tab not developed yet
+
+👤 AUTHOR
+• SLK GAMING
+]]
+
+contents["Information"] = infoContent
+
+infoTab.MouseButton1Click:Connect(function()
+	showTab("Information")
+end)
+
+------------------------------------------------
+-- TAB: PLAYER (NOT DEVELOPED)
+------------------------------------------------
+local playerTab = Instance.new("TextButton", tabList)
+playerTab.Size = UDim2.fromScale(1,0.12)
+playerTab.Text = "👤 PLAYER"
+playerTab.Font = Enum.Font.GothamBold
+playerTab.TextScaled = true
+playerTab.BackgroundColor3 = Color3.fromRGB(40,40,40)
+playerTab.TextColor3 = Color3.fromRGB(255,255,255)
+Instance.new("UICorner", playerTab).CornerRadius = UDim.new(0,10)
+
+local playerContent = Instance.new("Frame", contentArea)
+playerContent.Size = UDim2.fromScale(1,1)
+playerContent.BackgroundTransparency = 1
+playerContent.Visible = false
+
+local playerText = Instance.new("TextLabel", playerContent)
+playerText.Size = UDim2.fromScale(0.9,0.9)
+playerText.Position = UDim2.fromScale(0.05,0.05)
+playerText.BackgroundTransparency = 1
+playerText.TextWrapped = true
+playerText.TextScaled = false
+playerText.TextSize = 20
+playerText.Font = Enum.Font.Gotham
+playerText.TextYAlignment = Enum.TextYAlignment.Top
+playerText.TextColor3 = Color3.fromRGB(255,255,255)
+
+playerText.Text = [[
+👤 PLAYER TAB
+
+This tab is NOT DEVELOPED yet.
+
+• No functions added
+• Reserved for future update
+• Structure ready
+• Content intentionally empty
+
+Please wait for next update.
+]]
+
+contents["Player"] = playerContent
+
+playerTab.MouseButton1Click:Connect(function()
+	showTab("Player")
+end)
+
+------------------------------------------------
+-- AUTO OPEN INFORMATION
+------------------------------------------------
+showTab("Information")
+
+------------------------------------------------
+-- MINIMIZE SYSTEM
+------------------------------------------------
+local miniBtn = Instance.new("TextButton", gui)
+miniBtn.Size = UDim2.fromScale(0.18,0.06)
+miniBtn.Position = UDim2.fromScale(0.41,0.02)
+miniBtn.Text = "SLK HUB"
+miniBtn.Font = Enum.Font.GothamBold
+miniBtn.TextScaled = true
+miniBtn.BackgroundColor3 = Color3.fromRGB(0,0,0)
+miniBtn.BackgroundTransparency = 0.3
+miniBtn.TextColor3 = Color3.fromRGB(255,255,255)
+miniBtn.Visible = false
+Instance.new("UICorner", miniBtn).CornerRadius = UDim.new(1,0)
+
+min.MouseButton1Click:Connect(function()
+	main.Visible = false
+	miniBtn.Visible = true
+end)
+
+miniBtn.MouseButton1Click:Connect(function()
+	main.Visible = true
+	miniBtn.Visible = false
+end)
+
+------------------------------------------------
+-- CLOSE CONFIRM + 5s COUNTDOWN
+------------------------------------------------
+close.MouseButton1Click:Connect(function()
+	local ask = Instance.new("Frame", gui)
+	ask.Size = UDim2.fromScale(0.4,0.25)
+	ask.Position = UDim2.fromScale(0.3,0.38)
+	ask.BackgroundColor3 = Color3.fromRGB(0,0,0)
+	ask.BackgroundTransparency = 0.2
+	Instance.new("UICorner", ask).CornerRadius = UDim.new(0,14)
+
+	local txt = Instance.new("TextLabel", ask)
+	txt.Size = UDim2.fromScale(1,0.55)
+	txt.BackgroundTransparency = 1
+	txt.Text = "DO YOU WANT TO CLOSE SCRIPT?"
+	txt.Font = Enum.Font.GothamBold
+	txt.TextScaled = true
+	txt.TextColor3 = Color3.fromRGB(255,255,255)
+
+	local yes = Instance.new("TextButton", ask)
+	yes.Position = UDim2.fromScale(0.1,0.62)
+	yes.Size = UDim2.fromScale(0.35,0.25)
+	yes.Text = "YES"
+	yes.Font = Enum.Font.GothamBold
+	yes.TextScaled = true
+	yes.BackgroundColor3 = Color3.fromRGB(200,60,60)
+	Instance.new("UICorner", yes).CornerRadius = UDim.new(0,10)
+
+	local no = Instance.new("TextButton", ask)
+	no.Position = UDim2.fromScale(0.55,0.62)
+	no.Size = UDim2.fromScale(0.35,0.25)
+	no.Text = "NO"
+	no.Font = Enum.Font.GothamBold
+	no.TextScaled = true
+	no.BackgroundColor3 = Color3.fromRGB(60,60,60)
+	Instance.new("UICorner", no).CornerRadius = UDim.new(0,10)
+
+	no.MouseButton1Click:Connect(function()
+		ask:Destroy()
+	end)
+
+	yes.MouseButton1Click:Connect(function()
+		for i = 5,0,-1 do
+			txt.Text = "🙏 Thanks for using script\nClosing in "..i.."s"
+			task.wait(1)
+		end
+		gui:Destroy()
+	end)
+end)
+
+------------------------------------------------
+-- DRAG SYSTEM
+------------------------------------------------
+local dragging, dragStart, startPos
 
 top.InputBegan:Connect(function(input)
 	if input.UserInputType == Enum.UserInputType.MouseButton1
@@ -126,9 +445,7 @@ top.InputBegan:Connect(function(input)
 end)
 
 UIS.InputChanged:Connect(function(input)
-	if dragging and
-	(input.UserInputType == Enum.UserInputType.MouseMovement
-	or input.UserInputType == Enum.UserInputType.Touch) then
+	if dragging then
 		local delta = input.Position - dragStart
 		main.Position = UDim2.new(
 			startPos.X.Scale,
@@ -141,152 +458,4 @@ end)
 
 UIS.InputEnded:Connect(function()
 	dragging = false
-end)
-
-------------------------------------------------
--- CONTENT + TABS
-------------------------------------------------
-local tabList = Instance.new("Frame", main)
-tabList.Position = UDim2.fromScale(0.02,0.26)
-tabList.Size = UDim2.fromScale(0.25,0.7)
-tabList.BackgroundTransparency = 1
-Instance.new("UIListLayout", tabList).Padding = UDim.new(0,8)
-
-local content = Instance.new("Frame", main)
-content.Position = UDim2.fromScale(0.29,0.26)
-content.Size = UDim2.fromScale(0.69,0.7)
-content.BackgroundTransparency = 1
-
-local tabs = {}
-
-local function showTab(name)
-	for _,v in pairs(tabs) do v.Visible = false end
-	tabs[name].Visible = true
-end
-
-------------------------------------------------
--- INFO TAB
-------------------------------------------------
-local infoBtn = Instance.new("TextButton", tabList)
-infoBtn.Size = UDim2.fromScale(1,0.12)
-infoBtn.Text = "ℹ INFORMATION"
-infoBtn.Font = Enum.Font.GothamBold
-infoBtn.TextScaled = true
-infoBtn.BackgroundColor3 = Color3.fromRGB(40,40,40)
-Instance.new("UICorner", infoBtn)
-
-local info = Instance.new("TextLabel", content)
-info.Size = UDim2.fromScale(1,1)
-info.BackgroundTransparency = 1
-info.TextWrapped = true
-info.TextYAlignment = Top
-info.TextScaled = false
-info.TextSize = 20
-info.TextColor3 = Color3.fromRGB(0,170,255)
-info.Text = "SLK HUB\n\n• Stable\n• Fixed\n• Player Teleport Speed Ready"
-tabs["info"] = info
-
-------------------------------------------------
--- PLAYER TAB + TELEPORT SPEED
-------------------------------------------------
-local playerBtn = Instance.new("TextButton", tabList)
-playerBtn.Size = UDim2.fromScale(1,0.12)
-playerBtn.Text = "👤 PLAYER"
-playerBtn.Font = Enum.Font.GothamBold
-playerBtn.TextScaled = true
-playerBtn.BackgroundColor3 = Color3.fromRGB(40,40,40)
-Instance.new("UICorner", playerBtn)
-
-local playerTab = Instance.new("Frame", content)
-playerTab.Size = UDim2.fromScale(1,1)
-playerTab.BackgroundTransparency = 1
-playerTab.Visible = false
-tabs["player"] = playerTab
-
-local tpEnabled = false
-local tpSpeed = 5
-
-local tpBtn = Instance.new("TextButton", playerTab)
-tpBtn.Size = UDim2.fromScale(0.6,0.1)
-tpBtn.Position = UDim2.fromScale(0.05,0.1)
-tpBtn.Text = "⚡ Teleport Speed : OFF"
-tpBtn.Font = Enum.Font.GothamBold
-tpBtn.TextSize = 18
-tpBtn.BackgroundColor3 = Color3.fromRGB(80,80,80)
-tpBtn.TextColor3 = Color3.new(1,1,1)
-Instance.new("UICorner", tpBtn)
-
-tpBtn.MouseButton1Click:Connect(function()
-	tpEnabled = not tpEnabled
-	if tpEnabled then
-		tpBtn.Text = "⚡ Teleport Speed : ON"
-		tpBtn.BackgroundColor3 = Color3.fromRGB(0,170,255)
-	else
-		tpBtn.Text = "⚡ Teleport Speed : OFF"
-		tpBtn.BackgroundColor3 = Color3.fromRGB(80,80,80)
-	end
-end)
-
-RunService.RenderStepped:Connect(function()
-	if not tpEnabled then return end
-	local char = player.Character
-	if not char then return end
-	local hum = char:FindFirstChildOfClass("Humanoid")
-	local root = char:FindFirstChild("HumanoidRootPart")
-	if hum and root and hum.MoveDirection.Magnitude > 0 then
-		root.CFrame += hum.MoveDirection * (tpSpeed/15)
-	end
-end)
-
-------------------------------------------------
--- TAB EVENTS
-------------------------------------------------
-infoBtn.MouseButton1Click:Connect(function() showTab("info") end)
-playerBtn.MouseButton1Click:Connect(function() showTab("player") end)
-showTab("info")
-
-------------------------------------------------
--- MINIMIZE
-------------------------------------------------
-local mini = Instance.new("TextButton", mainGui)
-mini.Size = UDim2.fromScale(0.18,0.06)
-mini.Position = UDim2.fromScale(0.41,0.02)
-mini.Text = "SLK HUB"
-mini.Visible = false
-mini.BackgroundColor3 = Color3.fromRGB(0,0,0)
-mini.BackgroundTransparency = 0.3
-Instance.new("UICorner", mini)
-
-min.MouseButton1Click:Connect(function()
-	main.Visible = false
-	mini.Visible = true
-end)
-
-mini.MouseButton1Click:Connect(function()
-	main.Visible = true
-	mini.Visible = false
-end)
-
-------------------------------------------------
--- CLOSE CONFIRM + COUNTDOWN
-------------------------------------------------
-close.MouseButton1Click:Connect(function()
-	local ask = Instance.new("Frame", mainGui)
-	ask.Size = UDim2.fromScale(0.4,0.25)
-	ask.Position = UDim2.fromScale(0.3,0.38)
-	ask.BackgroundColor3 = Color3.fromRGB(0,0,0)
-	ask.BackgroundTransparency = 0.2
-	Instance.new("UICorner", ask)
-
-	local txt = Instance.new("TextLabel", ask)
-	txt.Size = UDim2.fromScale(1,0.6)
-	txt.BackgroundTransparency = 1
-	txt.TextScaled = true
-	txt.TextColor3 = Color3.new(1,1,1)
-
-	for i = 5,0,-1 do
-		txt.Text = "Closing in "..i.."s"
-		task.wait(1)
-	end
-	mainGui:Destroy()
 end)
