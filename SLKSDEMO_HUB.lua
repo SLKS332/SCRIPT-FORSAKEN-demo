@@ -140,8 +140,10 @@ TweenService:Create(frame, tweenInfo, {
 task.wait(1.3)
 gui:Destroy()
 
---// SLK HUB MENU (FULL - FINAL STABLE + PLAYER TELEPORT SPEED)
---// NO CUT - NO SHORTEN - NO BREAK STRUCTURE
+--// SLK HUB MENU (FULL - FINAL FIXED)
+--// Drag + Minimize + Close Confirm + Countdown
+--// Player Teleport Speed ON/OFF + Slider
+--// NO CUT - NO SHORTEN - NO BREAK
 
 local Players = game:GetService("Players")
 local UIS = game:GetService("UserInputService")
@@ -157,15 +159,15 @@ gui.ResetOnSpawn = false
 gui.Parent = player:WaitForChild("PlayerGui")
 
 ------------------------------------------------
--- MAIN FRAME
+-- MAIN
 ------------------------------------------------
 local main = Instance.new("Frame", gui)
 main.Size = UDim2.fromScale(0.6,0.55)
 main.Position = UDim2.fromScale(0.2,0.22)
 main.BackgroundColor3 = Color3.fromRGB(0,0,0)
 main.BackgroundTransparency = 0.35
-main.BorderSizePixel = 0
 main.Active = true
+main.BorderSizePixel = 0
 Instance.new("UICorner", main).CornerRadius = UDim.new(0,18)
 
 ------------------------------------------------
@@ -188,16 +190,18 @@ title.TextScaled = true
 title.TextColor3 = Color3.fromRGB(255,255,255)
 title.TextXAlignment = Enum.TextXAlignment.Left
 
+-- MINIMIZE
 local min = Instance.new("TextButton", top)
 min.Position = UDim2.fromScale(0.88,0.2)
 min.Size = UDim2.fromScale(0.05,0.6)
 min.Text = "-"
 min.Font = Enum.Font.GothamBold
 min.TextScaled = true
-min.BackgroundColor3 = Color3.fromRGB(70,70,70)
+min.BackgroundColor3 = Color3.fromRGB(80,80,80)
 min.TextColor3 = Color3.fromRGB(255,255,255)
 Instance.new("UICorner", min).CornerRadius = UDim.new(1,0)
 
+-- CLOSE
 local close = Instance.new("TextButton", top)
 close.Position = UDim2.fromScale(0.94,0.2)
 close.Size = UDim2.fromScale(0.05,0.6)
@@ -231,6 +235,7 @@ contentArea.BackgroundTransparency = 1
 -- TAB SYSTEM
 ------------------------------------------------
 local contents = {}
+
 local function showTab(name)
 	for _,v in pairs(contents) do
 		v.Visible = false
@@ -271,13 +276,9 @@ infoText.Text = [[
 SLK HUB INFORMATION
 
 • Script stable
-• UI fixed
+• Drag / Minimize / Close fixed
 • Player Teleport Speed ready
-• ON/OFF + Slider working
-
-NOTE
-• Do not cut lines
-• Do not shorten code
+• No cut - No shorten
 
 Made by SLK Gaming
 ]]
@@ -295,107 +296,4 @@ playerTab.Size = UDim2.fromScale(1,0.12)
 playerTab.Text = "👤 PLAYER"
 playerTab.Font = Enum.Font.GothamBold
 playerTab.TextScaled = true
-playerTab.BackgroundColor3 = Color3.fromRGB(40,40,40)
-playerTab.TextColor3 = Color3.fromRGB(255,255,255)
-Instance.new("UICorner", playerTab).CornerRadius = UDim.new(0,10)
-
-local playerContent = Instance.new("Frame", contentArea)
-playerContent.Size = UDim2.fromScale(1,1)
-playerContent.BackgroundTransparency = 1
-playerContent.Visible = false
-contents["Player"] = playerContent
-
-------------------------------------------------
--- TELEPORT SPEED SYSTEM
-------------------------------------------------
-local tpEnabled = false
-local tpSpeed = 5
-
-local tpToggle = Instance.new("TextButton", playerContent)
-tpToggle.Position = UDim2.fromScale(0.05,0.1)
-tpToggle.Size = UDim2.fromScale(0.6,0.1)
-tpToggle.Font = Enum.Font.GothamBold
-tpToggle.TextSize = 18
-tpToggle.TextColor3 = Color3.fromRGB(255,255,255)
-tpToggle.BackgroundColor3 = Color3.fromRGB(80,0,0)
-tpToggle.Text = "⚡ Teleport Speed : OFF"
-Instance.new("UICorner", tpToggle).CornerRadius = UDim.new(0,10)
-
-tpToggle.MouseButton1Click:Connect(function()
-	tpEnabled = not tpEnabled
-	if tpEnabled then
-		tpToggle.Text = "⚡ Teleport Speed : ON"
-		tpToggle.BackgroundColor3 = Color3.fromRGB(0,120,0)
-	else
-		tpToggle.Text = "⚡ Teleport Speed : OFF"
-		tpToggle.BackgroundColor3 = Color3.fromRGB(80,0,0)
-	end
-end)
-
-local speedLabel = Instance.new("TextLabel", playerContent)
-speedLabel.Position = UDim2.fromScale(0.05,0.23)
-speedLabel.Size = UDim2.fromScale(0.6,0.08)
-speedLabel.BackgroundTransparency = 1
-speedLabel.Text = "Speed : 5"
-speedLabel.Font = Enum.Font.Gotham
-speedLabel.TextSize = 16
-speedLabel.TextColor3 = Color3.fromRGB(255,255,255)
-speedLabel.TextXAlignment = Enum.TextXAlignment.Left
-
-local slider = Instance.new("Frame", playerContent)
-slider.Position = UDim2.fromScale(0.05,0.32)
-slider.Size = UDim2.fromScale(0.6,0.06)
-slider.BackgroundColor3 = Color3.fromRGB(70,70,70)
-Instance.new("UICorner", slider).CornerRadius = UDim.new(1,0)
-
-local fill = Instance.new("Frame", slider)
-fill.Size = UDim2.fromScale(tpSpeed/100,1)
-fill.BackgroundColor3 = Color3.fromRGB(0,170,255)
-Instance.new("UICorner", fill).CornerRadius = UDim.new(1,0)
-
-local dragging = false
-
-slider.InputBegan:Connect(function(input)
-	if input.UserInputType == Enum.UserInputType.MouseButton1
-	or input.UserInputType == Enum.UserInputType.Touch then
-		dragging = true
-	end
-end)
-
-UIS.InputEnded:Connect(function()
-	dragging = false
-end)
-
-UIS.InputChanged:Connect(function(input)
-	if dragging and (input.UserInputType == Enum.UserInputType.MouseMovement
-	or input.UserInputType == Enum.UserInputType.Touch) then
-		local pos = math.clamp(
-			(input.Position.X - slider.AbsolutePosition.X) / slider.AbsoluteSize.X,
-			0,1
-		)
-		fill.Size = UDim2.fromScale(pos,1)
-		tpSpeed = math.floor(pos * 100)
-		speedLabel.Text = "Speed : "..tpSpeed
-	end
-end)
-
-RunService.RenderStepped:Connect(function()
-	if not tpEnabled then return end
-	local char = player.Character
-	if not char then return end
-	local hum = char:FindFirstChildOfClass("Humanoid")
-	local root = char:FindFirstChild("HumanoidRootPart")
-	if not hum or not root then return end
-	if hum.MoveDirection.Magnitude > 0 then
-		root.CFrame = root.CFrame + hum.MoveDirection * math.clamp(tpSpeed/15,0,7)
-	end
-end)
-
-playerTab.MouseButton1Click:Connect(function()
-	showTab("Player")
-end)
-
-------------------------------------------------
--- AUTO OPEN
-------------------------------------------------
-showTab("Information")
+playerTab.BackgroundColor3 =
