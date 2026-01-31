@@ -139,3 +139,170 @@ TweenService:Create(frame, tweenInfo, {
 
 task.wait(1.3)
 gui:Destroy()
+-- SLK HUB - FULL EMPTY MENU (MINIMIZE + CONFIRM CLOSE)
+
+local Players = game:GetService("Players")
+local TweenService = game:GetService("TweenService")
+local UIS = game:GetService("UserInputService")
+local player = Players.LocalPlayer
+
+-- GUI
+local gui = Instance.new("ScreenGui")
+gui.Name = "SLK_HUB"
+gui.ResetOnSpawn = false
+gui.Parent = player:WaitForChild("PlayerGui")
+
+-- MAIN FRAME
+local main = Instance.new("Frame", gui)
+main.Size = UDim2.fromScale(0.75, 0.55)
+main.Position = UDim2.fromScale(0.125, 0.22)
+main.BackgroundColor3 = Color3.fromRGB(0,0,0)
+main.BackgroundTransparency = 0.8 -- mờ ban đầu
+main.BorderSizePixel = 0
+main.Active = false
+Instance.new("UICorner", main).CornerRadius = UDim.new(0,20)
+
+local stroke = Instance.new("UIStroke", main)
+stroke.Color = Color3.fromRGB(255,80,80)
+stroke.Thickness = 2
+
+-- HEADER
+local header = Instance.new("Frame", main)
+header.Size = UDim2.fromScale(1,0.12)
+header.BackgroundTransparency = 1
+
+local title = Instance.new("TextLabel", header)
+title.Size = UDim2.fromScale(0.4,1)
+title.Position = UDim2.fromScale(0.03,0)
+title.Text = "SLK HUB\nBy SLK Gaming"
+title.TextYAlignment = Enum.TextYAlignment.Center
+title.TextXAlignment = Enum.TextXAlignment.Left
+title.Font = Enum.Font.GothamBold
+title.TextScaled = true
+title.TextColor3 = Color3.fromRGB(255,255,255)
+title.BackgroundTransparency = 1
+
+local version = Instance.new("TextLabel", header)
+version.Size = UDim2.fromScale(0.15,0.6)
+version.Position = UDim2.fromScale(0.425,0.2)
+version.Text = "v1.1"
+version.Font = Enum.Font.Gotham
+version.TextScaled = true
+version.TextColor3 = Color3.fromRGB(200,200,200)
+version.BackgroundTransparency = 1
+
+-- MINIMIZE BUTTON (-)
+local minBtn = Instance.new("TextButton", header)
+minBtn.Size = UDim2.fromScale(0.06,0.6)
+minBtn.Position = UDim2.fromScale(0.85,0.2)
+minBtn.Text = "–"
+minBtn.Font = Enum.Font.GothamBold
+minBtn.TextScaled = true
+minBtn.TextColor3 = Color3.fromRGB(255,255,255)
+minBtn.BackgroundTransparency = 1
+
+-- CLOSE BUTTON (X)
+local closeBtn = Instance.new("TextButton", header)
+closeBtn.Size = UDim2.fromScale(0.06,0.6)
+closeBtn.Position = UDim2.fromScale(0.92,0.2)
+closeBtn.Text = "X"
+closeBtn.Font = Enum.Font.GothamBold
+closeBtn.TextScaled = true
+closeBtn.TextColor3 = Color3.fromRGB(255,80,80)
+closeBtn.BackgroundTransparency = 1
+
+-- CONFIRM POPUP
+local popup = Instance.new("Frame", gui)
+popup.Size = UDim2.fromScale(0.4,0.25)
+popup.Position = UDim2.fromScale(0.3,0.38)
+popup.BackgroundColor3 = Color3.fromRGB(0,0,0)
+popup.BackgroundTransparency = 0.2
+popup.Visible = false
+popup.BorderSizePixel = 0
+Instance.new("UICorner", popup).CornerRadius = UDim.new(0,16)
+
+local popText = Instance.new("TextLabel", popup)
+popText.Size = UDim2.fromScale(1,0.4)
+popText.Position = UDim2.fromScale(0,0.1)
+popText.Text = "DO YOU WANT DELETE SCRIPT?"
+popText.Font = Enum.Font.GothamBold
+popText.TextScaled = true
+popText.TextColor3 = Color3.fromRGB(255,255,255)
+popText.BackgroundTransparency = 1
+
+local yes = Instance.new("TextButton", popup)
+yes.Size = UDim2.fromScale(0.35,0.25)
+yes.Position = UDim2.fromScale(0.1,0.6)
+yes.Text = "YES"
+yes.Font = Enum.Font.GothamBold
+yes.TextScaled = true
+yes.TextColor3 = Color3.fromRGB(0,255,0)
+yes.BackgroundTransparency = 1
+
+local no = Instance.new("TextButton", popup)
+no.Size = UDim2.fromScale(0.35,0.25)
+no.Position = UDim2.fromScale(0.55,0.6)
+no.Text = "NO"
+no.Font = Enum.Font.GothamBold
+no.TextScaled = true
+no.TextColor3 = Color3.fromRGB(255,80,80)
+no.BackgroundTransparency = 1
+
+-- FADE IN MENU
+TweenService:Create(main, TweenInfo.new(0.6), {
+	BackgroundTransparency = 0.25
+}):Play()
+
+task.delay(0.6, function()
+	main.Active = true
+end)
+
+-- DRAG MENU
+local dragging, dragStart, startPos
+header.InputBegan:Connect(function(i)
+	if i.UserInputType == Enum.UserInputType.MouseButton1 then
+		dragging = true
+		dragStart = i.Position
+		startPos = main.Position
+	end
+end)
+UIS.InputChanged:Connect(function(i)
+	if dragging and i.UserInputType == Enum.UserInputType.MouseMovement then
+		local delta = i.Position - dragStart
+		main.Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X,
+			startPos.Y.Scale, startPos.Y.Offset + delta.Y)
+	end
+end)
+UIS.InputEnded:Connect(function(i)
+	if i.UserInputType == Enum.UserInputType.MouseButton1 then
+		dragging = false
+	end
+end)
+
+-- MINIMIZE
+minBtn.MouseButton1Click:Connect(function()
+	TweenService:Create(main, TweenInfo.new(0.4), {
+		Size = UDim2.fromScale(0.25,0.08),
+		Position = UDim2.fromScale(0.375,0.05)
+	}):Play()
+end)
+
+-- CLOSE
+closeBtn.MouseButton1Click:Connect(function()
+	popup.Visible = true
+	main.Active = false
+end)
+
+no.MouseButton1Click:Connect(function()
+	popup.Visible = false
+	main.Active = true
+end)
+
+yes.MouseButton1Click:Connect(function()
+	TweenService:Create(main, TweenInfo.new(0.5), {
+		Size = UDim2.fromScale(0,0),
+		BackgroundTransparency = 1
+	}):Play()
+	task.wait(0.6)
+	gui:Destroy()
+end)
