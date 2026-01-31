@@ -1,120 +1,96 @@
---==================================================
--- SLK HUB - MOBILE BLOCK (SAFE VERSION)
---==================================================
-
-local UIS = game:GetService("UserInputService")
+-- SLK HUB | Block PC Only
 local Players = game:GetService("Players")
-local Player = Players.LocalPlayer
+local UIS = game:GetService("UserInputService")
+local TweenService = game:GetService("TweenService")
+local player = Players.LocalPlayer
 
-local isMobile = UIS.TouchEnabled and not UIS.KeyboardEnabled
+-- ===== CHECK PC =====
+local isPC = UIS.KeyboardEnabled and not UIS.TouchEnabled
 
---==================================================
--- GUI
---==================================================
-local ScreenGui = Instance.new("ScreenGui")
-ScreenGui.Name = "SLK_MobileBlock"
-ScreenGui.ResetOnSpawn = false
-ScreenGui.Parent = game.CoreGui
+if isPC then
+    -- ===== GUI =====
+    local ScreenGui = Instance.new("ScreenGui")
+    ScreenGui.Name = "SLK_Block_PC"
+    ScreenGui.ResetOnSpawn = false
+    ScreenGui.Parent = game.CoreGui
 
-local Frame = Instance.new("Frame")
-Frame.Size = UDim2.fromScale(0.45, 0.3)
-Frame.Position = UDim2.fromScale(0.5, 0.5)
-Frame.AnchorPoint = Vector2.new(0.5, 0.5)
-Frame.BackgroundColor3 = Color3.fromRGB(15,15,15)
-Frame.BorderColor3 = Color3.fromRGB(255,0,0)
-Frame.BorderSizePixel = 2
-Frame.Parent = ScreenGui
+    local Frame = Instance.new("Frame", ScreenGui)
+    Frame.Size = UDim2.fromScale(0.5, 0.35)
+    Frame.Position = UDim2.fromScale(0.25, 0.325)
+    Frame.BackgroundColor3 = Color3.fromRGB(10,10,10)
+    Frame.BorderColor3 = Color3.fromRGB(255,0,0)
+    Frame.BorderSizePixel = 2
 
-Instance.new("UICorner", Frame).CornerRadius = UDim.new(0,18)
+    local UICorner = Instance.new("UICorner", Frame)
+    UICorner.CornerRadius = UDim.new(0,12)
 
--- TITLE
-local Title = Instance.new("TextLabel", Frame)
-Title.Size = UDim2.new(1,0,0.25,0)
-Title.BackgroundTransparency = 1
-Title.Text = "SLK HUB"
-Title.Font = Enum.Font.GothamBold
-Title.TextScaled = true
-Title.TextColor3 = Color3.fromRGB(255,0,0)
+    local Title = Instance.new("TextLabel", Frame)
+    Title.Size = UDim2.new(1,0,0.25,0)
+    Title.BackgroundTransparency = 1
+    Title.Text = "SLK HUB"
+    Title.TextColor3 = Color3.fromRGB(255,60,60)
+    Title.Font = Enum.Font.GothamBlack
+    Title.TextScaled = true
 
--- MAIN TEXT
-local MainText = Instance.new("TextLabel", Frame)
-MainText.Size = UDim2.new(1,-20,0.35,0)
-MainText.Position = UDim2.new(0,10,0.28,0)
-MainText.BackgroundTransparency = 1
-MainText.TextWrapped = true
-MainText.Font = Enum.Font.GothamBold
-MainText.TextScaled = true
-MainText.TextColor3 = Color3.fromRGB(255,255,255)
+    local MainText = Instance.new("TextLabel", Frame)
+    MainText.Position = UDim2.new(0,0,0.25,0)
+    MainText.Size = UDim2.new(1,0,0.45,0)
+    MainText.BackgroundTransparency = 1
+    MainText.TextWrapped = true
+    MainText.TextScaled = true
+    MainText.Font = Enum.Font.GothamBold
+    MainText.TextColor3 = Color3.fromRGB(255,255,255)
+    MainText.Text =
+        "SORRY\n" ..
+        "SCRIPT NOT WORK ON PC\n" ..
+        "PLEASE USE MOBILE"
 
--- COUNTDOWN
-local Countdown = Instance.new("TextLabel", Frame)
-Countdown.Size = UDim2.new(1,0,0.18,0)
-Countdown.Position = UDim2.new(0,0,0.78,0)
-Countdown.BackgroundTransparency = 1
-Countdown.Font = Enum.Font.GothamBold
-Countdown.TextScaled = true
-Countdown.TextColor3 = Color3.fromRGB(0,170,255)
+    local Countdown = Instance.new("TextLabel", Frame)
+    Countdown.Position = UDim2.new(0,0,0.72,0)
+    Countdown.Size = UDim2.new(1,0,0.25,0)
+    Countdown.BackgroundTransparency = 1
+    Countdown.TextColor3 = Color3.fromRGB(120,180,255)
+    Countdown.Font = Enum.Font.GothamBold
+    Countdown.TextScaled = true
 
---==================================================
--- MOBILE MODE
---==================================================
-if isMobile then
-    MainText.Text = "SORRY\nSCRIPT NOT WORK ON MOBILE\nPLEASE USE PC"
-
-    -- COUNTDOWN 5 -> 0
+    -- ===== COUNTDOWN 5 -> 0 =====
     for i = 5, 0, -1 do
-        Countdown.Text = "Closing in " .. i .. "s"
+        Countdown.Text = "Closing in "..i.."s"
         task.wait(1)
     end
 
+    -- ===== FINAL TEXT =====
+    MainText.Text =
+        "SORRY AGAIN.\n" ..
+        "CLOSING FAILED.\n" ..
+        "PLEASE LEAVE THE GAME."
+
     Countdown.Text = "Closing..."
-
-    -- TRY FADE
-    local closed = false
-    pcall(function()
-        for t = 0, 1, 0.1 do
-            Frame.BackgroundTransparency = t
-            Frame.BorderTransparency = t
-            Title.TextTransparency = t
-            MainText.TextTransparency = t
-            Countdown.TextTransparency = t
-            task.wait(0.04)
-        end
-        closed = true
-    end)
-
-    -- TRY DESTROY
-    task.wait(0.2)
-    pcall(function()
-        ScreenGui:Destroy()
-    end)
-
-    -- FAILSAFE CHECK
     task.wait(1.5)
-    if ScreenGui.Parent ~= nil then
-        -- ❌ KHÔNG TẮT ĐƯỢC → THÔNG BÁO CUỐI
-        Frame.BackgroundTransparency = 0
-        Frame.BorderTransparency = 0
-        Title.TextTransparency = 0
-        MainText.TextTransparency = 0
-        Countdown.TextTransparency = 0
 
-        MainText.Text =
-            "SORRY AGAIN.\n" ..
-            "CLOSING FAILED.\n" ..
-            "PLEASE LEAVE THE GAME."
+    -- ===== FADE OUT =====
+    local tween = TweenService:Create(
+        Frame,
+        TweenInfo.new(0.8, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
+        {BackgroundTransparency = 1, BorderTransparency = 1}
+    )
+    tween:Play()
 
-        Countdown.Text = "Close manually"
-        Countdown.TextColor3 = Color3.fromRGB(255,80,80)
+    for _,v in ipairs(Frame:GetDescendants()) do
+        if v:IsA("TextLabel") then
+            TweenService:Create(
+                v,
+                TweenInfo.new(0.8),
+                {TextTransparency = 1}
+            ):Play()
+        end
     end
 
-    return
+    task.wait(1)
+    ScreenGui:Destroy()
+
+    return -- ⛔ CHẶN TOÀN BỘ SCRIPT PHÍA DƯỚI
 end
 
---==================================================
--- PC MODE
---==================================================
-MainText.Text = "LOADING..."
-Countdown.Text = "Please wait..."
-
--- loadstring(game:HttpGet("LINK_PC_MENU"))()
+-- ===== MOBILE CHẠY BÌNH THƯỜNG Ở DƯỚI =====
+-- loading / menu của bạn đặt ở đây
