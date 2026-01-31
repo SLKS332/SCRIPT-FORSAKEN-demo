@@ -1,7 +1,6 @@
 --// SLK HUB        VERSION v1 (Demo)
 --// By SLK GAMING
 
-local Players = game:GetService("Players")
 local UIS = game:GetService("UserInputService")
 
 -- chống load lại
@@ -9,11 +8,12 @@ if game.CoreGui:FindFirstChild("SLK_HUB") then
 	game.CoreGui.SLK_HUB:Destroy()
 end
 
--- ScreenGui
+--------------------------------------------------
+-- GUI
+--------------------------------------------------
 local gui = Instance.new("ScreenGui")
 gui.Name = "SLK_HUB"
 gui.ResetOnSpawn = false
-gui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
 gui.Parent = game.CoreGui
 
 --------------------------------------------------
@@ -57,10 +57,10 @@ Title2.Font = Enum.Font.Gotham
 Title2.TextSize = 12
 Title2.TextXAlignment = Enum.TextXAlignment.Left
 
--- Version (BLUE)
+-- Version
 local Version = Instance.new("TextLabel", TopBar)
-Version.Size = UDim2.new(0, 120, 0, 24)
-Version.Position = UDim2.new(1, -210, 0.5, -12)
+Version.Size = UDim2.new(0, 130, 0, 24)
+Version.Position = UDim2.new(1, -220, 0.5, -12)
 Version.BackgroundColor3 = Color3.fromRGB(80,160,255)
 Version.TextColor3 = Color3.fromRGB(255,255,255)
 Version.Text = "Version v1 (Demo)"
@@ -98,7 +98,7 @@ Content.Size = UDim2.new(1, 0, 1, -46)
 Content.BackgroundTransparency = 1
 
 --------------------------------------------------
--- TAB BAR
+-- TAB + VIEW
 --------------------------------------------------
 local TabBar = Instance.new("Frame", Content)
 TabBar.Size = UDim2.new(0, 120, 1, 0)
@@ -120,26 +120,26 @@ Info.Font = Enum.Font.Gotham
 Info.TextSize = 14
 Info.TextColor3 = Color3.fromRGB(90,90,90)
 
--- INFO CONTENT
 local function InfoContent()
-	Info.Text = [[
-Welcome to SLK HUB 👋
+	Info.Text = [[Welcome to SLK HUB 👋
 
 Status:
 • Script Status: Working ✅
 • Version: Demo / Alpha
 • Last Update: 2026
 
+About:
+This script is currently in development.
+
 YouTube:
 SLK GAMING 📺
 
-Thank you for using this script ❤️
-]]
+Thank you ❤️]]
 end
 InfoContent()
 
 --------------------------------------------------
--- TABS (ĐÃ THÊM TAB 5 + TAB 6)
+-- TABS
 --------------------------------------------------
 local Tabs = {
 	"✅ INFO",
@@ -211,8 +211,46 @@ Min.MouseButton1Click:Connect(function()
 end)
 
 --------------------------------------------------
--- CLOSE
+-- CONFIRM CLOSE
 --------------------------------------------------
 Close.MouseButton1Click:Connect(function()
-	gui:Destroy()
+	if game.CoreGui:FindFirstChild("SLK_CONFIRM") then return end
+
+	local cf = Instance.new("Frame", gui)
+	cf.Name = "SLK_CONFIRM"
+	cf.Size = UDim2.new(0,260,0,130)
+	cf.Position = UDim2.new(0.5,-130,0.5,-65)
+	cf.BackgroundColor3 = Color3.fromRGB(255,255,255)
+	Instance.new("UICorner", cf).CornerRadius = UDim.new(0,12)
+
+	local txt = Instance.new("TextLabel", cf)
+	txt.Size = UDim2.new(1,-20,0,50)
+	txt.Position = UDim2.new(0,10,0,10)
+	txt.BackgroundTransparency = 1
+	txt.Text = "Do you want to close SLK HUB?"
+	txt.Font = Enum.Font.GothamBold
+	txt.TextSize = 14
+	txt.TextWrapped = true
+
+	local yes = Instance.new("TextButton", cf)
+	yes.Size = UDim2.new(0.4,0,0,32)
+	yes.Position = UDim2.new(0.05,0,1,-42)
+	yes.Text = "Yes"
+	yes.BackgroundColor3 = Color3.fromRGB(255,120,120)
+	yes.TextColor3 = Color3.new(1,1,1)
+	Instance.new("UICorner", yes).CornerRadius = UDim.new(0,8)
+
+	local no = Instance.new("TextButton", cf)
+	no.Size = UDim2.new(0.4,0,0,32)
+	no.Position = UDim2.new(0.55,0,1,-42)
+	no.Text = "No"
+	no.BackgroundColor3 = Color3.fromRGB(200,200,200)
+	Instance.new("UICorner", no).CornerRadius = UDim.new(0,8)
+
+	yes.MouseButton1Click:Connect(function()
+		gui:Destroy()
+	end)
+	no.MouseButton1Click:Connect(function()
+		cf:Destroy()
+	end)
 end)
