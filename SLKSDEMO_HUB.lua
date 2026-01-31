@@ -1,146 +1,108 @@
---// SLK HUB        VERSION v1 (Demo)
+--// SLK HUB - WHITE VERSION v1 (FIXED)
 --// By SLK GAMING
 
+---------------- SERVICES ----------------
+local Players = game:GetService("Players")
 local UIS = game:GetService("UserInputService")
 
--- chống load lại
+-------------- ANTI DUPLICATE ------------
 if game.CoreGui:FindFirstChild("SLK_HUB") then
 	game.CoreGui.SLK_HUB:Destroy()
 end
 
---------------------------------------------------
--- GUI
---------------------------------------------------
+---------------- GUI ---------------------
 local gui = Instance.new("ScreenGui")
 gui.Name = "SLK_HUB"
 gui.ResetOnSpawn = false
 gui.Parent = game.CoreGui
 
---------------------------------------------------
--- MAIN
---------------------------------------------------
+---------------- MAIN --------------------
 local Main = Instance.new("Frame", gui)
-Main.Size = UDim2.new(0, 520, 0, 320)
-Main.Position = UDim2.new(0.5, -260, 0.5, -160)
+Main.Size = UDim2.new(0,520,0,320)
+Main.Position = UDim2.new(0.5,-260,0.5,-160)
 Main.BackgroundColor3 = Color3.fromRGB(255,255,255)
 Main.BackgroundTransparency = 0.15
 Main.BorderSizePixel = 0
 Main.Active = true
 Instance.new("UICorner", Main).CornerRadius = UDim.new(0,18)
 
---------------------------------------------------
--- TOP BAR
---------------------------------------------------
+---------------- TOP BAR -----------------
 local TopBar = Instance.new("Frame", Main)
-TopBar.Size = UDim2.new(1, 0, 0, 46)
-TopBar.BackgroundColor3 = Color3.fromRGB(235,235,235)
+TopBar.Size = UDim2.new(1,0,0,46)
+TopBar.BackgroundColor3 = Color3.fromRGB(240,240,240)
+TopBar.BackgroundTransparency = 0.1
 TopBar.BorderSizePixel = 0
 TopBar.Active = true
 Instance.new("UICorner", TopBar).CornerRadius = UDim.new(0,18)
 
--- Title
-local Title1 = Instance.new("TextLabel", TopBar)
-Title1.Size = UDim2.new(1, -220, 0.5, 0)
-Title1.Position = UDim2.new(0, 16, 0, 2)
-Title1.BackgroundTransparency = 1
-Title1.Text = "SLK HUB"
-Title1.Font = Enum.Font.GothamBold
-Title1.TextSize = 15
-Title1.TextXAlignment = Enum.TextXAlignment.Left
-
-local Title2 = Instance.new("TextLabel", TopBar)
-Title2.Size = UDim2.new(1, -220, 0.5, 0)
-Title2.Position = UDim2.new(0, 16, 0.5, -2)
-Title2.BackgroundTransparency = 1
-Title2.Text = "By SLK GAMING"
-Title2.Font = Enum.Font.Gotham
-Title2.TextSize = 12
-Title2.TextXAlignment = Enum.TextXAlignment.Left
-
--- Version
-local Version = Instance.new("TextLabel", TopBar)
-Version.Size = UDim2.new(0, 130, 0, 24)
-Version.Position = UDim2.new(1, -220, 0.5, -12)
-Version.BackgroundColor3 = Color3.fromRGB(80,160,255)
-Version.TextColor3 = Color3.fromRGB(255,255,255)
-Version.Text = "Version v1 (Demo)"
-Version.Font = Enum.Font.GothamBold
-Version.TextSize = 12
-Instance.new("UICorner", Version).CornerRadius = UDim.new(0,10)
+local Title = Instance.new("TextLabel", TopBar)
+Title.Size = UDim2.new(1,-200,1,0)
+Title.Position = UDim2.new(0,16,0,0)
+Title.BackgroundTransparency = 1
+Title.Text = "SLK HUB | White Version"
+Title.Font = Enum.Font.GothamBold
+Title.TextSize = 15
+Title.TextXAlignment = Enum.TextXAlignment.Left
+Title.TextColor3 = Color3.fromRGB(60,60,60)
 
 -- Minimize
 local Min = Instance.new("TextButton", TopBar)
-Min.Size = UDim2.new(0, 32, 0, 32)
-Min.Position = UDim2.new(1, -74, 0.5, -16)
+Min.Size = UDim2.new(0,32,0,32)
+Min.Position = UDim2.new(1,-74,0.5,-16)
 Min.Text = "-"
 Min.Font = Enum.Font.GothamBold
 Min.TextSize = 18
-Min.BackgroundColor3 = Color3.fromRGB(245,245,245)
+Min.BackgroundColor3 = Color3.fromRGB(220,220,220)
+Min.TextColor3 = Color3.fromRGB(60,60,60)
 Instance.new("UICorner", Min).CornerRadius = UDim.new(0,8)
 
 -- Close
 local Close = Instance.new("TextButton", TopBar)
-Close.Size = UDim2.new(0, 32, 0, 32)
-Close.Position = UDim2.new(1, -36, 0.5, -16)
+Close.Size = UDim2.new(0,32,0,32)
+Close.Position = UDim2.new(1,-36,0.5,-16)
 Close.Text = "X"
 Close.Font = Enum.Font.GothamBold
 Close.TextSize = 14
-Close.TextColor3 = Color3.fromRGB(150,60,60)
-Close.BackgroundColor3 = Color3.fromRGB(245,245,245)
+Close.TextColor3 = Color3.fromRGB(180,60,60)
+Close.BackgroundColor3 = Color3.fromRGB(220,220,220)
 Instance.new("UICorner", Close).CornerRadius = UDim.new(0,8)
 
---------------------------------------------------
--- CONTENT
---------------------------------------------------
+---------------- CONTENT -----------------
 local Content = Instance.new("Frame", Main)
-Content.Position = UDim2.new(0, 0, 0, 46)
-Content.Size = UDim2.new(1, 0, 1, -46)
+Content.Position = UDim2.new(0,0,0,46)
+Content.Size = UDim2.new(1,0,1,-46)
 Content.BackgroundTransparency = 1
 
---------------------------------------------------
--- TAB + VIEW
---------------------------------------------------
 local TabBar = Instance.new("Frame", Content)
-TabBar.Size = UDim2.new(0, 120, 1, 0)
+TabBar.Size = UDim2.new(0,120,1,0)
 TabBar.BackgroundTransparency = 1
 
 local View = Instance.new("Frame", Content)
-View.Position = UDim2.new(0, 120, 0, 0)
-View.Size = UDim2.new(1, -120, 1, 0)
+View.Position = UDim2.new(0,120,0,0)
+View.Size = UDim2.new(1,-120,1,0)
 View.BackgroundTransparency = 1
 
+---------------- INFO --------------------
 local Info = Instance.new("TextLabel", View)
-Info.Size = UDim2.new(1, -20, 1, -20)
-Info.Position = UDim2.new(0, 10, 0, 10)
+Info.Size = UDim2.new(1,-20,1,-20)
+Info.Position = UDim2.new(0,10,0,10)
 Info.BackgroundTransparency = 1
-Info.TextXAlignment = Enum.TextXAlignment.Left
-Info.TextYAlignment = Enum.TextYAlignment.Top
 Info.TextWrapped = true
+Info.TextYAlignment = Enum.TextYAlignment.Top
 Info.Font = Enum.Font.Gotham
 Info.TextSize = 14
-Info.TextColor3 = Color3.fromRGB(90,90,90)
+Info.TextColor3 = Color3.fromRGB(70,70,70)
+Info.Text = [[Welcome to SLK HUB 👋
 
-local function InfoContent()
-	Info.Text = [[Welcome to SLK HUB 👋
+• Hub trắng – trong suốt nhẹ
+• Fix lỗi mất tab khi ấn –
+• Ấn X có hỏi xác nhận
+• 6 tab đầy đủ
 
-Status:
-• Script Status: Working ✅
-• Version: Demo / Alpha
-• Last Update: 2026
+Chỉ chơi vui, không phá game 😄
+YouTube: SLK GAMING]]
 
-About:
-This script is currently in development.
-
-YouTube:
-SLK GAMING 📺
-
-Thank you ❤️]]
-end
-InfoContent()
-
---------------------------------------------------
--- TABS
---------------------------------------------------
+---------------- TABS --------------------
 local Tabs = {
 	"✅ INFO",
 	"Tab 2",
@@ -152,26 +114,27 @@ local Tabs = {
 
 for i,name in ipairs(Tabs) do
 	local Tab = Instance.new("TextButton", TabBar)
-	Tab.Size = UDim2.new(1, -10, 0, 40)
-	Tab.Position = UDim2.new(0, 5, 0, (i-1)*45 + 10)
+	Tab.Size = UDim2.new(1,-10,0,40)
+	Tab.Position = UDim2.new(0,5,0,(i-1)*45+10)
 	Tab.Text = name
 	Tab.Font = Enum.Font.GothamBold
 	Tab.TextSize = 14
+	Tab.TextColor3 = Color3.fromRGB(60,60,60)
 	Tab.BackgroundColor3 = Color3.fromRGB(235,235,235)
 	Instance.new("UICorner", Tab).CornerRadius = UDim.new(0,8)
 
 	Tab.MouseButton1Click:Connect(function()
 		if name == "✅ INFO" then
-			InfoContent()
+			Info.Visible = true
+			Info.Text = Info.Text
 		else
-			Info.Text = name .. " is under development 🚧"
+			Info.Visible = true
+			Info.Text = name .. " đang phát triển 🚧"
 		end
 	end)
 end
 
---------------------------------------------------
--- DRAG (PC + MOBILE)
---------------------------------------------------
+---------------- DRAG --------------------
 local dragging, dragStart, startPos
 
 TopBar.InputBegan:Connect(function(input)
@@ -184,8 +147,7 @@ TopBar.InputBegan:Connect(function(input)
 end)
 
 UIS.InputChanged:Connect(function(input)
-	if dragging and (input.UserInputType == Enum.UserInputType.MouseMovement
-	or input.UserInputType == Enum.UserInputType.Touch) then
+	if dragging then
 		local delta = input.Position - dragStart
 		Main.Position = UDim2.new(
 			startPos.X.Scale,
@@ -200,9 +162,7 @@ UIS.InputEnded:Connect(function()
 	dragging = false
 end)
 
---------------------------------------------------
--- MINIMIZE
---------------------------------------------------
+---------------- MINIMIZE (FIX) ----------
 local minimized = false
 Min.MouseButton1Click:Connect(function()
 	minimized = not minimized
@@ -210,14 +170,12 @@ Min.MouseButton1Click:Connect(function()
 	Main.Size = minimized and UDim2.new(0,520,0,46) or UDim2.new(0,520,0,320)
 end)
 
---------------------------------------------------
--- CONFIRM CLOSE
---------------------------------------------------
+---------------- CLOSE CONFIRM ----------
 Close.MouseButton1Click:Connect(function()
-	if game.CoreGui:FindFirstChild("SLK_CONFIRM") then return end
+	if gui:FindFirstChild("CONFIRM") then return end
 
 	local cf = Instance.new("Frame", gui)
-	cf.Name = "SLK_CONFIRM"
+	cf.Name = "CONFIRM"
 	cf.Size = UDim2.new(0,260,0,130)
 	cf.Position = UDim2.new(0.5,-130,0.5,-65)
 	cf.BackgroundColor3 = Color3.fromRGB(255,255,255)
@@ -227,10 +185,11 @@ Close.MouseButton1Click:Connect(function()
 	txt.Size = UDim2.new(1,-20,0,50)
 	txt.Position = UDim2.new(0,10,0,10)
 	txt.BackgroundTransparency = 1
-	txt.Text = "Do you want to close SLK HUB?"
+	txt.Text = "Bạn có muốn đóng SLK HUB không?"
 	txt.Font = Enum.Font.GothamBold
 	txt.TextSize = 14
 	txt.TextWrapped = true
+	txt.TextColor3 = Color3.fromRGB(60,60,60)
 
 	local yes = Instance.new("TextButton", cf)
 	yes.Size = UDim2.new(0.4,0,0,32)
@@ -244,7 +203,7 @@ Close.MouseButton1Click:Connect(function()
 	no.Size = UDim2.new(0.4,0,0,32)
 	no.Position = UDim2.new(0.55,0,1,-42)
 	no.Text = "No"
-	no.BackgroundColor3 = Color3.fromRGB(200,200,200)
+	no.BackgroundColor3 = Color3.fromRGB(220,220,220)
 	Instance.new("UICorner", no).CornerRadius = UDim.new(0,8)
 
 	yes.MouseButton1Click:Connect(function()
