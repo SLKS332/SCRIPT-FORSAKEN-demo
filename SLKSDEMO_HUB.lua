@@ -1,109 +1,99 @@
--- SLK GAMING HUB - MENU KHUNG ONLY (v1)
-
--- XÓA GUI CŨ NẾU CÓ
-pcall(function()
-    game.CoreGui:FindFirstChild("SLK_GAMING_GUI"):Destroy()
-end)
+--==================================================
+-- SLK GAMING HUB | MENU ONLY | V1
+-- UI FRAME ONLY - NO FUNCTION
+--==================================================
 
 local Players = game:GetService("Players")
 local player = Players.LocalPlayer
 
--- ScreenGui
-local gui = Instance.new("ScreenGui")
-gui.Name = "SLK_GAMING_GUI"
-gui.ResetOnSpawn = false
-gui.Parent = game.CoreGui
+-- tránh load trùng
+if getgenv().SLK_MENU_V1 then return end
+getgenv().SLK_MENU_V1 = true
 
--- Main Frame
-local main = Instance.new("Frame")
-main.Parent = gui
-main.Size = UDim2.new(0, 520, 0, 300)
-main.Position = UDim2.new(0.5, -260, 0.5, -150)
-main.BackgroundColor3 = Color3.fromRGB(180, 0, 0)
-main.BackgroundTransparency = 0.35
-main.BorderSizePixel = 0
+--================ GUI =================
+local Gui = Instance.new("ScreenGui")
+Gui.Name = "SLK_HUB_GUI"
+Gui.ResetOnSpawn = false
+Gui.Parent = player:WaitForChild("PlayerGui")
 
-local corner = Instance.new("UICorner", main)
-corner.CornerRadius = UDim.new(0, 12)
+--================ MAIN FRAME =================
+local Main = Instance.new("Frame", Gui)
+Main.Size = UDim2.new(0, 460, 0, 300)
+Main.Position = UDim2.new(0.5, -230, 0.5, -150)
+Main.BackgroundColor3 = Color3.fromRGB(255, 255, 255) -- trắng
+Main.Active = true
+Main.Draggable = true
+Instance.new("UICorner", Main).CornerRadius = UDim.new(0, 18)
 
--- Top bar
-local top = Instance.new("Frame", main)
-top.Size = UDim2.new(1, 0, 0, 40)
-top.BackgroundColor3 = Color3.fromRGB(140, 0, 0)
-top.BackgroundTransparency = 0.2
-top.BorderSizePixel = 0
+--================ TOP BAR =================
+local TopBar = Instance.new("Frame", Main)
+TopBar.Size = UDim2.new(1, 0, 0, 42)
+TopBar.BackgroundColor3 = Color3.fromRGB(235, 235, 235) -- đậm nhẹ
+Instance.new("UICorner", TopBar).CornerRadius = UDim.new(0, 18)
 
-local topCorner = Instance.new("UICorner", top)
-topCorner.CornerRadius = UDim.new(0, 12)
+-- che bo góc dưới
+local Fix = Instance.new("Frame", TopBar)
+Fix.Size = UDim2.new(1, 0, 0, 18)
+Fix.Position = UDim2.new(0, 0, 1, -18)
+Fix.BackgroundColor3 = TopBar.BackgroundColor3
+Fix.BorderSizePixel = 0
 
--- Title
-local title = Instance.new("TextLabel", top)
-title.Size = UDim2.new(1, -120, 1, 0)
-title.Position = UDim2.new(0, 15, 0, 0)
-title.Text = "SLK GAMING HUB"
-title.TextColor3 = Color3.fromRGB(0, 0, 0)
-title.Font = Enum.Font.GothamBold
-title.TextSize = 18
-title.BackgroundTransparency = 1
-title.TextXAlignment = Left
+--================ TITLE =================
+local Title = Instance.new("TextLabel", TopBar)
+Title.Size = UDim2.new(1, -120, 1, 0)
+Title.Position = UDim2.new(0, 20, 0, 0)
+Title.BackgroundTransparency = 1
+Title.Text = "SLK HUB  |  by SLK GAMING"
+Title.Font = Enum.Font.GothamBold
+Title.TextSize = 16
+Title.TextXAlignment = Left
+Title.TextColor3 = Color3.fromRGB(40, 40, 40)
 
--- Version badge
-local version = Instance.new("TextLabel", top)
-version.Size = UDim2.new(0, 90, 0, 26)
-version.Position = UDim2.new(1, -210, 0.5, -13)
-version.Text = "Version v1"
-version.Font = Enum.Font.GothamBold
-version.TextSize = 14
-version.TextColor3 = Color3.fromRGB(255,255,255)
-version.BackgroundColor3 = Color3.fromRGB(0, 180, 90)
-version.BorderSizePixel = 0
+--================ VERSION TAG =================
+local Version = Instance.new("TextLabel", TopBar)
+Version.Size = UDim2.new(0, 90, 0, 26)
+Version.Position = UDim2.new(1, -210, 0.5, -13)
+Version.BackgroundColor3 = Color3.fromRGB(200, 230, 200)
+Version.Text = "v1"
+Version.Font = Enum.Font.GothamBold
+Version.TextSize = 14
+Version.TextColor3 = Color3.fromRGB(40, 120, 40)
+Instance.new("UICorner", Version).CornerRadius = UDim.new(1, 0)
 
-local vCorner = Instance.new("UICorner", version)
-vCorner.CornerRadius = UDim.new(0, 8)
+--================ BUTTONS =================
+local function TopButton(text, x)
+	local b = Instance.new("TextButton", TopBar)
+	b.Size = UDim2.new(0, 36, 0, 26)
+	b.Position = UDim2.new(1, x, 0.5, -13)
+	b.Text = text
+	b.Font = Enum.Font.GothamBold
+	b.TextSize = 16
+	b.BackgroundColor3 = Color3.fromRGB(220,220,220)
+	b.TextColor3 = Color3.fromRGB(60,60,60)
+	Instance.new("UICorner", b).CornerRadius = UDim.new(1,0)
+	return b
+end
 
--- Minimize button
-local min = Instance.new("TextButton", top)
-min.Size = UDim2.new(0, 32, 0, 26)
-min.Position = UDim2.new(1, -75, 0.5, -13)
-min.Text = "-"
-min.Font = Enum.Font.GothamBold
-min.TextSize = 20
-min.TextColor3 = Color3.fromRGB(255,255,255)
-min.BackgroundColor3 = Color3.fromRGB(90,90,90)
-min.BorderSizePixel = 0
+local MinBtn = TopButton("-", -80)
+local CloseBtn = TopButton("X", -40)
 
-local minCorner = Instance.new("UICorner", min)
-minCorner.CornerRadius = UDim.new(0, 6)
+--================ CONTENT =================
+local Content = Instance.new("Frame", Main)
+Content.Position = UDim2.new(0, 0, 0, 42)
+Content.Size = UDim2.new(1, 0, 1, -42)
+Content.BackgroundTransparency = 1
 
--- Close button
-local close = Instance.new("TextButton", top)
-close.Size = UDim2.new(0, 32, 0, 26)
-close.Position = UDim2.new(1, -38, 0.5, -13)
-close.Text = "X"
-close.Font = Enum.Font.GothamBold
-close.TextSize = 14
-close.TextColor3 = Color3.fromRGB(255,255,255)
-close.BackgroundColor3 = Color3.fromRGB(200, 0, 0)
-close.BorderSizePixel = 0
-
-local closeCorner = Instance.new("UICorner", close)
-closeCorner.CornerRadius = UDim.new(0, 6)
-
--- BODY (trống)
-local body = Instance.new("Frame", main)
-body.Position = UDim2.new(0, 0, 0, 40)
-body.Size = UDim2.new(1, 0, 1, -40)
-body.BackgroundTransparency = 1
-
--- CHỨC NĂNG NÚT
+--================ BUTTON LOGIC =================
 local minimized = false
-
-min.MouseButton1Click:Connect(function()
-    minimized = not minimized
-    body.Visible = not minimized
-    main.Size = minimized and UDim2.new(0, 520, 0, 40) or UDim2.new(0, 520, 0, 300)
+MinBtn.MouseButton1Click:Connect(function()
+	minimized = not minimized
+	Content.Visible = not minimized
+	Main.Size = minimized and UDim2.new(0,460,0,42) or UDim2.new(0,460,0,300)
 end)
 
-close.MouseButton1Click:Connect(function()
-    gui:Destroy()
+CloseBtn.MouseButton1Click:Connect(function()
+	Gui:Destroy()
+	getgenv().SLK_MENU_V1 = nil
 end)
+
+print("SLK HUB MENU V1 LOADED")
