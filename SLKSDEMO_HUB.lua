@@ -4,12 +4,14 @@
 local Players = game:GetService("Players")
 local UIS = game:GetService("UserInputService")
 
--- Anti reload
+-- chống load lại
 if game.CoreGui:FindFirstChild("SLK_HUB") then
 	game.CoreGui.SLK_HUB:Destroy()
 end
 
--- ScreenGui
+--------------------------------------------------
+-- GUI
+--------------------------------------------------
 local gui = Instance.new("ScreenGui")
 gui.Name = "SLK_HUB"
 gui.ResetOnSpawn = false
@@ -23,7 +25,7 @@ local Main = Instance.new("Frame", gui)
 Main.Size = UDim2.new(0, 520, 0, 320)
 Main.Position = UDim2.new(0.5, -260, 0.5, -160)
 Main.BackgroundColor3 = Color3.fromRGB(255,255,255)
-Main.BackgroundTransparency = 0.15
+Main.BackgroundTransparency = 0.1
 Main.BorderSizePixel = 0
 Main.Active = true
 Instance.new("UICorner", Main).CornerRadius = UDim.new(0,18)
@@ -38,7 +40,6 @@ TopBar.BorderSizePixel = 0
 TopBar.Active = true
 Instance.new("UICorner", TopBar).CornerRadius = UDim.new(0,18)
 
--- Title
 local Title1 = Instance.new("TextLabel", TopBar)
 Title1.Size = UDim2.new(1, -220, 0.5, 0)
 Title1.Position = UDim2.new(0, 16, 0, 2)
@@ -57,18 +58,16 @@ Title2.Font = Enum.Font.Gotham
 Title2.TextSize = 12
 Title2.TextXAlignment = Enum.TextXAlignment.Left
 
--- Version
 local Version = Instance.new("TextLabel", TopBar)
-Version.Size = UDim2.new(0, 110, 0, 22)
-Version.Position = UDim2.new(1, -200, 0.5, -11)
-Version.BackgroundColor3 = Color3.fromRGB(230,230,230)
-Version.BackgroundTransparency = 0.25
-Version.Text = "Version v1 (Demo)"
+Version.Size = UDim2.new(0, 90, 0, 22)
+Version.Position = UDim2.new(1, -180, 0.5, -11)
+Version.BackgroundColor3 = Color3.fromRGB(220,220,220)
+Version.BackgroundTransparency = 0.3
+Version.Text = "DEMO v1"
 Version.Font = Enum.Font.Gotham
 Version.TextSize = 12
 Instance.new("UICorner", Version).CornerRadius = UDim.new(0,8)
 
--- Minimize
 local Min = Instance.new("TextButton", TopBar)
 Min.Size = UDim2.new(0, 32, 0, 32)
 Min.Position = UDim2.new(1, -74, 0.5, -16)
@@ -78,7 +77,6 @@ Min.TextSize = 18
 Min.BackgroundColor3 = Color3.fromRGB(245,245,245)
 Instance.new("UICorner", Min).CornerRadius = UDim.new(0,8)
 
--- Close
 local Close = Instance.new("TextButton", TopBar)
 Close.Size = UDim2.new(0, 32, 0, 32)
 Close.Position = UDim2.new(1, -36, 0.5, -16)
@@ -100,21 +98,28 @@ Content.BackgroundTransparency = 1
 --------------------------------------------------
 -- TAB SYSTEM
 --------------------------------------------------
-local TabNames = {"INFO","Tab 2","Tab 3","Tab 4"}
+local Tabs = {
+	{Title = "INFO", Icon = "ℹ️"},
+	{Title = "TAB 2", Icon = "⚙️"},
+	{Title = "TAB 3", Icon = "🧪"},
+	{Title = "TAB 4", Icon = "🔒"},
+}
 
 local TabBar = Instance.new("Frame", Content)
-TabBar.Size = UDim2.new(0, 120, 1, 0)
+TabBar.Size = UDim2.new(0, 130, 1, 0)
 TabBar.BackgroundTransparency = 1
 
 local View = Instance.new("Frame", Content)
-View.Position = UDim2.new(0, 120, 0, 0)
-View.Size = UDim2.new(1, -120, 1, 0)
+View.Position = UDim2.new(0, 130, 0, 0)
+View.Size = UDim2.new(1, -130, 1, 0)
 View.BackgroundTransparency = 1
 
--- Info content
+--------------------------------------------------
+-- INFO CONTENT
+--------------------------------------------------
 local InfoText = Instance.new("TextLabel", View)
-InfoText.Size = UDim2.new(1, -30, 1, -30)
-InfoText.Position = UDim2.new(0, 15, 0, 15)
+InfoText.Size = UDim2.new(1, -20, 1, -20)
+InfoText.Position = UDim2.new(0, 10, 0, 10)
 InfoText.BackgroundTransparency = 1
 InfoText.TextWrapped = true
 InfoText.TextYAlignment = Enum.TextYAlignment.Top
@@ -123,85 +128,49 @@ InfoText.Font = Enum.Font.Gotham
 InfoText.TextSize = 14
 InfoText.TextColor3 = Color3.fromRGB(60,60,60)
 
-local function InfoContent()
-	return [[
-Welcome to SLK HUB 👋
+local function showInfo()
+	InfoText.Text =
+[[👋 Welcome to SLK HUB!
 
-Status:
-• Script Status: Working ✅
-• Version: Demo / Alpha
-• Last Update: 2026
+📌 Script Status:
+• Version: DEMO v1
+• State: Alpha / Demo
+• Update: Manual
 
-About:
-This script is currently in development.
-Some features may change in the future.
+📺 YouTube:
+SLK GAMING
 
-YouTube:
-SLK GAMING 🎥
+⚠️ Note:
+This hub is still under development.
+More features will be added soon.
 
-Thank you for using this script ❤️
+❤️ Thank you for using my script!
 ]]
 end
 
-InfoText.Text = InfoContent()
+showInfo()
 
-for i,name in ipairs(TabNames) do
-	local Tab = Instance.new("TextButton", TabBar)
-	Tab.Size = UDim2.new(1, -10, 0, 40)
-	Tab.Position = UDim2.new(0, 5, 0, (i-1)*45 + 10)
-	Tab.Text = name
-	Tab.Font = Enum.Font.Gotham
-	Tab.TextSize = 14
-	Tab.BackgroundColor3 = Color3.fromRGB(235,235,235)
-	Instance.new("UICorner", Tab).CornerRadius = UDim.new(0,8)
+--------------------------------------------------
+-- CREATE TABS
+--------------------------------------------------
+for i,tab in ipairs(Tabs) do
+	local Btn = Instance.new("TextButton", TabBar)
+	Btn.Size = UDim2.new(1, -10, 0, 42)
+	Btn.Position = UDim2.new(0, 5, 0, (i-1)*48 + 10)
+	Btn.Text = tab.Icon.."  "..tab.Title
+	Btn.Font = Enum.Font.Gotham
+	Btn.TextSize = 14
+	Btn.BackgroundColor3 = Color3.fromRGB(235,235,235)
+	Instance.new("UICorner", Btn).CornerRadius = UDim.new(0,8)
 
-	Tab.MouseButton1Click:Connect(function()
-		if name == "INFO" then
-			InfoText.Text = InfoContent()
+	Btn.MouseButton1Click:Connect(function()
+		if tab.Title == "INFO" then
+			showInfo()
 		else
-			InfoText.Text = name.." is under development"
+			InfoText.Text = tab.Title.." is under development 🚧"
 		end
 	end)
 end
-
---------------------------------------------------
--- CONFIRM CLOSE
---------------------------------------------------
-local Confirm = Instance.new("Frame", gui)
-Confirm.Size = UDim2.new(0, 300, 0, 140)
-Confirm.Position = UDim2.new(0.5, -150, 0.5, -70)
-Confirm.BackgroundColor3 = Color3.fromRGB(245,245,245)
-Confirm.Visible = false
-Confirm.ZIndex = 20
-Instance.new("UICorner", Confirm).CornerRadius = UDim.new(0,14)
-
-local Msg = Instance.new("TextLabel", Confirm)
-Msg.Size = UDim2.new(1, -20, 0, 50)
-Msg.Position = UDim2.new(0, 10, 0, 10)
-Msg.BackgroundTransparency = 1
-Msg.Text = "Do you want to close this script?"
-Msg.Font = Enum.Font.Gotham
-Msg.TextSize = 14
-Msg.ZIndex = 21
-
-local Yes = Instance.new("TextButton", Confirm)
-Yes.Size = UDim2.new(0, 100, 0, 32)
-Yes.Position = UDim2.new(0.5, -110, 1, -50)
-Yes.Text = "YES"
-Yes.Font = Enum.Font.GothamBold
-Yes.TextColor3 = Color3.fromRGB(255,255,255)
-Yes.BackgroundColor3 = Color3.fromRGB(220,80,80)
-Yes.ZIndex = 21
-Instance.new("UICorner", Yes).CornerRadius = UDim.new(0,8)
-
-local No = Instance.new("TextButton", Confirm)
-No.Size = UDim2.new(0, 100, 0, 32)
-No.Position = UDim2.new(0.5, 10, 1, -50)
-No.Text = "NO"
-No.Font = Enum.Font.GothamBold
-No.BackgroundColor3 = Color3.fromRGB(200,200,200)
-No.ZIndex = 21
-Instance.new("UICorner", No).CornerRadius = UDim.new(0,8)
 
 --------------------------------------------------
 -- DRAG
@@ -209,7 +178,6 @@ Instance.new("UICorner", No).CornerRadius = UDim.new(0,8)
 local dragging, dragStart, startPos
 
 TopBar.InputBegan:Connect(function(input)
-	if Confirm.Visible then return end
 	if input.UserInputType == Enum.UserInputType.MouseButton1
 	or input.UserInputType == Enum.UserInputType.Touch then
 		dragging = true
@@ -251,13 +219,5 @@ end)
 -- CLOSE
 --------------------------------------------------
 Close.MouseButton1Click:Connect(function()
-	Confirm.Visible = true
-end)
-
-Yes.MouseButton1Click:Connect(function()
 	gui:Destroy()
-end)
-
-No.MouseButton1Click:Connect(function()
-	Confirm.Visible = false
 end)
