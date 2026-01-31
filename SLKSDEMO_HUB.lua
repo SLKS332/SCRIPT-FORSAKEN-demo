@@ -1,9 +1,9 @@
---// SLK HUB - WHITE VERSION v1 (INVISIBLE ESP FIXED)
+--// SLK HUB - WHITE VERSION v1.2 (ESP FIXED)
 --// By SLK GAMING
 
 ---------------- SERVICES ----------------
-local UIS = game:GetService("UserInputService")
 local Players = game:GetService("Players")
+local UIS = game:GetService("UserInputService")
 local LocalPlayer = Players.LocalPlayer
 
 -------------- ANTI DUPLICATE ------------
@@ -12,10 +12,9 @@ if game.CoreGui:FindFirstChild("SLK_HUB") then
 end
 
 ---------------- GUI ---------------------
-local gui = Instance.new("ScreenGui")
+local gui = Instance.new("ScreenGui", game.CoreGui)
 gui.Name = "SLK_HUB"
 gui.ResetOnSpawn = false
-gui.Parent = game.CoreGui
 
 ---------------- MAIN --------------------
 local Main = Instance.new("Frame", gui)
@@ -94,120 +93,111 @@ Info.Font = Enum.Font.Gotham
 Info.TextSize = 14
 Info.TextColor3 = Color3.fromRGB(70,70,70)
 
-local INFO_TEXT = [[⚙ SCRIPT STATUS
+local INFO_TEXT = [[WELCOME TO SLK HUB 🤍
 
-• Script Status: Working ✅
-• Update Status: Updating...
+SCRIPT STATUS: WORKING ✅
+ESP STATUS: STABLE
+VERSION: v1.2
 
-🙏 Thank you for using SLK HUB
+Thank you for using SLK HUB
 YouTube: SLK GAMING]]
 
 Info.Text = INFO_TEXT
 
----------------- ESP (INVISIBLE) ----------------
-local ESP_ON = false
-local ESP_LIST = {}
+---------------- ESP SYSTEM ----------------
+local ESP_ENABLED = false
+local ESP_CACHE = {}
 
-local function ClearESP()
-	for _,h in pairs(ESP_LIST) do
-		if h and h.Parent then
-			h:Destroy()
-		end
+local function clearESP()
+	for _,v in pairs(ESP_CACHE) do
+		if v then v:Destroy() end
 	end
-	table.clear(ESP_LIST)
+	ESP_CACHE = {}
 end
 
-local function ApplyESP()
-	ClearESP()
-	if not ESP_ON then return end
+local function addESP(plr)
+	if plr == LocalPlayer then return end
 
+	local function onChar(char)
+		local hum = char:WaitForChild("Humanoid",5)
+		local root = char:WaitForChild("HumanoidRootPart",5)
+		if not hum or not root then return end
+		if hum.Health <= 0 then return end
+
+		local box = Instance.new("Highlight")
+		box.FillColor = Color3.new(1,1,1)
+		box.OutlineColor = Color3.new(1,1,1)
+		box.FillTransparency = 0.6
+		box.OutlineTransparency = 0
+		box.Adornee = char
+		box.Parent = gui
+
+		ESP_CACHE[plr] = box
+
+		hum.Died:Connect(function()
+			if ESP_CACHE[plr] then
+				ESP_CACHE[plr]:Destroy()
+				ESP_CACHE[plr] = nil
+			end
+		end)
+	end
+
+	if plr.Character then
+		onChar(plr.Character)
+	end
+	plr.CharacterAdded:Connect(onChar)
+end
+
+local function enableESP()
+	clearESP()
 	for _,plr in pairs(Players:GetPlayers()) do
-		if plr ~= LocalPlayer and plr.Character then
-			local hl = Instance.new("Highlight")
-			hl.Adornee = plr.Character
-			hl.FillColor = Color3.fromRGB(255,70,70)
-			hl.OutlineColor = Color3.new(1,1,1)
-			hl.FillTransparency = 0.35
-			hl.DepthMode = Enum.HighlightDepthMode.AlwaysOnTop
-			hl.Parent = plr.Character
-			table.insert(ESP_LIST, hl)
-		end
+		addESP(plr)
 	end
 end
 
----------------- ESP UI ----------------
-local ESP_Frame = Instance.new("Frame", View)
-ESP_Frame.Size = UDim2.new(0,260,0,80)
-ESP_Frame.Position = UDim2.new(0,20,0,20)
-ESP_Frame.BackgroundTransparency = 1
-ESP_Frame.Visible = false
-
-local ESP_Toggle = Instance.new("TextButton", ESP_Frame)
-ESP_Toggle.Size = UDim2.new(0,200,0,36)
-ESP_Toggle.Position = UDim2.new(0,0,0,0)
-ESP_Toggle.Text = "ESP Highlight : OFF"
-ESP_Toggle.Font = Enum.Font.GothamBold
-ESP_Toggle.TextSize = 14
-ESP_Toggle.TextColor3 = Color3.new(1,1,1)
-ESP_Toggle.BackgroundColor3 = Color3.fromRGB(160,160,160)
-Instance.new("UICorner", ESP_Toggle).CornerRadius = UDim.new(0,10)
-
-ESP_Toggle.MouseButton1Click:Connect(function()
-	ESP_ON = not ESP_ON
-	if ESP_ON then
-		ESP_Toggle.Text = "ESP Highlight : ON"
-		ESP_Toggle.BackgroundColor3 = Color3.fromRGB(220,70,70)
-		ApplyESP()
-	else
-		ESP_Toggle.Text = "ESP Highlight : OFF"
-		ESP_Toggle.BackgroundColor3 = Color3.fromRGB(160,160,160)
-		ClearESP()
+Players.PlayerAdded:Connect(function(plr)
+	if ESP_ENABLED then
+		addESP(plr)
 	end
 end)
 
----------------- TABS --------------------
-local Tabs = {
-	"✅ INFO",
-	"👁 INVISIBLE",
-	"Tab 3",
-	"Tab 4",
-	"Tab 5",
-	"Tab 6"
-}
+-- AUTO FIX RESPAWN / NEW MATCH
+LocalPlayer.CharacterAdded:Connect(function()
+	task.wait(1.5)
+	if ESP_ENABLED then
+		clearESP()
+		enableESP()
+	end
+end)
 
-for i,name in ipairs(Tabs) do
-	local Tab = Instance.new("TextButton", TabBar)
-	Tab.Size = UDim2.new(1,-10,0,40)
-	Tab.Position = UDim2.new(0,5,0,(i-1)*45+10)
-	Tab.Text = name
-	Tab.Font = Enum.Font.GothamBold
-	Tab.TextSize = 14
-	Tab.TextColor3 = Color3.fromRGB(60,60,60)
-	Tab.BackgroundColor3 = Color3.fromRGB(235,235,235)
-	Instance.new("UICorner", Tab).CornerRadius = UDim.new(0,8)
+---------------- ESP UI ----------------
+local EspButton = Instance.new("TextButton", View)
+EspButton.Size = UDim2.new(0,200,0,40)
+EspButton.Position = UDim2.new(0,20,0,20)
+EspButton.Text = "ESP Highlight : OFF"
+EspButton.Font = Enum.Font.GothamBold
+EspButton.TextSize = 14
+EspButton.BackgroundColor3 = Color3.fromRGB(180,180,180)
+EspButton.TextColor3 = Color3.new(1,1,1)
+Instance.new("UICorner", EspButton).CornerRadius = UDim.new(0,10)
 
-	Tab.MouseButton1Click:Connect(function()
-		if name == "✅ INFO" then
-			Info.Visible = true
-			ESP_Frame.Visible = false
-			Info.Text = INFO_TEXT
-		elseif name == "👁 INVISIBLE" then
-			Info.Visible = false
-			ESP_Frame.Visible = true
-		else
-			Info.Visible = true
-			ESP_Frame.Visible = false
-			Info.Text = name .. " đang phát triển 🚧"
-		end
-	end)
-end
+EspButton.MouseButton1Click:Connect(function()
+	ESP_ENABLED = not ESP_ENABLED
+	if ESP_ENABLED then
+		EspButton.Text = "ESP Highlight : ON"
+		EspButton.BackgroundColor3 = Color3.fromRGB(220,60,60)
+		enableESP()
+	else
+		EspButton.Text = "ESP Highlight : OFF"
+		EspButton.BackgroundColor3 = Color3.fromRGB(180,180,180)
+		clearESP()
+	end
+end)
 
----------------- DRAG --------------------
+---------------- DRAG ----------------
 local dragging, dragStart, startPos
-
 TopBar.InputBegan:Connect(function(input)
-	if input.UserInputType == Enum.UserInputType.MouseButton1
-	or input.UserInputType == Enum.UserInputType.Touch then
+	if input.UserInputType == Enum.UserInputType.MouseButton1 then
 		dragging = true
 		dragStart = input.Position
 		startPos = Main.Position
@@ -238,12 +228,9 @@ Min.MouseButton1Click:Connect(function()
 	Main.Size = minimized and UDim2.new(0,520,0,46) or UDim2.new(0,520,0,320)
 end)
 
----------------- CLOSE CONFIRM -----------
+---------------- CLOSE CONFIRM ----------------
 Close.MouseButton1Click:Connect(function()
-	if gui:FindFirstChild("CONFIRM") then return end
-
 	local cf = Instance.new("Frame", gui)
-	cf.Name = "CONFIRM"
 	cf.Size = UDim2.new(0,260,0,130)
 	cf.Position = UDim2.new(0.5,-130,0.5,-65)
 	cf.BackgroundColor3 = Color3.fromRGB(255,255,255)
