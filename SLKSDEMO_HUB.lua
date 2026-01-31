@@ -1,20 +1,27 @@
 -- ==============================
--- SLK HUB - MOBILE BLOCK + COUNTDOWN
+-- SLK HUB - MOBILE BLOCK + COUNTDOWN (FIX)
 -- ==============================
 
 local UIS = game:GetService("UserInputService")
 
 if UIS.TouchEnabled and not UIS.KeyboardEnabled and not UIS.MouseEnabled then
     
+    local CoreGui = game:GetService("CoreGui")
+
+    -- tránh trùng GUI
+    if CoreGui:FindFirstChild("SLK_Mobile_Block") then
+        CoreGui:FindFirstChild("SLK_Mobile_Block"):Destroy()
+    end
+
     local ScreenGui = Instance.new("ScreenGui")
     ScreenGui.Name = "SLK_Mobile_Block"
     ScreenGui.ResetOnSpawn = false
-    ScreenGui.Parent = game:GetService("CoreGui")
+    ScreenGui.Parent = CoreGui
 
     local Frame = Instance.new("Frame")
     Frame.Parent = ScreenGui
-    Frame.Size = UDim2.new(0, 380, 0, 190)
-    Frame.Position = UDim2.new(0.5, -190, 0.5, -95)
+    Frame.Size = UDim2.new(0, 380, 0, 200)
+    Frame.Position = UDim2.new(0.5, -190, 0.5, -100)
     Frame.BackgroundColor3 = Color3.fromRGB(15,15,15)
     Frame.BorderColor3 = Color3.fromRGB(255,0,0)
     Frame.BorderSizePixel = 2
@@ -30,18 +37,18 @@ if UIS.TouchEnabled and not UIS.KeyboardEnabled and not UIS.MouseEnabled then
     Title.TextScaled = true
     Title.TextColor3 = Color3.fromRGB(255,60,60)
 
-    local Text = Instance.new("TextLabel")
-    Text.Parent = Frame
-    Text.Position = UDim2.new(0, 15, 0, 45)
-    Text.Size = UDim2.new(1, -30, 0, 80)
-    Text.BackgroundTransparency = 1
-    Text.TextWrapped = true
-    Text.TextScaled = true
-    Text.Font = Enum.Font.GothamBold
-    Text.TextColor3 = Color3.fromRGB(230,230,230)
-    Text.Text = "SORRY\nSCRIPT NOT WORK ON MOBILE\nPLEASE USE PC"
+    local MainText = Instance.new("TextLabel")
+    MainText.Parent = Frame
+    MainText.Position = UDim2.new(0, 15, 0, 45)
+    MainText.Size = UDim2.new(1, -30, 0, 90)
+    MainText.BackgroundTransparency = 1
+    MainText.TextWrapped = true
+    MainText.TextScaled = true
+    MainText.Font = Enum.Font.GothamBold
+    MainText.TextColor3 = Color3.fromRGB(230,230,230)
+    MainText.Text = "SORRY\nSCRIPT NOT WORK ON MOBILE\nPLEASE USE PC"
 
-    -- ⏱️ COUNTDOWN TEXT
+    -- 🔢 COUNTDOWN (FIX CHẮC HIỆN)
     local Countdown = Instance.new("TextLabel")
     Countdown.Parent = Frame
     Countdown.Position = UDim2.new(0, 0, 1, -45)
@@ -50,29 +57,30 @@ if UIS.TouchEnabled and not UIS.KeyboardEnabled and not UIS.MouseEnabled then
     Countdown.Font = Enum.Font.GothamBold
     Countdown.TextScaled = true
     Countdown.TextColor3 = Color3.fromRGB(120,180,255)
+    Countdown.Text = "Closing in 5s"
 
-    -- ĐẾM NGƯỢC 5 → 0
+    -- ⏱️ ĐẾM NGƯỢC 5 → 0 (CHẮC CHẮN UPDATE)
     for i = 5, 0, -1 do
-        Countdown.Text = "Closing in " .. i .. "s"
+        Countdown.Text = "Closing in " .. tostring(i) .. "s"
+        Countdown.Visible = true
         task.wait(1)
     end
 
-    -- Hiệu ứng mờ dần
+    -- 🌫️ MỜ DẦN
     for i = 0, 1, 0.1 do
         Frame.BackgroundTransparency = i
         Frame.BorderTransparency = i
         Title.TextTransparency = i
-        Text.TextTransparency = i
+        MainText.TextTransparency = i
         Countdown.TextTransparency = i
         task.wait(0.05)
     end
 
     ScreenGui:Destroy()
-    return -- ❌ MOBILE DỪNG TẠI ĐÂY
+    return -- ❌ MOBILE DỪNG HẲN
 end
 
 -- ==============================
--- PC SẼ CHẠY TỪ ĐÂY TRỞ XUỐNG
+-- PC CHẠY TỪ ĐÂY
 -- ==============================
-
 print("SLK HUB: PC detected, continue...")
