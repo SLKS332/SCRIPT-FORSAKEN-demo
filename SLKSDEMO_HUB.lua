@@ -1,8 +1,7 @@
---// SLK HUB - WHITE VERSION v1 (FIXED)
+--// SLK HUB - WHITE VERSION v1 (FIXED TAB INFO)
 --// By SLK GAMING
 
 ---------------- SERVICES ----------------
-local Players = game:GetService("Players")
 local UIS = game:GetService("UserInputService")
 
 -------------- ANTI DUPLICATE ------------
@@ -92,7 +91,9 @@ Info.TextYAlignment = Enum.TextYAlignment.Top
 Info.Font = Enum.Font.Gotham
 Info.TextSize = 14
 Info.TextColor3 = Color3.fromRGB(70,70,70)
-Info.Text = [[Welcome to SLK HUB 👋
+
+-- NỘI DUNG INFO GỐC (FIX LỖI)
+local INFO_TEXT = [[Welcome to SLK HUB 👋
 
 • Hub trắng – trong suốt nhẹ
 • Fix lỗi mất tab khi ấn –
@@ -101,6 +102,8 @@ Info.Text = [[Welcome to SLK HUB 👋
 
 Chỉ chơi vui, không phá game 😄
 YouTube: SLK GAMING]]
+
+Info.Text = INFO_TEXT
 
 ---------------- TABS --------------------
 local Tabs = {
@@ -125,10 +128,8 @@ for i,name in ipairs(Tabs) do
 
 	Tab.MouseButton1Click:Connect(function()
 		if name == "✅ INFO" then
-			Info.Visible = true
-			Info.Text = Info.Text
+			Info.Text = INFO_TEXT
 		else
-			Info.Visible = true
 			Info.Text = name .. " đang phát triển 🚧"
 		end
 	end)
@@ -162,7 +163,7 @@ UIS.InputEnded:Connect(function()
 	dragging = false
 end)
 
----------------- MINIMIZE (FIX) ----------
+---------------- MINIMIZE ----------------
 local minimized = false
 Min.MouseButton1Click:Connect(function()
 	minimized = not minimized
