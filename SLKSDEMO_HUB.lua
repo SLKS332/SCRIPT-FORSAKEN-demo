@@ -110,5 +110,32 @@ for i = 1, 100 do
 end
 
 statusText.Text = "Thanks for use script"
-task.wait(1)
+
+-- Hiệu ứng nhỏ dần + mờ dần
+local tweenInfo = TweenInfo.new(
+	1.2, -- thời gian (chậm, mượt)
+	Enum.EasingStyle.Quad,
+	Enum.EasingDirection.Out
+)
+
+local fadeGoals = {
+	BackgroundTransparency = 1
+}
+
+-- Fade toàn bộ UI
+for _, v in ipairs(gui:GetDescendants()) do
+	if v:IsA("TextLabel") then
+		TweenService:Create(v, tweenInfo, {TextTransparency = 1}):Play()
+	elseif v:IsA("Frame") then
+		TweenService:Create(v, tweenInfo, {BackgroundTransparency = 1}):Play()
+	end
+end
+
+-- Thu nhỏ khung
+TweenService:Create(frame, tweenInfo, {
+	Size = UDim2.fromScale(0.4, 0.4),
+	Position = UDim2.fromScale(0.3, 0.3)
+}):Play()
+
+task.wait(1.3)
 gui:Destroy()
