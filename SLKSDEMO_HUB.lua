@@ -140,7 +140,7 @@ TweenService:Create(frame, tweenInfo, {
 task.wait(1.3)
 gui:Destroy()
 
---// SLK HUB MENU (NO LOADING - FULL FIX CLOSE)
+--// SLK HUB MENU (NO LOADING - INFORMATION ONLY)
 local Players = game:GetService("Players")
 local TweenService = game:GetService("TweenService")
 local UIS = game:GetService("UserInputService")
@@ -182,7 +182,7 @@ title.TextScaled = true
 title.TextColor3 = Color3.fromRGB(255,255,255)
 title.TextXAlignment = Enum.TextXAlignment.Left
 
--- VERSION BOX
+-- VERSION
 local verBox = Instance.new("Frame", top)
 verBox.Position = UDim2.fromScale(0.28, 0.28)
 verBox.Size = UDim2.fromScale(0.2, 0.45)
@@ -231,11 +231,20 @@ close.BackgroundColor3 = Color3.fromRGB(180,50,50)
 close.TextColor3 = Color3.fromRGB(255,255,255)
 Instance.new("UICorner", close).CornerRadius = UDim.new(1,0)
 
--- CONTENT (TRỐNG)
+-- CONTENT (INFORMATION)
 local content = Instance.new("Frame", main)
 content.Position = UDim2.fromScale(0.02, 0.26)
 content.Size = UDim2.fromScale(0.96, 0.7)
 content.BackgroundTransparency = 1
+
+local info = Instance.new("TextLabel", content)
+info.Size = UDim2.fromScale(1,1)
+info.BackgroundTransparency = 1
+info.Text = "SCRIPT IS DEVELOPING\nPLEASE WAIT FOR UPDATE"
+info.Font = Enum.Font.GothamBold
+info.TextScaled = true
+info.TextWrapped = true
+info.TextColor3 = Color3.fromRGB(0,170,255)
 
 -- DRAG
 local dragging, dragStart, startPos
@@ -327,43 +336,6 @@ close.MouseButton1Click:Connect(function()
 	end)
 
 	yes.MouseButton1Click:Connect(function()
-		ask:Destroy()
-
-		local bye = Instance.new("Frame", gui)
-		bye.Size = UDim2.fromScale(0.45, 0.28)
-		bye.Position = UDim2.fromScale(0.275, 0.36)
-		bye.BackgroundColor3 = Color3.fromRGB(0,0,0)
-		bye.BackgroundTransparency = 0.15
-		Instance.new("UICorner", bye).CornerRadius = UDim.new(0,16)
-
-		local icon = Instance.new("TextLabel", bye)
-		icon.Size = UDim2.fromScale(1, 0.3)
-		icon.Text = "👋"
-		icon.TextScaled = true
-		icon.BackgroundTransparency = 1
-
-		local msg = Instance.new("TextLabel", bye)
-		msg.Position = UDim2.fromScale(0, 0.32)
-		msg.Size = UDim2.fromScale(1, 0.3)
-		msg.Text = "Okay sorry\nYou good bye\nSee you again"
-		msg.TextScaled = true
-		msg.Font = Enum.Font.GothamBold
-		msg.BackgroundTransparency = 1
-
-		local count = Instance.new("TextLabel", bye)
-		count.Position = UDim2.fromScale(0.3, 0.7)
-		count.Size = UDim2.fromScale(0.4, 0.25)
-		count.TextScaled = true
-		count.Font = Enum.Font.GothamBlack
-		count.TextColor3 = Color3.fromRGB(0,170,255)
-		count.TextStrokeTransparency = 0
-		count.BackgroundTransparency = 1
-
-		for i = 5, 0, -1 do
-			count.Text = i.."s"
-			task.wait(1)
-		end
-
 		gui:Destroy()
 	end)
 end)
