@@ -1,129 +1,111 @@
--- SLK HUB LOADING FULL FIX
-local TweenService = game:GetService("TweenService")
+-- SLK HUB Loading Screen
+-- By SLK Gaming
+
 local Players = game:GetService("Players")
+local TweenService = game:GetService("TweenService")
 local player = Players.LocalPlayer
 
--- GUI
+-- UI
 local gui = Instance.new("ScreenGui")
 gui.Name = "SLK_LOADING"
 gui.ResetOnSpawn = false
 gui.Parent = player:WaitForChild("PlayerGui")
 
--- MAIN FRAME
 local main = Instance.new("Frame", gui)
-main.Size = UDim2.fromScale(0.6,0.35)
-main.Position = UDim2.fromScale(0.5,0.5)
-main.AnchorPoint = Vector2.new(0.5,0.5)
-main.BackgroundColor3 = Color3.fromRGB(0,0,0)
-main.BorderSizePixel = 0
+main.Size = UDim2.fromScale(0.5, 0.25)
+main.Position = UDim2.fromScale(0.25, 0.38)
+main.BackgroundColor3 = Color3.fromRGB(10,10,10)
 main.BackgroundTransparency = 0
+main.AnchorPoint = Vector2.new(0,0)
+Instance.new("UICorner", main).CornerRadius = UDim.new(0,18)
 
-local corner = Instance.new("UICorner", main)
-corner.CornerRadius = UDim.new(0,18)
+-- Viền
+local stroke = Instance.new("UIStroke", main)
+stroke.Color = Color3.fromRGB(255,255,255)
+stroke.Thickness = 2
 
--- TITLE
+-- Title
 local title = Instance.new("TextLabel", main)
-title.Size = UDim2.fromScale(1,0.22)
+title.Size = UDim2.fromScale(1,0.25)
+title.Position = UDim2.fromScale(0,0.05)
 title.BackgroundTransparency = 1
 title.Text = "SLK HUB"
-title.TextColor3 = Color3.fromRGB(255,0,0)
-title.Font = Enum.Font.GothamBlack
+title.TextColor3 = Color3.fromRGB(255,70,70)
 title.TextScaled = true
+title.Font = Enum.Font.GothamBold
 
--- BY TEXT
+-- By text
 local by = Instance.new("TextLabel", main)
-by.Position = UDim2.fromScale(0,0.22)
-by.Size = UDim2.fromScale(1,0.1)
+by.Size = UDim2.fromScale(1,0.15)
+by.Position = UDim2.fromScale(0,0.3)
 by.BackgroundTransparency = 1
-by.Text = "By SLK GAMING"
-by.TextColor3 = Color3.fromRGB(180,180,180)
-by.Font = Enum.Font.Gotham
+by.Text = "By SLK Gaming"
+by.TextColor3 = Color3.fromRGB(200,200,200)
 by.TextScaled = true
+by.Font = Enum.Font.Gotham
 
--- STATUS
-local status = Instance.new("TextLabel", main)
-status.Position = UDim2.fromScale(0,0.32)
-status.Size = UDim2.fromScale(1,0.12)
-status.BackgroundTransparency = 1
-status.Text = "Welcome to script"
-status.TextColor3 = Color3.fromRGB(255,255,255)
-status.Font = Enum.Font.Gotham
-status.TextScaled = true
+-- Loading bar background
+local barBG = Instance.new("Frame", main)
+barBG.Size = UDim2.fromScale(0.85,0.12)
+barBG.Position = UDim2.fromScale(0.075,0.55)
+barBG.BackgroundColor3 = Color3.fromRGB(40,40,40)
+Instance.new("UICorner", barBG).CornerRadius = UDim.new(0,10)
 
--- LOAD BAR OUTLINE
-local outline = Instance.new("Frame", main)
-outline.Position = UDim2.fromScale(0.1,0.5)
-outline.Size = UDim2.fromScale(0.8,0.1)
-outline.BackgroundColor3 = Color3.fromRGB(255,0,0)
-outline.BorderSizePixel = 0
-
-local oc = Instance.new("UICorner", outline)
-oc.CornerRadius = UDim.new(0,8)
-
--- LOAD BAR
-local bar = Instance.new("Frame", outline)
+-- Loading bar
+local bar = Instance.new("Frame", barBG)
 bar.Size = UDim2.fromScale(0,1)
 bar.BackgroundColor3 = Color3.fromRGB(0,170,255)
-bar.BorderSizePixel = 0
+Instance.new("UICorner", bar).CornerRadius = UDim.new(0,10)
 
-local bc = Instance.new("UICorner", bar)
-bc.CornerRadius = UDim.new(0,8)
-
--- PERCENT
+-- Percent text
 local percent = Instance.new("TextLabel", main)
-percent.Position = UDim2.fromScale(0,0.62)
-percent.Size = UDim2.fromScale(1,0.1)
+percent.Size = UDim2.fromScale(1,0.15)
+percent.Position = UDim2.fromScale(0,0.7)
 percent.BackgroundTransparency = 1
 percent.Text = "0%"
 percent.TextColor3 = Color3.fromRGB(255,255,255)
-percent.Font = Enum.Font.Code
 percent.TextScaled = true
+percent.Font = Enum.Font.GothamBold
 
--- BINARY
-local binary = Instance.new("TextLabel", main)
-binary.Position = UDim2.fromScale(0.1,0.75)
-binary.Size = UDim2.fromScale(0.8,0.1)
-binary.BackgroundTransparency = 1
-binary.Text = "10101010101010101010"
-binary.TextColor3 = Color3.fromRGB(120,120,120)
-binary.Font = Enum.Font.Code
-binary.TextScaled = true
+-- Binary text
+local bin = Instance.new("TextLabel", main)
+bin.Size = UDim2.fromScale(1,0.1)
+bin.Position = UDim2.fromScale(0,0.85)
+bin.BackgroundTransparency = 1
+bin.Text = "101010101010101010"
+bin.TextColor3 = Color3.fromRGB(120,120,120)
+bin.TextScaled = true
+bin.Font = Enum.Font.Code
 
--- BINARY MOVE
-task.spawn(function()
-	while binary.Parent do
-		binary.Text = binary.Text:sub(2)..binary.Text:sub(1,1)
-		task.wait(0.15)
-	end
-end)
-
--- STATUS LIST
-local texts = {
-	"Welcome to script",
-	"Script will done",
-	"Script will ready",
-	"Okay wait a script"
-}
-
--- LOADING
-for i = 0,100 do
-	bar.Size = UDim2.fromScale(i/100,1)
-	percent.Text = i.."%"
-	status.Text = texts[(i%#texts)+1]
-	task.wait(0.06) -- ~6s
+-- Loading logic
+for i = 1,100 do
+	bar:TweenSize(
+		UDim2.fromScale(i/100,1),
+		Enum.EasingDirection.Out,
+		Enum.EasingStyle.Quad,
+		0.03,
+		true
+	)
+	percent.Text = i .. "%"
+	task.wait(0.03)
 end
 
--- FADE + SHRINK
-TweenService:Create(main, TweenInfo.new(0.5), {
-	Size = UDim2.fromScale(0.45,0.25),
+-- Finish animation (thu nhỏ + mờ dần)
+task.wait(0.4)
+
+TweenService:Create(main, TweenInfo.new(0.6), {
+	Size = UDim2.fromScale(0.2,0.1),
 	BackgroundTransparency = 1
 }):Play()
 
-for _,v in ipairs(main:GetDescendants()) do
+for _,v in pairs(main:GetDescendants()) do
 	if v:IsA("TextLabel") then
-		TweenService:Create(v, TweenInfo.new(0.5), {TextTransparency = 1}):Play()
+		TweenService:Create(v, TweenInfo.new(0.6), {TextTransparency = 1}):Play()
+	end
+	if v:IsA("Frame") then
+		TweenService:Create(v, TweenInfo.new(0.6), {BackgroundTransparency = 1}):Play()
 	end
 end
 
-task.wait(0.6)
+task.wait(0.7)
 gui:Destroy()
