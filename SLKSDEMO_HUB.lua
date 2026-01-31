@@ -1,9 +1,10 @@
---// SLK HUB - WHITE VERSION v1 (INVISIBLE ESP FIXED + TAB SAFE)
+--// SLK HUB - WHITE VERSION v1.2
 --// By SLK GAMING
 
 ---------------- SERVICES ----------------
 local UIS = game:GetService("UserInputService")
 local Players = game:GetService("Players")
+local RunService = game:GetService("RunService")
 local LocalPlayer = Players.LocalPlayer
 
 -------------- ANTI DUPLICATE ------------
@@ -27,11 +28,11 @@ Main.BorderSizePixel = 0
 Main.Active = true
 Instance.new("UICorner", Main).CornerRadius = UDim.new(0,18)
 
----------------- TOP BAR -----------------
+---------------- TOP BAR (TRANSPARENT) -----------------
 local TopBar = Instance.new("Frame", Main)
 TopBar.Size = UDim2.new(1,0,0,46)
-TopBar.BackgroundColor3 = Color3.fromRGB(240,240,240)
-TopBar.BackgroundTransparency = 0.1
+TopBar.BackgroundColor3 = Color3.fromRGB(255,255,255)
+TopBar.BackgroundTransparency = 0.2
 TopBar.BorderSizePixel = 0
 TopBar.Active = true
 Instance.new("UICorner", TopBar).CornerRadius = UDim.new(0,18)
@@ -40,7 +41,7 @@ local Title = Instance.new("TextLabel", TopBar)
 Title.Size = UDim2.new(1,-200,1,0)
 Title.Position = UDim2.new(0,16,0,0)
 Title.BackgroundTransparency = 1
-Title.Text = "SLK HUB | White Version"
+Title.Text = "SLK HUB | White Version v1.2"
 Title.Font = Enum.Font.GothamBold
 Title.TextSize = 15
 Title.TextXAlignment = Enum.TextXAlignment.Left
@@ -53,7 +54,8 @@ Min.Position = UDim2.new(1,-74,0.5,-16)
 Min.Text = "-"
 Min.Font = Enum.Font.GothamBold
 Min.TextSize = 18
-Min.BackgroundColor3 = Color3.fromRGB(220,220,220)
+Min.BackgroundColor3 = Color3.fromRGB(255,255,255)
+Min.BackgroundTransparency = 0.25
 Min.TextColor3 = Color3.fromRGB(60,60,60)
 Instance.new("UICorner", Min).CornerRadius = UDim.new(0,8)
 
@@ -65,7 +67,8 @@ Close.Text = "X"
 Close.Font = Enum.Font.GothamBold
 Close.TextSize = 14
 Close.TextColor3 = Color3.fromRGB(180,60,60)
-Close.BackgroundColor3 = Color3.fromRGB(220,220,220)
+Close.BackgroundColor3 = Color3.fromRGB(255,255,255)
+Close.BackgroundTransparency = 0.25
 Instance.new("UICorner", Close).CornerRadius = UDim.new(0,8)
 
 ---------------- CONTENT -----------------
@@ -94,84 +97,61 @@ Info.Font = Enum.Font.Gotham
 Info.TextSize = 14
 Info.TextColor3 = Color3.fromRGB(70,70,70)
 
-local INFO_TEXT = [[⚙ SCRIPT STATUS
+Info.Text = [[⚙ SCRIPT STATUS
 
 • Script Status: Working ✅
-• ESP Status: Stable
-• Version: v1 FIXED
+• Version: v1.2
 
 🙏 Thank you for using SLK HUB
 YouTube: SLK GAMING]]
 
-Info.Text = INFO_TEXT
-
----------------- ESP SYSTEM (FIXED) ----------------
+---------------- ESP (HIGHLIGHT) ----------------
 local ESP_ON = false
-local ESP_CACHE = {}
+local ESP_LIST = {}
 
-local function removeESP(plr)
-	if ESP_CACHE[plr] then
-		ESP_CACHE[plr]:Destroy()
-		ESP_CACHE[plr] = nil
+local function ClearESP()
+	for _,v in pairs(ESP_LIST) do
+		if v then v:Destroy() end
 	end
+	table.clear(ESP_LIST)
 end
 
-local function createESP(plr, char)
+local function ApplyESP()
+	ClearESP()
 	if not ESP_ON then return end
-	if plr == LocalPlayer then return end
 
-	local hum = char:FindFirstChildOfClass("Humanoid")
-	if not hum or hum.Health <= 0 then return end
-
-	removeESP(plr)
-
-	local hl = Instance.new("Highlight")
-	hl.Adornee = char
-	hl.FillColor = Color3.new(1,1,1)
-	hl.OutlineColor = Color3.new(1,1,1)
-	hl.FillTransparency = 0.6
-	hl.OutlineTransparency = 0
-	hl.DepthMode = Enum.HighlightDepthMode.AlwaysOnTop
-	hl.Parent = char
-
-	ESP_CACHE[plr] = hl
-
-	hum.Died:Connect(function()
-		removeESP(plr)
-	end)
-end
-
-local function refreshESP()
-	for _,plr in ipairs(Players:GetPlayers()) do
-		if plr.Character then
-			createESP(plr, plr.Character)
+	for _,plr in pairs(Players:GetPlayers()) do
+		if plr ~= LocalPlayer and plr.Character then
+			local hum = plr.Character:FindFirstChildOfClass("Humanoid")
+			if hum and hum.Health > 0 then
+				local hl = Instance.new("Highlight")
+				hl.Adornee = plr.Character
+				hl.FillColor = Color3.fromRGB(255,80,80)
+				hl.OutlineColor = Color3.new(1,1,1)
+				hl.FillTransparency = 0.35
+				hl.DepthMode = Enum.HighlightDepthMode.AlwaysOnTop
+				hl.Parent = plr.Character
+				table.insert(ESP_LIST, hl)
+			end
 		end
 	end
 end
 
-Players.PlayerAdded:Connect(function(plr)
-	plr.CharacterAdded:Connect(function(char)
-		task.wait(0.3)
-		createESP(plr, char)
-	end)
-end)
-
-LocalPlayer.CharacterAdded:Connect(function()
-	task.wait(1)
+RunService.Heartbeat:Connect(function()
 	if ESP_ON then
-		refreshESP()
+		ApplyESP()
 	end
 end)
 
 ---------------- ESP UI ----------------
 local ESP_Frame = Instance.new("Frame", View)
-ESP_Frame.Size = UDim2.new(0,260,0,80)
+ESP_Frame.Size = UDim2.new(0,320,0,140)
 ESP_Frame.Position = UDim2.new(0,20,0,20)
 ESP_Frame.BackgroundTransparency = 1
 ESP_Frame.Visible = false
 
 local ESP_Toggle = Instance.new("TextButton", ESP_Frame)
-ESP_Toggle.Size = UDim2.new(0,200,0,36)
+ESP_Toggle.Size = UDim2.new(0,240,0,36)
 ESP_Toggle.Text = "ESP Highlight : OFF"
 ESP_Toggle.Font = Enum.Font.GothamBold
 ESP_Toggle.TextSize = 14
@@ -184,25 +164,36 @@ ESP_Toggle.MouseButton1Click:Connect(function()
 	if ESP_ON then
 		ESP_Toggle.Text = "ESP Highlight : ON"
 		ESP_Toggle.BackgroundColor3 = Color3.fromRGB(220,70,70)
-		refreshESP()
+		ApplyESP()
 	else
 		ESP_Toggle.Text = "ESP Highlight : OFF"
 		ESP_Toggle.BackgroundColor3 = Color3.fromRGB(160,160,160)
-		for plr,_ in pairs(ESP_CACHE) do
-			removeESP(plr)
-		end
+		ClearESP()
 	end
 end)
 
+local NoteVN = Instance.new("TextLabel", ESP_Frame)
+NoteVN.Position = UDim2.new(0,0,0,50)
+NoteVN.Size = UDim2.new(1,0,0,30)
+NoteVN.BackgroundTransparency = 1
+NoteVN.Text = "🇻🇳 Hiện tại hub chỉ để demo nên chưa có nhiều chức năng"
+NoteVN.Font = Enum.Font.Gotham
+NoteVN.TextSize = 13
+NoteVN.TextColor3 = Color3.fromRGB(90,90,90)
+NoteVN.TextWrapped = true
+
+local NoteEN = Instance.new("TextLabel", ESP_Frame)
+NoteEN.Position = UDim2.new(0,0,0,80)
+NoteEN.Size = UDim2.new(1,0,0,30)
+NoteEN.BackgroundTransparency = 1
+NoteEN.Text = "🇺🇸 This hub is for demo purposes, more features coming soon"
+NoteEN.Font = Enum.Font.Gotham
+NoteEN.TextSize = 13
+NoteEN.TextColor3 = Color3.fromRGB(90,90,90)
+NoteEN.TextWrapped = true
+
 ---------------- TABS --------------------
-local Tabs = {
-	"✅ INFO",
-	"👁 INVISIBLE",
-	"Tab 3",
-	"Tab 4",
-	"Tab 5",
-	"Tab 6"
-}
+local Tabs = {"✅ INFO","👁 INVISIBLE","Tab 3","Tab 4","Tab 5","Tab 6"}
 
 for i,name in ipairs(Tabs) do
 	local Tab = Instance.new("TextButton", TabBar)
@@ -216,47 +207,27 @@ for i,name in ipairs(Tabs) do
 	Instance.new("UICorner", Tab).CornerRadius = UDim.new(0,8)
 
 	Tab.MouseButton1Click:Connect(function()
-		Info.Visible = false
-		ESP_Frame.Visible = false
-
-		if name == "✅ INFO" then
-			Info.Visible = true
-			Info.Text = INFO_TEXT
-		elseif name == "👁 INVISIBLE" then
-			ESP_Frame.Visible = true
-		else
-			Info.Visible = true
-			Info.Text = name .. " đang phát triển 🚧"
-		end
+		Info.Visible = name ~= "👁 INVISIBLE"
+		ESP_Frame.Visible = name == "👁 INVISIBLE"
 	end)
 end
 
 ---------------- DRAG --------------------
 local dragging, dragStart, startPos
-TopBar.InputBegan:Connect(function(input)
-	if input.UserInputType == Enum.UserInputType.MouseButton1
-	or input.UserInputType == Enum.UserInputType.Touch then
+TopBar.InputBegan:Connect(function(i)
+	if i.UserInputType == Enum.UserInputType.MouseButton1 then
 		dragging = true
-		dragStart = input.Position
+		dragStart = i.Position
 		startPos = Main.Position
 	end
 end)
-
-UIS.InputChanged:Connect(function(input)
+UIS.InputChanged:Connect(function(i)
 	if dragging then
-		local delta = input.Position - dragStart
-		Main.Position = UDim2.new(
-			startPos.X.Scale,
-			startPos.X.Offset + delta.X,
-			startPos.Y.Scale,
-			startPos.Y.Offset + delta.Y
-		)
+		local d = i.Position - dragStart
+		Main.Position = UDim2.new(startPos.X.Scale,startPos.X.Offset+d.X,startPos.Y.Scale,startPos.Y.Offset+d.Y)
 	end
 end)
-
-UIS.InputEnded:Connect(function()
-	dragging = false
-end)
+UIS.InputEnded:Connect(function() dragging = false end)
 
 ---------------- MINIMIZE ----------------
 local minimized = false
@@ -268,5 +239,36 @@ end)
 
 ---------------- CLOSE CONFIRM ----------------
 Close.MouseButton1Click:Connect(function()
-	gui:Destroy()
+	local cf = Instance.new("Frame", gui)
+	cf.Size = UDim2.new(0,260,0,130)
+	cf.Position = UDim2.new(0.5,-130,0.5,-65)
+	cf.BackgroundColor3 = Color3.fromRGB(255,255,255)
+	Instance.new("UICorner", cf).CornerRadius = UDim.new(0,12)
+
+	local t = Instance.new("TextLabel", cf)
+	t.Size = UDim2.new(1,-20,0,50)
+	t.Position = UDim2.new(0,10,0,10)
+	t.BackgroundTransparency = 1
+	t.Text = "Bạn có muốn đóng SLK HUB không?"
+	t.Font = Enum.Font.GothamBold
+	t.TextSize = 14
+	t.TextColor3 = Color3.fromRGB(60,60,60)
+
+	local y = Instance.new("TextButton", cf)
+	y.Size = UDim2.new(0.4,0,0,32)
+	y.Position = UDim2.new(0.05,0,1,-42)
+	y.Text = "Yes"
+	y.BackgroundColor3 = Color3.fromRGB(255,100,100)
+	y.TextColor3 = Color3.new(1,1,1)
+	Instance.new("UICorner", y).CornerRadius = UDim.new(0,8)
+
+	local n = Instance.new("TextButton", cf)
+	n.Size = UDim2.new(0.4,0,0,32)
+	n.Position = UDim2.new(0.55,0,1,-42)
+	n.Text = "No"
+	n.BackgroundColor3 = Color3.fromRGB(220,220,220)
+	Instance.new("UICorner", n).CornerRadius = UDim.new(0,8)
+
+	y.MouseButton1Click:Connect(function() gui:Destroy() end)
+	n.MouseButton1Click:Connect(function() cf:Destroy() end)
 end)
