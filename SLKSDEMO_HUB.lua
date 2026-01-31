@@ -1,86 +1,112 @@
--- ==============================
--- SLK HUB - MOBILE BLOCK + COUNTDOWN (FIX)
--- ==============================
+--==================================================
+-- SLK HUB - ANTI MOBILE LOADER
+--==================================================
 
+-- 📱 CHECK MOBILE
 local UIS = game:GetService("UserInputService")
+local Players = game:GetService("Players")
+local Player = Players.LocalPlayer
 
-if UIS.TouchEnabled and not UIS.KeyboardEnabled and not UIS.MouseEnabled then
-    
-    local CoreGui = game:GetService("CoreGui")
+local isMobile = UIS.TouchEnabled and not UIS.KeyboardEnabled
 
-    -- tránh trùng GUI
-    if CoreGui:FindFirstChild("SLK_Mobile_Block") then
-        CoreGui:FindFirstChild("SLK_Mobile_Block"):Destroy()
-    end
+--==================================================
+-- GUI CREATE
+--==================================================
+local ScreenGui = Instance.new("ScreenGui")
+ScreenGui.ResetOnSpawn = false
+ScreenGui.Parent = game.CoreGui
 
-    local ScreenGui = Instance.new("ScreenGui")
-    ScreenGui.Name = "SLK_Mobile_Block"
-    ScreenGui.ResetOnSpawn = false
-    ScreenGui.Parent = CoreGui
+local Frame = Instance.new("Frame")
+Frame.Size = UDim2.fromScale(0.45, 0.3)
+Frame.Position = UDim2.fromScale(0.5, 0.5)
+Frame.AnchorPoint = Vector2.new(0.5, 0.5)
+Frame.BackgroundColor3 = Color3.fromRGB(15,15,15)
+Frame.BorderColor3 = Color3.fromRGB(255,0,0)
+Frame.BorderSizePixel = 2
+Frame.Parent = ScreenGui
+Frame.Name = "MainFrame"
+Frame.BackgroundTransparency = 0
 
-    local Frame = Instance.new("Frame")
-    Frame.Parent = ScreenGui
-    Frame.Size = UDim2.new(0, 380, 0, 200)
-    Frame.Position = UDim2.new(0.5, -190, 0.5, -100)
-    Frame.BackgroundColor3 = Color3.fromRGB(15,15,15)
-    Frame.BorderColor3 = Color3.fromRGB(255,0,0)
-    Frame.BorderSizePixel = 2
+-- ROUND CORNER
+local UICorner = Instance.new("UICorner", Frame)
+UICorner.CornerRadius = UDim.new(0, 18)
 
-    Instance.new("UICorner", Frame).CornerRadius = UDim.new(0, 14)
+--==================================================
+-- TITLE
+--==================================================
+local Title = Instance.new("TextLabel")
+Title.Size = UDim2.new(1,0,0.25,0)
+Title.BackgroundTransparency = 1
+Title.Text = "SLK HUB"
+Title.Font = Enum.Font.GothamBold
+Title.TextScaled = true
+Title.TextColor3 = Color3.fromRGB(255,0,0)
+Title.Parent = Frame
 
-    local Title = Instance.new("TextLabel")
-    Title.Parent = Frame
-    Title.Size = UDim2.new(1, 0, 0, 40)
-    Title.BackgroundTransparency = 1
-    Title.Text = "SLK HUB"
-    Title.Font = Enum.Font.GothamBlack
-    Title.TextScaled = true
-    Title.TextColor3 = Color3.fromRGB(255,60,60)
+--==================================================
+-- MAIN TEXT
+--==================================================
+local MainText = Instance.new("TextLabel")
+MainText.Size = UDim2.new(1,-20,0.35,0)
+MainText.Position = UDim2.new(0,10,0.28,0)
+MainText.BackgroundTransparency = 1
+MainText.TextWrapped = true
+MainText.Text = "SORRY\nSCRIPT NOT WORK ON MOBILE\nPLEASE USE PC"
+MainText.Font = Enum.Font.GothamBold
+MainText.TextScaled = true
+MainText.TextColor3 = Color3.fromRGB(255,255,255)
+MainText.Parent = Frame
 
-    local MainText = Instance.new("TextLabel")
-    MainText.Parent = Frame
-    MainText.Position = UDim2.new(0, 15, 0, 45)
-    MainText.Size = UDim2.new(1, -30, 0, 90)
-    MainText.BackgroundTransparency = 1
-    MainText.TextWrapped = true
-    MainText.TextScaled = true
-    MainText.Font = Enum.Font.GothamBold
-    MainText.TextColor3 = Color3.fromRGB(230,230,230)
-    MainText.Text = "SORRY\nSCRIPT NOT WORK ON MOBILE\nPLEASE USE PC"
+--==================================================
+-- COUNTDOWN TEXT
+--==================================================
+local Countdown = Instance.new("TextLabel")
+Countdown.Size = UDim2.new(1,0,0.18,0)
+Countdown.Position = UDim2.new(0,0,0.78,0)
+Countdown.BackgroundTransparency = 1
+Countdown.Text = "Closing in 5s"
+Countdown.Font = Enum.Font.GothamBold
+Countdown.TextScaled = true
+Countdown.TextColor3 = Color3.fromRGB(0,170,255)
+Countdown.Parent = Frame
 
-    -- 🔢 COUNTDOWN (FIX CHẮC HIỆN)
-    local Countdown = Instance.new("TextLabel")
-    Countdown.Parent = Frame
-    Countdown.Position = UDim2.new(0, 0, 1, -45)
-    Countdown.Size = UDim2.new(1, 0, 0, 35)
-    Countdown.BackgroundTransparency = 1
-    Countdown.Font = Enum.Font.GothamBold
-    Countdown.TextScaled = true
-    Countdown.TextColor3 = Color3.fromRGB(120,180,255)
-    Countdown.Text = "Closing in 5s"
-
-    -- ⏱️ ĐẾM NGƯỢC 5 → 0 (CHẮC CHẮN UPDATE)
+--==================================================
+-- MOBILE BEHAVIOR
+--==================================================
+if isMobile then
+    -- ⏱️ COUNTDOWN 5 → 0
     for i = 5, 0, -1 do
-        Countdown.Text = "Closing in " .. tostring(i) .. "s"
-        Countdown.Visible = true
+        Countdown.Text = "Closing in " .. i .. "s"
         task.wait(1)
     end
 
-    -- 🌫️ MỜ DẦN
-    for i = 0, 1, 0.1 do
-        Frame.BackgroundTransparency = i
-        Frame.BorderTransparency = i
-        Title.TextTransparency = i
-        MainText.TextTransparency = i
-        Countdown.TextTransparency = i
-        task.wait(0.05)
-    end
+    Countdown.Text = "Closing..."
 
+    -- 🌫️ FADE OUT (SAFE)
+    pcall(function()
+        for t = 0, 1, 0.1 do
+            Frame.BackgroundTransparency = t
+            Frame.BorderTransparency = t
+            Title.TextTransparency = t
+            MainText.TextTransparency = t
+            Countdown.TextTransparency = t
+            task.wait(0.04)
+        end
+    end)
+
+    -- 💥 DESTROY CHẮC CHẮN
+    task.wait(0.2)
     ScreenGui:Destroy()
-    return -- ❌ MOBILE DỪNG HẲN
+    return
 end
 
--- ==============================
--- PC CHẠY TỪ ĐÂY
--- ==============================
-print("SLK HUB: PC detected, continue...")
+--==================================================
+-- 🖥️ PC: CONTINUE SCRIPT
+--==================================================
+
+-- Nếu là PC thì đổi text (ví dụ)
+MainText.Text = "LOADING..."
+Countdown.Text = "Please wait..."
+
+-- 🔽 BẠN GẮN LOADING / MENU HUB Ở DƯỚI ĐÂY 🔽
+-- loadstring(game:HttpGet("LINK_MENU_PC"))()
