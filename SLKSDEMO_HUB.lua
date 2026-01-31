@@ -220,9 +220,7 @@ SpeedBtn.TextSize = 14
 SpeedBtn.TextColor3 = Color3.new(1,1,1)
 SpeedBtn.BackgroundColor3 = Color3.fromRGB(160,160,160)
 
-local SpeedCorner = Instance.new("UICorner")
-SpeedCorner.CornerRadius = UDim.new(0,10)
-SpeedCorner.Parent = SpeedBtn
+Instance.new("UICorner",SpeedBtn).CornerRadius = UDim.new(0,10)
 
 ---------------------------------------------------------------
 -- SPEED SLIDER
@@ -232,19 +230,13 @@ Bar.Parent = PlayerFrame
 Bar.Size = UDim2.new(0,240,0,8)
 Bar.Position = UDim2.new(0,20,0,85)
 Bar.BackgroundColor3 = Color3.fromRGB(200,200,200)
-
-local BarCorner = Instance.new("UICorner")
-BarCorner.CornerRadius = UDim.new(1,0)
-BarCorner.Parent = Bar
+Instance.new("UICorner",Bar).CornerRadius = UDim.new(1,0)
 
 local Fill = Instance.new("Frame")
 Fill.Parent = Bar
 Fill.Size = UDim2.new(0,0,1,0)
 Fill.BackgroundColor3 = Color3.fromRGB(80,180,255)
-
-local FillCorner = Instance.new("UICorner")
-FillCorner.CornerRadius = UDim.new(1,0)
-FillCorner.Parent = Fill
+Instance.new("UICorner",Fill).CornerRadius = UDim.new(1,0)
 
 local SpeedText = Instance.new("TextLabel")
 SpeedText.Parent = PlayerFrame
@@ -270,22 +262,13 @@ SpeedBtn.MouseButton1Click:Connect(function()
 	end
 end)
 
----------------------------------------------------------------
--- SLIDER LOGIC
----------------------------------------------------------------
 local dragging = false
-
 Bar.InputBegan:Connect(function(i)
-	if i.UserInputType == Enum.UserInputType.MouseButton1
-	or i.UserInputType == Enum.UserInputType.Touch then
+	if i.UserInputType == Enum.UserInputType.MouseButton1 or i.UserInputType == Enum.UserInputType.Touch then
 		dragging = true
 	end
 end)
-
-UserInputService.InputEnded:Connect(function()
-	dragging = false
-end)
-
+UserInputService.InputEnded:Connect(function() dragging = false end)
 UserInputService.InputChanged:Connect(function(i)
 	if dragging then
 		local x = math.clamp((i.Position.X - Bar.AbsolutePosition.X)/Bar.AbsoluteSize.X,0,1)
@@ -294,7 +277,6 @@ UserInputService.InputChanged:Connect(function(i)
 		SpeedText.Text = "Speed: "..SpeedValue
 	end
 end)
-
 RunService.RenderStepped:Connect(function()
 	if SpeedOn and LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("Humanoid") then
 		LocalPlayer.Character.Humanoid.WalkSpeed = SpeedValue
@@ -305,7 +287,6 @@ end)
 -- TABS
 ---------------------------------------------------------------
 local Tabs = {"INFO","INVISIBLE","👤 PLAYER","TAB 4","TAB 5","TAB 6"}
-
 for i,name in ipairs(Tabs) do
 	local btn = Instance.new("TextButton")
 	btn.Parent = TabBar
@@ -316,24 +297,16 @@ for i,name in ipairs(Tabs) do
 	btn.TextSize = 14
 	btn.BackgroundColor3 = Color3.fromRGB(235,235,235)
 	btn.TextColor3 = Color3.fromRGB(60,60,60)
-
 	Instance.new("UICorner",btn).CornerRadius = UDim.new(0,8)
 
 	btn.MouseButton1Click:Connect(function()
 		Info.Visible = false
 		InvisFrame.Visible = false
 		PlayerFrame.Visible = false
-
-		if name == "INFO" then
-			Info.Visible = true
-		elseif name == "INVISIBLE" then
-			InvisFrame.Visible = true
-		elseif name == "👤 PLAYER" then
-			PlayerFrame.Visible = true
-		else
-			Info.Visible = true
-			Info.Text = name.." đang phát triển 🚧"
-		end
+		if name == "INFO" then Info.Visible = true
+		elseif name == "INVISIBLE" then InvisFrame.Visible = true
+		elseif name == "👤 PLAYER" then PlayerFrame.Visible = true
+		else Info.Visible = true; Info.Text = name.." đang phát triển 🚧" end
 	end)
 end
 
@@ -342,31 +315,20 @@ end
 ---------------------------------------------------------------
 local draggingWindow = false
 local dragStart, startPos
-
 TopBar.InputBegan:Connect(function(i)
-	if i.UserInputType == Enum.UserInputType.MouseButton1
-	or i.UserInputType == Enum.UserInputType.Touch then
+	if i.UserInputType == Enum.UserInputType.MouseButton1 or i.UserInputType == Enum.UserInputType.Touch then
 		draggingWindow = true
 		dragStart = i.Position
 		startPos = Main.Position
 	end
 end)
-
 UserInputService.InputChanged:Connect(function(i)
 	if draggingWindow then
 		local delta = i.Position - dragStart
-		Main.Position = UDim2.new(
-			startPos.X.Scale,
-			startPos.X.Offset + delta.X,
-			startPos.Y.Scale,
-			startPos.Y.Offset + delta.Y
-		)
+		Main.Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X, startPos.Y.Scale, startPos.Y.Offset + delta.Y)
 	end
 end)
-
-UserInputService.InputEnded:Connect(function()
-	draggingWindow = false
-end)
+UserInputService.InputEnded:Connect(function() draggingWindow = false end)
 
 ---------------------------------------------------------------
 -- MINIMIZE
@@ -414,6 +376,70 @@ CloseBtn.MouseButton1Click:Connect(function()
 
 	y.MouseButton1Click:Connect(function() ScreenGui:Destroy() end)
 	n.MouseButton1Click:Connect(function() cf:Destroy() end)
+end)
+
+---------------------------------------------------------------
+-- ESP SETTINGS
+---------------------------------------------------------------
+local ESP_Player = true
+local ESP_Gen = true
+
+---------------------------------------------------------------
+-- ESP PLAYER (WHITE)
+---------------------------------------------------------------
+local function createPlayerESP(plr)
+	if plr == LocalPlayer then return end
+	local function onChar(char)
+		if not ESP_Player then return end
+		local hrp = char:WaitForChild("HumanoidRootPart",5)
+		if not hrp then return end
+		if hrp:FindFirstChild("SLK_PlayerESP") then hrp.SLK_PlayerESP:Destroy() end
+		local box = Instance.new("BoxHandleAdornment")
+		box.Name = "SLK_PlayerESP"
+		box.Adornee = hrp
+		box.Size = Vector3.new(4,6,4)
+		box.Color3 = Color3.new(1,1,1)
+		box.Transparency = 0.5
+		box.AlwaysOnTop = true
+		box.ZIndex = 5
+		box.Parent = hrp
+	end
+	if plr.Character then onChar(plr.Character) end
+	plr.CharacterAdded:Connect(onChar)
+end
+for _,p in ipairs(Players:GetPlayers()) do createPlayerESP(p) end
+Players.PlayerAdded:Connect(createPlayerESP)
+
+---------------------------------------------------------------
+-- ESP GENERATOR (YELLOW) - FORSAKEN
+---------------------------------------------------------------
+local function genESP(model)
+	if not ESP_Gen or not model:IsA("Model") then return end
+	if model:FindFirstChild("SLK_GenESP") then return end
+	local primary = model.PrimaryPart or model:FindFirstChildWhichIsA("BasePart")
+	if not primary then return end
+	local box = Instance.new("BoxHandleAdornment")
+	box.Name = "SLK_GenESP"
+	box.Adornee = primary
+	box.Size = model:GetExtentsSize()
+	box.Color3 = Color3.fromRGB(255,220,0)
+	box.Transparency = 0.4
+	box.AlwaysOnTop = true
+	box.ZIndex = 4
+	box.Parent = primary
+end
+
+task.spawn(function()
+	while task.wait(2) do
+		for _,v in ipairs(workspace:GetDescendants()) do
+			if v:IsA("Model") then
+				local n = v.Name:lower()
+				if n:find("gen") or n:find("generator") then
+					genESP(v)
+				end
+			end
+		end
+	end
 end)
 
 --// ================= END SLK HUB v1.3.1 ======================
