@@ -141,12 +141,11 @@ task.wait(1.3)
 gui:Destroy()
 
 --// SLK HUB MENU (FULL - FINAL STABLE)
---// Includes: Information Tab + Minimize + Close Confirm + Countdown
+--// Includes: Information Tab + Auto Open + Minimize + Close Confirm + Countdown
 --// Do NOT shorten or remove lines
 
 local Players = game:GetService("Players")
 local UIS = game:GetService("UserInputService")
-
 local player = Players.LocalPlayer
 
 ------------------------------------------------
@@ -258,11 +257,11 @@ infoTab.TextColor3 = Color3.fromRGB(255,255,255)
 Instance.new("UICorner", infoTab).CornerRadius = UDim.new(0,10)
 
 ------------------------------------------------
--- INFORMATION CONTENT (SCROLL + BIG TEXT)
+-- INFORMATION CONTENT
 ------------------------------------------------
 local infoContent = Instance.new("ScrollingFrame", contentArea)
 infoContent.Size = UDim2.fromScale(1,1)
-infoContent.CanvasSize = UDim2.new(0,0,1.5,0)
+infoContent.CanvasSize = UDim2.new(0,0,1.6,0)
 infoContent.ScrollBarImageTransparency = 0.3
 infoContent.BackgroundTransparency = 1
 infoContent.Visible = false
@@ -282,29 +281,30 @@ infoText.Position = UDim2.fromScale(0.05,0.25)
 infoText.Size = UDim2.fromScale(0.9,0.75)
 infoText.BackgroundTransparency = 1
 infoText.TextWrapped = true
-infoText.TextScaled = false
-infoText.TextSize = 18
+infoText.TextSize = 20
 infoText.Font = Enum.Font.Gotham
 infoText.TextYAlignment = Enum.TextYAlignment.Top
 infoText.TextColor3 = Color3.fromRGB(0,170,255)
 
 infoText.Text = [[
-🔧 Script Status
-- Script stabilized
-- Core fixed
+🔧 SCRIPT INFORMATION
 
-⚙️ Working
-- Progress: 85%
-- UI: Stable
+• Script stabilized
+• Core logic fixed
+• UI fully working
 
-📦 Update
-- Latest fixes applied
+⚙️ WORKING STATUS
+• Progress: 85%
+• Menu: Stable
+• No shortened lines
 
-👤 Credits
-- SLK Gaming
+📦 NOTES
+• Do not edit core
+• Do not remove lines
+• This hub is under development
 
-📝 Note
-- Do not edit core lines
+👤 MADE BY
+• SLK GAMING
 ]]
 
 contents["Information"] = infoContent
@@ -312,6 +312,11 @@ contents["Information"] = infoContent
 infoTab.MouseButton1Click:Connect(function()
 	showTab("Information")
 end)
+
+------------------------------------------------
+-- AUTO OPEN INFORMATION TAB
+------------------------------------------------
+showTab("Information")
 
 ------------------------------------------------
 -- MINIMIZE SYSTEM
@@ -339,7 +344,7 @@ miniBtn.MouseButton1Click:Connect(function()
 end)
 
 ------------------------------------------------
--- CLOSE CONFIRM + COUNTDOWN (X LOGIC CHUẨN)
+-- CLOSE CONFIRM (YES = THANKS + 5s)
 ------------------------------------------------
 close.MouseButton1Click:Connect(function()
 	local ask = Instance.new("Frame", gui)
@@ -352,7 +357,7 @@ close.MouseButton1Click:Connect(function()
 	local txt = Instance.new("TextLabel", ask)
 	txt.Size = UDim2.fromScale(1,0.55)
 	txt.BackgroundTransparency = 1
-	txt.Text = "DO YOU WANT CLOSE SCRIPT?"
+	txt.Text = "DO YOU WANT TO CLOSE SCRIPT?"
 	txt.Font = Enum.Font.GothamBold
 	txt.TextScaled = true
 	txt.TextColor3 = Color3.fromRGB(255,255,255)
@@ -381,7 +386,7 @@ close.MouseButton1Click:Connect(function()
 
 	yes.MouseButton1Click:Connect(function()
 		for i = 5,0,-1 do
-			txt.Text = "👋 See you again\nClosing in "..i.."s"
+			txt.Text = "🙏 Thanks for using script\nClosing in "..i.."s"
 			task.wait(1)
 		end
 		gui:Destroy()
