@@ -1,139 +1,129 @@
---==================================================
--- SLK HUB | CLEAN VERSION (NO MOBILE EXEC BANNER)
---==================================================
-
-local Players = game:GetService("Players")
+-- SLK HUB LOADING FULL FIX
 local TweenService = game:GetService("TweenService")
+local Players = game:GetService("Players")
 local player = Players.LocalPlayer
-local PlayerGui = player:WaitForChild("PlayerGui")
 
---==================================================
--- 🔥 REMOVE EXECUTOR GUI / BANNER BẨN
---==================================================
-for _, v in ipairs(PlayerGui:GetChildren()) do
-    if v:IsA("ScreenGui") then
-        local n = string.lower(v.Name)
-        if n:find("slk") or n:find("hub") or n:find("mobile") then
-            v:Destroy()
-        end
-    end
-end
-
-for _, v in ipairs(game:GetDescendants()) do
-    if v:IsA("TextLabel") then
-        local t = string.lower(v.Text)
-        if t:find("slk hub") or t:find("mobile exec") then
-            pcall(function()
-                v.Parent:Destroy()
-            end)
-        end
-    end
-end
-
---==================================================
--- 🎬 LOADING GUI
---==================================================
-local gui = Instance.new("ScreenGui", PlayerGui)
-gui.Name = "SLK_Loading"
+-- GUI
+local gui = Instance.new("ScreenGui")
+gui.Name = "SLK_LOADING"
 gui.ResetOnSpawn = false
+gui.Parent = player:WaitForChild("PlayerGui")
 
+-- MAIN FRAME
 local main = Instance.new("Frame", gui)
-main.Size = UDim2.fromScale(0.45, 0.28)
-main.Position = UDim2.fromScale(0.5, 0.5)
-main.AnchorPoint = Vector2.new(0.5, 0.5)
+main.Size = UDim2.fromScale(0.6,0.35)
+main.Position = UDim2.fromScale(0.5,0.5)
+main.AnchorPoint = Vector2.new(0.5,0.5)
 main.BackgroundColor3 = Color3.fromRGB(0,0,0)
-main.BackgroundTransparency = 0
 main.BorderSizePixel = 0
-Instance.new("UICorner", main).CornerRadius = UDim.new(0,16)
+main.BackgroundTransparency = 0
 
+local corner = Instance.new("UICorner", main)
+corner.CornerRadius = UDim.new(0,18)
+
+-- TITLE
 local title = Instance.new("TextLabel", main)
-title.Size = UDim2.fromScale(1,0.3)
+title.Size = UDim2.fromScale(1,0.22)
 title.BackgroundTransparency = 1
 title.Text = "SLK HUB"
-title.TextColor3 = Color3.fromRGB(255,60,60)
-title.Font = Enum.Font.GothamBold
+title.TextColor3 = Color3.fromRGB(255,0,0)
+title.Font = Enum.Font.GothamBlack
 title.TextScaled = true
 
+-- BY TEXT
+local by = Instance.new("TextLabel", main)
+by.Position = UDim2.fromScale(0,0.22)
+by.Size = UDim2.fromScale(1,0.1)
+by.BackgroundTransparency = 1
+by.Text = "By SLK GAMING"
+by.TextColor3 = Color3.fromRGB(180,180,180)
+by.Font = Enum.Font.Gotham
+by.TextScaled = true
+
+-- STATUS
 local status = Instance.new("TextLabel", main)
-status.Position = UDim2.fromScale(0,0.3)
-status.Size = UDim2.fromScale(1,0.2)
+status.Position = UDim2.fromScale(0,0.32)
+status.Size = UDim2.fromScale(1,0.12)
 status.BackgroundTransparency = 1
 status.Text = "Welcome to script"
-status.TextColor3 = Color3.fromRGB(200,200,200)
+status.TextColor3 = Color3.fromRGB(255,255,255)
 status.Font = Enum.Font.Gotham
 status.TextScaled = true
 
-local barBG = Instance.new("Frame", main)
-barBG.Position = UDim2.fromScale(0.1,0.6)
-barBG.Size = UDim2.fromScale(0.8,0.12)
-barBG.BackgroundColor3 = Color3.fromRGB(255,0,0)
-barBG.BorderSizePixel = 0
-Instance.new("UICorner", barBG).CornerRadius = UDim.new(1,0)
+-- LOAD BAR OUTLINE
+local outline = Instance.new("Frame", main)
+outline.Position = UDim2.fromScale(0.1,0.5)
+outline.Size = UDim2.fromScale(0.8,0.1)
+outline.BackgroundColor3 = Color3.fromRGB(255,0,0)
+outline.BorderSizePixel = 0
 
-local bar = Instance.new("Frame", barBG)
+local oc = Instance.new("UICorner", outline)
+oc.CornerRadius = UDim.new(0,8)
+
+-- LOAD BAR
+local bar = Instance.new("Frame", outline)
 bar.Size = UDim2.fromScale(0,1)
 bar.BackgroundColor3 = Color3.fromRGB(0,170,255)
 bar.BorderSizePixel = 0
-Instance.new("UICorner", bar).CornerRadius = UDim.new(1,0)
 
+local bc = Instance.new("UICorner", bar)
+bc.CornerRadius = UDim.new(0,8)
+
+-- PERCENT
 local percent = Instance.new("TextLabel", main)
-percent.Position = UDim2.fromScale(0,0.75)
-percent.Size = UDim2.fromScale(1,0.2)
+percent.Position = UDim2.fromScale(0,0.62)
+percent.Size = UDim2.fromScale(1,0.1)
 percent.BackgroundTransparency = 1
 percent.Text = "0%"
 percent.TextColor3 = Color3.fromRGB(255,255,255)
 percent.Font = Enum.Font.Code
 percent.TextScaled = true
 
---==================================================
--- ⏳ LOADING (5–7s)
---==================================================
+-- BINARY
+local binary = Instance.new("TextLabel", main)
+binary.Position = UDim2.fromScale(0.1,0.75)
+binary.Size = UDim2.fromScale(0.8,0.1)
+binary.BackgroundTransparency = 1
+binary.Text = "10101010101010101010"
+binary.TextColor3 = Color3.fromRGB(120,120,120)
+binary.Font = Enum.Font.Code
+binary.TextScaled = true
+
+-- BINARY MOVE
+task.spawn(function()
+	while binary.Parent do
+		binary.Text = binary.Text:sub(2)..binary.Text:sub(1,1)
+		task.wait(0.15)
+	end
+end)
+
+-- STATUS LIST
 local texts = {
-    "Welcome to script",
-    "Script will load",
-    "Script will ready",
-    "Okay wait a script",
+	"Welcome to script",
+	"Script will done",
+	"Script will ready",
+	"Okay wait a script"
 }
 
-local loadTime = math.random(5,7)
-local steps = 100
-local stepTime = loadTime / steps
-
-for i = 1, steps do
-    bar.Size = UDim2.fromScale(i/100,1)
-    percent.Text = i.."%"
-
-    if i % 25 == 0 then
-        status.Text = texts[(i/25)%#texts + 1]
-    end
-
-    task.wait(stepTime)
+-- LOADING
+for i = 0,100 do
+	bar.Size = UDim2.fromScale(i/100,1)
+	percent.Text = i.."%"
+	status.Text = texts[(i%#texts)+1]
+	task.wait(0.06) -- ~6s
 end
 
-status.Text = "Thanks for use script"
+-- FADE + SHRINK
+TweenService:Create(main, TweenInfo.new(0.5), {
+	Size = UDim2.fromScale(0.45,0.25),
+	BackgroundTransparency = 1
+}):Play()
 
---==================================================
--- ✨ FADE OUT + SHRINK
---==================================================
-TweenService:Create(
-    main,
-    TweenInfo.new(0.8, Enum.EasingStyle.Quad, Enum.EasingDirection.In),
-    {
-        Size = UDim2.fromScale(0.1,0.05),
-        BackgroundTransparency = 1
-    }
-):Play()
-
-for _, v in ipairs(main:GetDescendants()) do
-    if v:IsA("TextLabel") then
-        TweenService:Create(v, TweenInfo.new(0.5), {TextTransparency = 1}):Play()
-    end
+for _,v in ipairs(main:GetDescendants()) do
+	if v:IsA("TextLabel") then
+		TweenService:Create(v, TweenInfo.new(0.5), {TextTransparency = 1}):Play()
+	end
 end
 
-task.wait(0.9)
+task.wait(0.6)
 gui:Destroy()
-
---==================================================
--- 🚀 HUB START (CHỖ NÀY GẮN MENU SAU)
---==================================================
-print("SLK HUB READY")
