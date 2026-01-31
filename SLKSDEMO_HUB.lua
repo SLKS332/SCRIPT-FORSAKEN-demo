@@ -140,7 +140,7 @@ TweenService:Create(frame, tweenInfo, {
 task.wait(1.3)
 gui:Destroy()
 
---// SLK HUB MENU (NO LOADING - FINAL FIX)
+--// SLK HUB MENU (NO LOADING - FULL FIX CLOSE)
 local Players = game:GetService("Players")
 local TweenService = game:GetService("TweenService")
 local UIS = game:GetService("UserInputService")
@@ -154,19 +154,17 @@ gui.ResetOnSpawn = false
 gui.Parent = player:WaitForChild("PlayerGui")
 
 -- MAIN FRAME
-local main = Instance.new("Frame")
-main.Parent = gui
+local main = Instance.new("Frame", gui)
 main.Size = UDim2.fromScale(0.6, 0.55)
 main.Position = UDim2.fromScale(0.2, 0.22)
 main.BackgroundColor3 = Color3.fromRGB(0,0,0)
-main.BackgroundTransparency = 1 -- mờ lúc đầu
+main.BackgroundTransparency = 1
 main.BorderSizePixel = 0
 main.Active = true
 Instance.new("UICorner", main).CornerRadius = UDim.new(0,18)
 
 -- TOP BAR
-local top = Instance.new("Frame")
-top.Parent = main
+local top = Instance.new("Frame", main)
 top.Size = UDim2.fromScale(1, 0.16)
 top.BackgroundColor3 = Color3.fromRGB(20,20,20)
 top.BackgroundTransparency = 0.25
@@ -174,8 +172,7 @@ top.BorderSizePixel = 0
 Instance.new("UICorner", top).CornerRadius = UDim.new(0,18)
 
 -- TITLE
-local title = Instance.new("TextLabel")
-title.Parent = top
+local title = Instance.new("TextLabel", top)
 title.Position = UDim2.fromScale(0.02, 0)
 title.Size = UDim2.fromScale(0.25, 1)
 title.BackgroundTransparency = 1
@@ -186,16 +183,14 @@ title.TextColor3 = Color3.fromRGB(255,255,255)
 title.TextXAlignment = Enum.TextXAlignment.Left
 
 -- VERSION BOX
-local verBox = Instance.new("Frame")
-verBox.Parent = top
+local verBox = Instance.new("Frame", top)
 verBox.Position = UDim2.fromScale(0.28, 0.28)
 verBox.Size = UDim2.fromScale(0.2, 0.45)
 verBox.BackgroundColor3 = Color3.fromRGB(0,170,255)
 verBox.BorderSizePixel = 0
 Instance.new("UICorner", verBox).CornerRadius = UDim.new(1,0)
 
-local verText = Instance.new("TextLabel")
-verText.Parent = verBox
+local verText = Instance.new("TextLabel", verBox)
 verText.Size = UDim2.fromScale(1,1)
 verText.BackgroundTransparency = 1
 verText.Text = "VERSION v1"
@@ -203,9 +198,8 @@ verText.Font = Enum.Font.GothamBold
 verText.TextScaled = true
 verText.TextColor3 = Color3.fromRGB(255,255,255)
 
--- BY TEXT (DƯỚI SLK HUB)
-local by = Instance.new("TextLabel")
-by.Parent = main
+-- BY TEXT
+local by = Instance.new("TextLabel", main)
 by.Position = UDim2.fromScale(0.02, 0.17)
 by.Size = UDim2.fromScale(0.4, 0.06)
 by.BackgroundTransparency = 1
@@ -215,9 +209,8 @@ by.TextScaled = true
 by.TextColor3 = Color3.fromRGB(180,180,180)
 by.TextXAlignment = Enum.TextXAlignment.Left
 
--- MINIMIZE BUTTON
-local min = Instance.new("TextButton")
-min.Parent = top
+-- MINIMIZE
+local min = Instance.new("TextButton", top)
 min.Position = UDim2.fromScale(0.88, 0.2)
 min.Size = UDim2.fromScale(0.05, 0.6)
 min.Text = "-"
@@ -227,9 +220,8 @@ min.BackgroundColor3 = Color3.fromRGB(70,70,70)
 min.TextColor3 = Color3.fromRGB(255,255,255)
 Instance.new("UICorner", min).CornerRadius = UDim.new(1,0)
 
--- CLOSE BUTTON
-local close = Instance.new("TextButton")
-close.Parent = top
+-- CLOSE
+local close = Instance.new("TextButton", top)
 close.Position = UDim2.fromScale(0.94, 0.2)
 close.Size = UDim2.fromScale(0.05, 0.6)
 close.Text = "X"
@@ -240,16 +232,13 @@ close.TextColor3 = Color3.fromRGB(255,255,255)
 Instance.new("UICorner", close).CornerRadius = UDim.new(1,0)
 
 -- CONTENT (TRỐNG)
-local content = Instance.new("Frame")
-content.Parent = main
+local content = Instance.new("Frame", main)
 content.Position = UDim2.fromScale(0.02, 0.26)
 content.Size = UDim2.fromScale(0.96, 0.7)
 content.BackgroundTransparency = 1
 
--- DRAG MENU (FIX KÉO ĐI THEO)
-local dragging = false
-local dragStart, startPos
-
+-- DRAG
+local dragging, dragStart, startPos
 top.InputBegan:Connect(function(input)
 	if input.UserInputType == Enum.UserInputType.MouseButton1
 	or input.UserInputType == Enum.UserInputType.Touch then
@@ -260,8 +249,7 @@ top.InputBegan:Connect(function(input)
 end)
 
 UIS.InputChanged:Connect(function(input)
-	if dragging and (input.UserInputType == Enum.UserInputType.MouseMovement
-	or input.UserInputType == Enum.UserInputType.Touch) then
+	if dragging then
 		local delta = input.Position - dragStart
 		main.Position = UDim2.new(
 			startPos.X.Scale,
@@ -272,16 +260,12 @@ UIS.InputChanged:Connect(function(input)
 	end
 end)
 
-UIS.InputEnded:Connect(function(input)
-	if input.UserInputType == Enum.UserInputType.MouseButton1
-	or input.UserInputType == Enum.UserInputType.Touch then
-		dragging = false
-	end
+UIS.InputEnded:Connect(function()
+	dragging = false
 end)
 
 -- MINI BUTTON
-local miniBtn = Instance.new("TextButton")
-miniBtn.Parent = gui
+local miniBtn = Instance.new("TextButton", gui)
 miniBtn.Size = UDim2.fromScale(0.18, 0.06)
 miniBtn.Position = UDim2.fromScale(0.41, 0.02)
 miniBtn.Text = "SLK HUB"
@@ -303,7 +287,7 @@ miniBtn.MouseButton1Click:Connect(function()
 	miniBtn.Visible = false
 end)
 
--- CLOSE CONFIRM
+-- CLOSE CONFIRM + GOODBYE
 close.MouseButton1Click:Connect(function()
 	local ask = Instance.new("Frame", gui)
 	ask.Size = UDim2.fromScale(0.4, 0.22)
@@ -338,16 +322,53 @@ close.MouseButton1Click:Connect(function()
 	no.BackgroundColor3 = Color3.fromRGB(60,60,60)
 	Instance.new("UICorner", no).CornerRadius = UDim.new(0,10)
 
-	yes.MouseButton1Click:Connect(function()
-		gui:Destroy()
-	end)
-
 	no.MouseButton1Click:Connect(function()
 		ask:Destroy()
 	end)
+
+	yes.MouseButton1Click:Connect(function()
+		ask:Destroy()
+
+		local bye = Instance.new("Frame", gui)
+		bye.Size = UDim2.fromScale(0.45, 0.28)
+		bye.Position = UDim2.fromScale(0.275, 0.36)
+		bye.BackgroundColor3 = Color3.fromRGB(0,0,0)
+		bye.BackgroundTransparency = 0.15
+		Instance.new("UICorner", bye).CornerRadius = UDim.new(0,16)
+
+		local icon = Instance.new("TextLabel", bye)
+		icon.Size = UDim2.fromScale(1, 0.3)
+		icon.Text = "👋"
+		icon.TextScaled = true
+		icon.BackgroundTransparency = 1
+
+		local msg = Instance.new("TextLabel", bye)
+		msg.Position = UDim2.fromScale(0, 0.32)
+		msg.Size = UDim2.fromScale(1, 0.3)
+		msg.Text = "Okay sorry\nYou good bye\nSee you again"
+		msg.TextScaled = true
+		msg.Font = Enum.Font.GothamBold
+		msg.BackgroundTransparency = 1
+
+		local count = Instance.new("TextLabel", bye)
+		count.Position = UDim2.fromScale(0.3, 0.7)
+		count.Size = UDim2.fromScale(0.4, 0.25)
+		count.TextScaled = true
+		count.Font = Enum.Font.GothamBlack
+		count.TextColor3 = Color3.fromRGB(0,170,255)
+		count.TextStrokeTransparency = 0
+		count.BackgroundTransparency = 1
+
+		for i = 5, 0, -1 do
+			count.Text = i.."s"
+			task.wait(1)
+		end
+
+		gui:Destroy()
+	end)
 end)
 
--- FADE IN (MỜ → RÕ RỒI MỚI DÙNG ĐƯỢC)
+-- FADE IN
 main.Active = false
 TweenService:Create(main, TweenInfo.new(0.8), {
 	BackgroundTransparency = 0.35
