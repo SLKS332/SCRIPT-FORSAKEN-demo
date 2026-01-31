@@ -141,8 +141,9 @@ task.wait(1.3)
 gui:Destroy()
 
 --// SLK HUB MENU (FULL - FINAL STABLE)
---// Includes: Information Tab + Auto Open + Minimize + Close Confirm + Countdown
---// Do NOT shorten or remove lines
+--// Tabs: Information (FULL) + Player (NOT DEVELOPED)
+--// Auto Open Information + Minimize + Close Confirm + 5s Countdown
+--// DO NOT SHORTEN / DO NOT REMOVE LINES
 
 local Players = game:GetService("Players")
 local UIS = game:GetService("UserInputService")
@@ -178,7 +179,6 @@ top.BackgroundTransparency = 0.25
 top.BorderSizePixel = 0
 Instance.new("UICorner", top).CornerRadius = UDim.new(0,18)
 
--- TITLE
 local title = Instance.new("TextLabel", top)
 title.Position = UDim2.fromScale(0.02,0)
 title.Size = UDim2.fromScale(0.25,1)
@@ -189,7 +189,7 @@ title.TextScaled = true
 title.TextColor3 = Color3.fromRGB(255,255,255)
 title.TextXAlignment = Enum.TextXAlignment.Left
 
--- MINIMIZE BUTTON
+-- MINIMIZE
 local min = Instance.new("TextButton", top)
 min.Position = UDim2.fromScale(0.88,0.2)
 min.Size = UDim2.fromScale(0.05,0.6)
@@ -200,7 +200,7 @@ min.BackgroundColor3 = Color3.fromRGB(70,70,70)
 min.TextColor3 = Color3.fromRGB(255,255,255)
 Instance.new("UICorner", min).CornerRadius = UDim.new(1,0)
 
--- CLOSE BUTTON
+-- CLOSE
 local close = Instance.new("TextButton", top)
 close.Position = UDim2.fromScale(0.94,0.2)
 close.Size = UDim2.fromScale(0.05,0.6)
@@ -245,7 +245,7 @@ local function showTab(name)
 end
 
 ------------------------------------------------
--- INFORMATION TAB
+-- TAB: INFORMATION
 ------------------------------------------------
 local infoTab = Instance.new("TextButton", tabList)
 infoTab.Size = UDim2.fromScale(1,0.12)
@@ -256,31 +256,20 @@ infoTab.BackgroundColor3 = Color3.fromRGB(40,40,40)
 infoTab.TextColor3 = Color3.fromRGB(255,255,255)
 Instance.new("UICorner", infoTab).CornerRadius = UDim.new(0,10)
 
-------------------------------------------------
--- INFORMATION CONTENT
-------------------------------------------------
 local infoContent = Instance.new("ScrollingFrame", contentArea)
 infoContent.Size = UDim2.fromScale(1,1)
 infoContent.CanvasSize = UDim2.new(0,0,1.6,0)
-infoContent.ScrollBarImageTransparency = 0.3
 infoContent.BackgroundTransparency = 1
 infoContent.Visible = false
 infoContent.BorderSizePixel = 0
-
-local icon = Instance.new("TextLabel", infoContent)
-icon.Size = UDim2.fromScale(0.2,0.18)
-icon.Position = UDim2.fromScale(0.4,0.02)
-icon.BackgroundTransparency = 1
-icon.Text = "🛠️"
-icon.Font = Enum.Font.GothamBold
-icon.TextScaled = true
-icon.TextColor3 = Color3.fromRGB(0,170,255)
+infoContent.ScrollBarImageTransparency = 0.3
 
 local infoText = Instance.new("TextLabel", infoContent)
-infoText.Position = UDim2.fromScale(0.05,0.25)
-infoText.Size = UDim2.fromScale(0.9,0.75)
+infoText.Position = UDim2.fromScale(0.05,0.05)
+infoText.Size = UDim2.fromScale(0.9,0.9)
 infoText.BackgroundTransparency = 1
 infoText.TextWrapped = true
+infoText.TextScaled = false
 infoText.TextSize = 20
 infoText.Font = Enum.Font.Gotham
 infoText.TextYAlignment = Enum.TextYAlignment.Top
@@ -291,19 +280,20 @@ infoText.Text = [[
 
 • Script stabilized
 • Core logic fixed
-• UI fully working
-
-⚙️ WORKING STATUS
-• Progress: 85%
-• Menu: Stable
+• UI system stable
 • No shortened lines
 
-📦 NOTES
+⚙️ STATUS
+• Progress: 85%
+• Auto open enabled
+• Close confirm enabled
+
+📦 NOTE
 • Do not edit core
 • Do not remove lines
-• This hub is under development
+• Player tab not developed yet
 
-👤 MADE BY
+👤 AUTHOR
 • SLK GAMING
 ]]
 
@@ -314,7 +304,54 @@ infoTab.MouseButton1Click:Connect(function()
 end)
 
 ------------------------------------------------
--- AUTO OPEN INFORMATION TAB
+-- TAB: PLAYER (NOT DEVELOPED)
+------------------------------------------------
+local playerTab = Instance.new("TextButton", tabList)
+playerTab.Size = UDim2.fromScale(1,0.12)
+playerTab.Text = "👤 PLAYER"
+playerTab.Font = Enum.Font.GothamBold
+playerTab.TextScaled = true
+playerTab.BackgroundColor3 = Color3.fromRGB(40,40,40)
+playerTab.TextColor3 = Color3.fromRGB(255,255,255)
+Instance.new("UICorner", playerTab).CornerRadius = UDim.new(0,10)
+
+local playerContent = Instance.new("Frame", contentArea)
+playerContent.Size = UDim2.fromScale(1,1)
+playerContent.BackgroundTransparency = 1
+playerContent.Visible = false
+
+local playerText = Instance.new("TextLabel", playerContent)
+playerText.Size = UDim2.fromScale(0.9,0.9)
+playerText.Position = UDim2.fromScale(0.05,0.05)
+playerText.BackgroundTransparency = 1
+playerText.TextWrapped = true
+playerText.TextScaled = false
+playerText.TextSize = 20
+playerText.Font = Enum.Font.Gotham
+playerText.TextYAlignment = Enum.TextYAlignment.Top
+playerText.TextColor3 = Color3.fromRGB(255,255,255)
+
+playerText.Text = [[
+👤 PLAYER TAB
+
+This tab is NOT DEVELOPED yet.
+
+• No functions added
+• Reserved for future update
+• Structure ready
+• Content intentionally empty
+
+Please wait for next update.
+]]
+
+contents["Player"] = playerContent
+
+playerTab.MouseButton1Click:Connect(function()
+	showTab("Player")
+end)
+
+------------------------------------------------
+-- AUTO OPEN INFORMATION
 ------------------------------------------------
 showTab("Information")
 
@@ -344,7 +381,7 @@ miniBtn.MouseButton1Click:Connect(function()
 end)
 
 ------------------------------------------------
--- CLOSE CONFIRM (YES = THANKS + 5s)
+-- CLOSE CONFIRM + 5s COUNTDOWN
 ------------------------------------------------
 close.MouseButton1Click:Connect(function()
 	local ask = Instance.new("Frame", gui)
