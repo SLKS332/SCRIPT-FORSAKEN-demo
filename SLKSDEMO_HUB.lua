@@ -140,9 +140,8 @@ TweenService:Create(frame, tweenInfo, {
 task.wait(1.3)
 gui:Destroy()
 
---// SLK HUB MENU (FULL - INFORMATION TAB ONLY)
+--// SLK HUB MENU (FULL VERSION - INFORMATION TAB WORKING)
 local Players = game:GetService("Players")
-local TweenService = game:GetService("TweenService")
 local UIS = game:GetService("UserInputService")
 
 local player = Players.LocalPlayer
@@ -193,7 +192,6 @@ local verBox = Instance.new("Frame", top)
 verBox.Position = UDim2.fromScale(0.28, 0.28)
 verBox.Size = UDim2.fromScale(0.2, 0.45)
 verBox.BackgroundColor3 = Color3.fromRGB(0,170,255)
-verBox.BorderSizePixel = 0
 Instance.new("UICorner", verBox).CornerRadius = UDim.new(1,0)
 
 local verText = Instance.new("TextLabel", verBox)
@@ -204,7 +202,9 @@ verText.Font = Enum.Font.GothamBold
 verText.TextScaled = true
 verText.TextColor3 = Color3.fromRGB(255,255,255)
 
--- MINIMIZE
+------------------------------------------------
+-- BUTTONS
+------------------------------------------------
 local min = Instance.new("TextButton", top)
 min.Position = UDim2.fromScale(0.88, 0.2)
 min.Size = UDim2.fromScale(0.05, 0.6)
@@ -215,7 +215,6 @@ min.BackgroundColor3 = Color3.fromRGB(70,70,70)
 min.TextColor3 = Color3.fromRGB(255,255,255)
 Instance.new("UICorner", min).CornerRadius = UDim.new(1,0)
 
--- CLOSE
 local close = Instance.new("TextButton", top)
 close.Position = UDim2.fromScale(0.94, 0.2)
 close.Size = UDim2.fromScale(0.05, 0.6)
@@ -227,19 +226,6 @@ close.TextColor3 = Color3.fromRGB(255,255,255)
 Instance.new("UICorner", close).CornerRadius = UDim.new(1,0)
 
 ------------------------------------------------
--- BY TEXT
-------------------------------------------------
-local by = Instance.new("TextLabel", main)
-by.Position = UDim2.fromScale(0.02, 0.17)
-by.Size = UDim2.fromScale(0.4, 0.06)
-by.BackgroundTransparency = 1
-by.Text = "BY slk gaming"
-by.Font = Enum.Font.Gotham
-by.TextScaled = true
-by.TextColor3 = Color3.fromRGB(180,180,180)
-by.TextXAlignment = Enum.TextXAlignment.Left
-
-------------------------------------------------
 -- TAB LIST (LEFT)
 ------------------------------------------------
 local tabList = Instance.new("Frame", main)
@@ -247,8 +233,8 @@ tabList.Position = UDim2.fromScale(0.02, 0.26)
 tabList.Size = UDim2.fromScale(0.25, 0.7)
 tabList.BackgroundTransparency = 1
 
-local tabLayout = Instance.new("UIListLayout", tabList)
-tabLayout.Padding = UDim.new(0,8)
+local listLayout = Instance.new("UIListLayout", tabList)
+listLayout.Padding = UDim.new(0,8)
 
 ------------------------------------------------
 -- CONTENT AREA (RIGHT)
@@ -294,35 +280,38 @@ infoContent.Visible = false
 
 -- ICON
 local icon = Instance.new("TextLabel", infoContent)
-icon.Size = UDim2.fromScale(0.2, 0.3)
-icon.Position = UDim2.fromScale(0.4, 0.05)
+icon.Size = UDim2.fromScale(0.25, 0.25)
+icon.Position = UDim2.fromScale(0.375, 0.05)
 icon.BackgroundTransparency = 1
 icon.Text = "🚧"
-icon.Font = Enum.Font.GothamBold
 icon.TextScaled = true
-icon.TextColor3 = Color3.fromRGB(0,170,255)
 
 -- TEXT
 local infoText = Instance.new("TextLabel", infoContent)
 infoText.Position = UDim2.fromScale(0, 0.35)
-infoText.Size = UDim2.fromScale(1, 0.6)
+infoText.Size = UDim2.fromScale(1, 0.4)
 infoText.BackgroundTransparency = 1
 infoText.Text = "SCRIPT IS DEVELOPING\nPLEASE WAIT FOR UPDATE"
-infoText.Font = Enum.Font.GothamBlack
+infoText.Font = Enum.Font.GothamBold
 infoText.TextScaled = true
 infoText.TextWrapped = true
 infoText.TextColor3 = Color3.fromRGB(0,170,255)
+
+-- WORKING %
+local working = Instance.new("TextLabel", infoContent)
+working.Position = UDim2.fromScale(0, 0.78)
+working.Size = UDim2.fromScale(1, 0.18)
+working.BackgroundTransparency = 1
+working.Text = "STATUS: WORKING 100%"
+working.Font = Enum.Font.GothamBlack
+working.TextScaled = true
+working.TextColor3 = Color3.fromRGB(0,255,150)
 
 contents["Information"] = infoContent
 
 infoTab.MouseButton1Click:Connect(function()
 	showTab("Information")
 end)
-
-------------------------------------------------
--- DEFAULT (NO TAB OPEN AT START)
-------------------------------------------------
--- Không auto show, phải ấn tab mới hiện
 
 ------------------------------------------------
 -- MINIMIZE SYSTEM
@@ -350,7 +339,7 @@ miniBtn.MouseButton1Click:Connect(function()
 end)
 
 ------------------------------------------------
--- CLOSE CONFIRM + GOODBYE COUNTDOWN
+-- CLOSE CONFIRM + GOODBYE
 ------------------------------------------------
 close.MouseButton1Click:Connect(function()
 	local ask = Instance.new("Frame", gui)
@@ -392,7 +381,6 @@ close.MouseButton1Click:Connect(function()
 
 	yes.MouseButton1Click:Connect(function()
 		ask:Destroy()
-
 		local bye = Instance.new("TextLabel", gui)
 		bye.Size = UDim2.fromScale(0.4, 0.25)
 		bye.Position = UDim2.fromScale(0.3, 0.38)
@@ -407,7 +395,6 @@ close.MouseButton1Click:Connect(function()
 			bye.Text = "👋\nOkay sorry\nSee you again\n"..i.."s"
 			task.wait(1)
 		end
-
 		gui:Destroy()
 	end)
 end)
