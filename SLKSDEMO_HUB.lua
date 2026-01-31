@@ -129,55 +129,9 @@ for i,name in ipairs(TabNames) do
 end
 
 --------------------------------------------------
--- DRAG (FIXED)
+-- CONFIRM CLOSE (TẠO TRƯỚC DRAG)
 --------------------------------------------------
-local dragging = false
-local dragStart
-local startPos
-
-TopBar.InputBegan:Connect(function(input)
-	if Confirm.Visible then return end
-	if input.UserInputType == Enum.UserInputType.MouseButton1
-	or input.UserInputType == Enum.UserInputType.Touch then
-		dragging = true
-		dragStart = input.Position
-		startPos = Main.Position
-
-		input.Changed:Connect(function()
-			if input.UserInputState == Enum.UserInputState.End then
-				dragging = false
-			end
-		end)
-	end
-end)
-
-UIS.InputChanged:Connect(function(input)
-	if dragging and (input.UserInputType == Enum.UserInputType.MouseMovement
-	or input.UserInputType == Enum.UserInputType.Touch) then
-		local delta = input.Position - dragStart
-		Main.Position = UDim2.new(
-			startPos.X.Scale,
-			startPos.X.Offset + delta.X,
-			startPos.Y.Scale,
-			startPos.Y.Offset + delta.Y
-		)
-	end
-end)
-
---------------------------------------------------
--- MINIMIZE
---------------------------------------------------
-local minimized = false
-Min.MouseButton1Click:Connect(function()
-	minimized = not minimized
-	Content.Visible = not minimized
-	Main.Size = minimized and UDim2.new(0,520,0,46) or UDim2.new(0,520,0,320)
-end)
-
---------------------------------------------------
--- CONFIRM CLOSE
---------------------------------------------------
-Confirm = Instance.new("Frame", gui)
+local Confirm = Instance.new("Frame", gui)
 Confirm.Size = UDim2.new(0, 300, 0, 140)
 Confirm.Position = UDim2.new(0.5, -150, 0.5, -70)
 Confirm.BackgroundColor3 = Color3.fromRGB(245,245,245)
@@ -208,6 +162,66 @@ No.Text = "NO"
 No.BackgroundColor3 = Color3.fromRGB(200,200,200)
 Instance.new("UICorner", No).CornerRadius = UDim.new(0,8)
 
+--------------------------------------------------
+-- DRAG (PC + MOBILE – FIX CHUẨN)
+--------------------------------------------------
+local dragging = false
+local dragInput
+local dragStart
+local startPos
+
+local function update(input)
+	local delta = input.Position - dragStart
+	Main.Position = UDim2.new(
+		startPos.X.Scale,
+		startPos.X.Offset + delta.X,
+		startPos.Y.Scale,
+		startPos.Y.Offset + delta.Y
+	)
+end
+
+TopBar.InputBegan:Connect(function(input)
+	if Confirm.Visible then return end
+	if input.UserInputType == Enum.UserInputType.MouseButton1
+	or input.UserInputType == Enum.UserInputType.Touch then
+		dragging = true
+		dragStart = input.Position
+		startPos = Main.Position
+
+		input.Changed:Connect(function()
+			if input.UserInputState == Enum.UserInputState.End then
+				dragging = false
+			end
+		end)
+	end
+end)
+
+TopBar.InputChanged:Connect(function(input)
+	if input.UserInputType == Enum.UserInputType.MouseMovement
+	or input.UserInputType == Enum.UserInputType.Touch then
+		dragInput = input
+	end
+end)
+
+UIS.InputChanged:Connect(function(input)
+	if input == dragInput and dragging then
+		update(input)
+	end
+end)
+
+--------------------------------------------------
+-- MINIMIZE
+--------------------------------------------------
+local minimized = false
+Min.MouseButton1Click:Connect(function()
+	minimized = not minimized
+	Content.Visible = not minimized
+	Main.Size = minimized and UDim2.new(0,520,0,46) or UDim2.new(0,520,0,320)
+end)
+
+--------------------------------------------------
+-- CLOSE EVENTS
+--------------------------------------------------
 Close.MouseButton1Click:Connect(function()
 	Confirm.Visible = true
 end)
